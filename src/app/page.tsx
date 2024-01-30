@@ -9,7 +9,7 @@ export default async function Home() {
     <>
       <h1>Hello world</h1>
       <h1>Session in server component</h1>
-      {JSON.stringify(session, null, 2)}
+      <pre>{JSON.stringify(session, null, 2)}</pre>
       <br />
       <br />
       <h1>Session in client component</h1>

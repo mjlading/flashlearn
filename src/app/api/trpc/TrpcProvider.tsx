@@ -11,7 +11,7 @@ export default function TrpcProvider({ children }: PropsWithChildren) {
     trpc.createClient({
       links: [
         httpBatchLink({
-          url: "http://localhost:3000/api/trpc",
+          url: `${process.env.NEXTAUTH_URL}/api/trpc`,
         }),
       ],
     })

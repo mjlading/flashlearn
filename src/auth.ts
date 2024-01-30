@@ -30,6 +30,9 @@ export const authConfig = {
       return session;
     },
   },
+  pages: {
+    signIn: "/auth/signIn",
+  },
 } satisfies NextAuthConfig;
 
 export const {

@@ -6,6 +6,29 @@ import prisma from "./db";
 export const authConfig = {
   providers: [GitHub],
   adapter: PrismaAdapter(prisma),
+  session: { strategy: "jwt" },
+  callbacks: {
+    jwt({ token, account, user }) {
+      if (account) {
+        token.accessToken = account.access_token;
+        token.id = user?.id;
+      }
+      return token;
+    },
+    session({ session, token }: any) {
+      // session.accessToken = token.accessToken;
+
+      if (token.sub) {
+        session.user.id = token.sub;
+      } else {
+        console.error("Token SUB is missing");
+      }
+
+      // console.log("Session callback - Modified session object:", session);
+
+      return session;
+    },
+  },
 } satisfies NextAuthConfig;
 
 export const {

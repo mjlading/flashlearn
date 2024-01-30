@@ -7,7 +7,7 @@ import { trpc } from "./client";
 
 const TRPC_API_URL =
   process.env.NODE_ENV === "production"
-    ? "https://learning-app-one-mu.vercel.app/api/trpc"
+    ? "https://flashlearn.no/api/trpc"
     : "http://localhost:3000/api/trpc";
 
 export default function TrpcProvider({ children }: PropsWithChildren) {

@@ -1,4 +1,5 @@
 import { router, publicProcedure } from "../trpc";
+import prisma from "@/db";
 
 export const appRouter = router({
   hello: publicProcedure.query(() => {
@@ -6,7 +7,10 @@ export const appRouter = router({
   }),
   helloPrisma: publicProcedure.query(async () => {
     // Test prisma db
-    return await prisma?.user.findFirst();
+    const user = await prisma.user.findFirst();
+    if (!user) throw new Error("User not found");
+
+    return user;
   }),
 });
 

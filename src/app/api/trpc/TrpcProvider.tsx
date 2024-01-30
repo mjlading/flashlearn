@@ -5,13 +5,18 @@ import { httpBatchLink } from "@trpc/client";
 import { PropsWithChildren, useState } from "react";
 import { trpc } from "./client";
 
+const TRPC_API_URL =
+  process.env.NODE_ENV === "production"
+    ? "https://hello-there-git-main-matslading.vercel.app/api/trpc"
+    : "http://localhost:3000/api/trpc";
+
 export default function TrpcProvider({ children }: PropsWithChildren) {
   const [queryClient] = useState(() => new QueryClient());
   const [trpcClient] = useState(() =>
     trpc.createClient({
       links: [
         httpBatchLink({
-          url: `${process.env.NEXTAUTH_URL}/api/trpc`,
+          url: TRPC_API_URL,
         }),
       ],
     })

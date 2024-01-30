@@ -1,4 +1,5 @@
 import GitHub from "next-auth/providers/github";
+import Google from "next-auth/providers/google";
 
 import type { DefaultSession, NextAuthConfig } from "next-auth";
 
@@ -11,5 +12,5 @@ declare module "next-auth" {
 }
 
 export default {
-  providers: [GitHub],
+  providers: [GitHub, Google],
 } satisfies NextAuthConfig;

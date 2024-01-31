@@ -3,9 +3,9 @@
 import { signIn } from "next-auth/react";
 import { Button } from "./ui/button";
 
-export default function SignInButton() {
+export default function SignInButton({ ...props }) {
   return (
-    <Button onClick={() => signIn()}>
+    <Button {...props} onClick={() => signIn()}>
       <span>Logg inn</span>
     </Button>
   );

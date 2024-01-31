@@ -29,6 +29,25 @@ export const authConfig = {
 
       return session;
     },
+    // Middleware function for authorization
+    authorized({ auth, request: { nextUrl } }) {
+      const isLoggedIn = !!auth?.user;
+
+      // Define the paths that require authentication
+      const protectedPaths = ["/dashboard"];
+
+      const isProtected = protectedPaths.some((path) =>
+        nextUrl.pathname.startsWith(path)
+      );
+
+      if (isProtected && !isLoggedIn) {
+        const redirectUrl = new URL("api/auth/signin", nextUrl.origin);
+        redirectUrl.searchParams.append("callbackUrl", nextUrl.href);
+        return Response.redirect(redirectUrl);
+      }
+
+      return true;
+    },
   },
   pages: {
     signIn: "/auth/signIn",

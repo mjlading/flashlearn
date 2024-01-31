@@ -1,7 +1,12 @@
 import { auth } from "@/auth";
 import { cn } from "@/lib/utils";
+import { LayoutDashboard } from "lucide-react";
+import { User } from "next-auth";
 import Link from "next/link";
-import { Button, buttonVariants } from "./ui/button";
+import DropDownMenuItemSignOut from "./DropDownMenuItemSignOut";
+import SignInButton from "./SignInButton";
+import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+import { buttonVariants } from "./ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,12 +16,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
-import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
-import { LayoutDashboard } from "lucide-react";
-import DropDownMenuItemSignOut from "./DropDownMenuItemSignOut";
-import { User } from "next-auth";
-import AuthButton from "./AuthButton";
-import SignInButton from "./SignInButton";
+import { DropDownMenuItemThemeToggle } from "./DropDownMenuItemThemeToggle";
 
 function ProfileDropdownMenu({ user }: { user: User }) {
   const userInitials = user?.name
@@ -50,6 +50,7 @@ function ProfileDropdownMenu({ user }: { user: User }) {
               <LayoutDashboard className="mr-2 h-4 w-4" />
               <span>Dashbord</span>
             </DropdownMenuItem>
+            <DropDownMenuItemThemeToggle />
           </Link>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />

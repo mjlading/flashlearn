@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+.height-minus-navbar {
+  height: calc(100vh - 61px);
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;

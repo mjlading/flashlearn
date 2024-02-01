@@ -52,6 +52,8 @@ model User {
   BookmarkedDeck    BookmarkedDeck[]
   DeckRating        DeckRating[]
   UserDeckKnowledge UserDeckKnowledge[]
+  Rehearsal         Rehearsal[]
+  Collection        Collection[]
 }
 
 model VerificationToken {
@@ -80,6 +82,10 @@ model Deck {
   BookmarkedDeck    BookmarkedDeck[]
   DeckRating        DeckRating[]
   UserDeckKnowledge UserDeckKnowledge[]
+  Flashcard         Flashcard[]
+  Rehearsal         Rehearsal[]
+  DeckRehearsal     DeckRehearsal[]
+  CollectionDeck    CollectionDeck[]
 }
 
 // Many-to-many between User and Deck
@@ -120,4 +126,73 @@ model Subject {
   name String @id
 
   decks Deck[]
+}
+
+model Flashcard {
+  id    String  @id @default(cuid())
+  front String
+  back  String
+  tag   String?
+
+  deck               Deck                 @relation(fields: [deckId], references: [id])
+  deckId             String
+  FlashcardRehearsal FlashcardRehearsal[]
+}
+
+model Rehearsal {
+  id        String   @id @default(cuid())
+  dateStart DateTime @default(now())
+  dateEnd   DateTime
+
+  user               User                 @relation(fields: [userId], references: [id])
+  userId             String
+  Deck               Deck                 @relation(fields: [deckId], references: [id])
+  deckId             String
+  FlashcardRehearsal FlashcardRehearsal[]
+  DeckRehearsal      DeckRehearsal[]
+}
+
+// Many-to-many between Rehearsal and Flashcard
+model FlashcardRehearsal {
+  score Int
+
+  flashcard   Flashcard @relation(fields: [flashcardId], references: [id])
+  flashcardId String
+  rehearsal   Rehearsal @relation(fields: [rehearsalId], references: [id])
+  rehearsalId String
+
+  @@id([flashcardId, rehearsalId])
+}
+
+// Many-to-many between Rehearsal and Deck
+model DeckRehearsal {
+  score Int
+
+  deck        Deck      @relation(fields: [deckId], references: [id])
+  deckId      String
+  rehearsal   Rehearsal @relation(fields: [rehearsalId], references: [id])
+  rehearsalId String
+
+  @@id([deckId, rehearsalId])
+}
+
+model Collection {
+  id   String @id @default(cuid())
+  name String @unique
+
+  user           User             @relation(fields: [userId], references: [id])
+  userId         String
+  CollectionDeck CollectionDeck[]
+
+  @@unique([name, userId]) // A user's collections must have unique names
+}
+
+// Many-to-many between Collection and Deck
+model CollectionDeck {
+  deck         Deck       @relation(fields: [deckId], references: [id])
+  deckId       String
+  collection   Collection @relation(fields: [collectionId], references: [id])
+  collectionId String
+
+  @@id([deckId, collectionId])
 }

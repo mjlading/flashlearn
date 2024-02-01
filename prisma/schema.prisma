@@ -48,13 +48,13 @@ model User {
   accounts      Account[]
   sessions      Session[]
 
-  decks               Deck[]
-  BookmarkedDeck      BookmarkedDeck[]
-  DeckRating          DeckRating[]
-  UserDeckKnowledge   UserDeckKnowledge[]
-  Rehearsal           Rehearsal[]
-  Collection          Collection[]
-  RoadmapUserProgress RoadmapUserProgress[]
+  decks                 Deck[]
+  bookmarkedDecks       BookmarkedDeck[]
+  deckRatings           DeckRating[]
+  userDeckKnowledges    UserDeckKnowledge[]
+  rehearsals            Rehearsal[]
+  collections           Collection[]
+  roadmapUserProgresses RoadmapUserProgress[]
 }
 
 model VerificationToken {
@@ -78,16 +78,17 @@ model Deck {
   userId String
   user   User   @relation(fields: [userId], references: [id])
 
-  subjectName       String
-  subject           Subject             @relation(fields: [subjectName], references: [name])
-  BookmarkedDeck    BookmarkedDeck[]
-  DeckRating        DeckRating[]
-  UserDeckKnowledge UserDeckKnowledge[]
-  Flashcard         Flashcard[]
-  Rehearsal         Rehearsal[]
-  DeckRehearsal     DeckRehearsal[]
-  CollectionDeck    CollectionDeck[]
-  RoadmapStep       RoadmapStep[]
+  subjectName String
+  subject     Subject @relation(fields: [subjectName], references: [name])
+
+  bookmarkedDecks    BookmarkedDeck[]
+  deckRatings        DeckRating[]
+  userDeckKnowledges UserDeckKnowledge[]
+  flashcards         Flashcard[]
+  rehearsals         Rehearsal[]
+  deckRehearsals     DeckRehearsal[]
+  collectionDecks    CollectionDeck[]
+  roadmapSteps       RoadmapStep[]
 }
 
 // Many-to-many between User and Deck
@@ -136,9 +137,10 @@ model Flashcard {
   back  String
   tag   String?
 
-  deck               Deck                 @relation(fields: [deckId], references: [id])
-  deckId             String
-  FlashcardRehearsal FlashcardRehearsal[]
+  deck   Deck   @relation(fields: [deckId], references: [id])
+  deckId String
+
+  flashcardRehearsals FlashcardRehearsal[]
 }
 
 model Rehearsal {
@@ -146,12 +148,13 @@ model Rehearsal {
   dateStart DateTime @default(now())
   dateEnd   DateTime
 
-  user               User                 @relation(fields: [userId], references: [id])
-  userId             String
-  Deck               Deck                 @relation(fields: [deckId], references: [id])
-  deckId             String
-  FlashcardRehearsal FlashcardRehearsal[]
-  DeckRehearsal      DeckRehearsal[]
+  user   User   @relation(fields: [userId], references: [id])
+  userId String
+  Deck   Deck   @relation(fields: [deckId], references: [id])
+  deckId String
+
+  flashcardRehearsals FlashcardRehearsal[]
+  deckRehearsals      DeckRehearsal[]
 }
 
 // Many-to-many between Rehearsal and Flashcard
@@ -182,9 +185,10 @@ model Collection {
   id   String @id @default(cuid())
   name String @unique
 
-  user           User             @relation(fields: [userId], references: [id])
-  userId         String
-  CollectionDeck CollectionDeck[]
+  user   User   @relation(fields: [userId], references: [id])
+  userId String
+
+  collectionDecks CollectionDeck[]
 
   @@unique([name, userId]) // A user's collections must have unique names
 }
@@ -214,9 +218,9 @@ model Roadmap {
   name        String
   description String?
 
-  course              Course?
-  RoadmapStep         RoadmapStep[]
-  RoadmapUserProgress RoadmapUserProgress[]
+  course                Course?
+  roadmapSteps          RoadmapStep[]
+  roadmapUserProgresses RoadmapUserProgress[]
 }
 
 model RoadmapStep {

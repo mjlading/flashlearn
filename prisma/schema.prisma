@@ -48,7 +48,10 @@ model User {
   accounts      Account[]
   sessions      Session[]
 
-  decks Deck[]
+  decks             Deck[]
+  BookmarkedDeck    BookmarkedDeck[]
+  DeckRating        DeckRating[]
+  UserDeckKnowledge UserDeckKnowledge[]
 }
 
 model VerificationToken {
@@ -72,8 +75,45 @@ model Deck {
   userId String
   user   User   @relation(fields: [userId], references: [id])
 
-  subjectName String
-  subject     Subject @relation(fields: [subjectName], references: [name])
+  subjectName       String
+  subject           Subject             @relation(fields: [subjectName], references: [name])
+  BookmarkedDeck    BookmarkedDeck[]
+  DeckRating        DeckRating[]
+  UserDeckKnowledge UserDeckKnowledge[]
+}
+
+// Many-to-many between User and Deck
+model BookmarkedDeck {
+  user   User   @relation(fields: [userId], references: [id])
+  userId String
+  deck   Deck   @relation(fields: [deckId], references: [id])
+  deckId String
+
+  @@id([userId, deckId])
+}
+
+// Many-to-many between User and Deck
+model DeckRating {
+  stars Int
+
+  user   User   @relation(fields: [userId], references: [id])
+  userId String
+  deck   Deck   @relation(fields: [deckId], references: [id])
+  deckId String
+
+  @@id([userId, deckId])
+}
+
+// Many-to-many between User and Deck
+model UserDeckKnowledge {
+  knowledgeLevel Int
+
+  user   User   @relation(fields: [userId], references: [id])
+  userId String
+  deck   Deck   @relation(fields: [deckId], references: [id])
+  deckId String
+
+  @@id([userId, deckId])
 }
 
 model Subject {

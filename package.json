@@ -9,8 +9,12 @@
     "start-test":"npm run build-test && next start",
     "start": "next start",
     "lint": "next lint",
-    "test-dev": "start-server-and-test start-test 3000 test",
-    "test": "vitest"
+
+    "test-dev": "start-server-and-test start-test 3000 vitest-passthrough",
+    "test": "start-server-and-vitest",
+
+    "start-server-and-vitest": "start-server-and-test start 3000 vitest-passthrough",
+    "vitest-passthrough":"vitest"
   },
   "dependencies": {
     "@auth/prisma-adapter": "^1.1.0",

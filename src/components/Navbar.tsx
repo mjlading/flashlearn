@@ -50,8 +50,8 @@ function ProfileDropdownMenu({ user }: { user: User }) {
               <LayoutDashboard className="mr-2 h-4 w-4" />
               <span>Dashbord</span>
             </DropdownMenuItem>
-            <DropDownMenuItemThemeToggle />
           </Link>
+          <DropDownMenuItemThemeToggle />
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropDownMenuItemSignOut />

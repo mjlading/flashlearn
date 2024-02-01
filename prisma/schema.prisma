@@ -11,6 +11,7 @@ datasource db {
   directUrl = env("DIRECT_URL")
 }
 
+// Entities used for Auth.js
 model Account {
   id                String  @id @default(cuid())
   userId            String
@@ -46,6 +47,8 @@ model User {
   image         String?
   accounts      Account[]
   sessions      Session[]
+
+  decks Deck[]
 }
 
 model VerificationToken {
@@ -54,4 +57,27 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
+}
+
+// Entities defined from our own ER-diagram
+model Deck {
+  id            String   @id @default(cuid())
+  name          String
+  isPublic      Boolean  @default(false)
+  averageRating Float
+  academicLevel Int
+  dateCreated   DateTime @default(now())
+  dateChanged   DateTime @updatedAt
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  subjectName String
+  subject     Subject @relation(fields: [subjectName], references: [name])
+}
+
+model Subject {
+  name String @id
+
+  decks Deck[]
 }

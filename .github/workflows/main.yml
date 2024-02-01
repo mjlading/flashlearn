@@ -22,13 +22,14 @@ jobs:
       AUTH_GITHUB_ID: ${{ secrets.AUTH_GITHUB_ID }}
       AUTH_GITHUB_SECRET: ${{ secrets.AUTH_GITHUB_SECRET }}
 
-
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
     - name: Use Node.js 21.5.0
-      uses: actions/setup-node@v2
+      uses: actions/setup-node@v3
       with:
         node-version: '21.5.0'
     - run: npm ci
     - run: npm run build
     - run: npm test
+
+  

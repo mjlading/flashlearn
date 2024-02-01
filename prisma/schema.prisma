@@ -196,3 +196,21 @@ model CollectionDeck {
 
   @@id([deckId, collectionId])
 }
+
+model Course {
+  id          String  @id @default(cuid())
+  name        String
+  courseCode  String?
+  institution String?
+
+  roadmap   Roadmap @relation(fields: [roadmapId], references: [id])
+  roadmapId String  @unique
+}
+
+model Roadmap {
+  id          String  @id @default(cuid())
+  name        String
+  description String?
+
+  course Course?
+}

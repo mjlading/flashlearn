@@ -11,7 +11,7 @@
     "lint": "next lint",
 
     "test-dev": "start-server-and-test start-test 3000 vitest-passthrough",
-    "test": "start-server-and-vitest",
+    "test": "npm run start-server-and-vitest",
 
     "start-server-and-vitest": "start-server-and-test start 3000 vitest-passthrough",
     "vitest-passthrough":"vitest"

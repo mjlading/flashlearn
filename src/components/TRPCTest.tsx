@@ -3,8 +3,8 @@
 import { trpc } from "@/app/api/trpc/client";
 
 export default function TRPCTest() {
-  const helloTest = trpc.hello.useQuery();
-  const prismaTest = trpc.helloPrisma.useQuery();
+  const helloTest = trpc.test.hello.useQuery();
+  const prismaTest = trpc.test.helloPrisma.useQuery();
 
   return (
     <>

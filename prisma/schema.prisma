@@ -48,12 +48,13 @@ model User {
   accounts      Account[]
   sessions      Session[]
 
-  decks             Deck[]
-  BookmarkedDeck    BookmarkedDeck[]
-  DeckRating        DeckRating[]
-  UserDeckKnowledge UserDeckKnowledge[]
-  Rehearsal         Rehearsal[]
-  Collection        Collection[]
+  decks               Deck[]
+  BookmarkedDeck      BookmarkedDeck[]
+  DeckRating          DeckRating[]
+  UserDeckKnowledge   UserDeckKnowledge[]
+  Rehearsal           Rehearsal[]
+  Collection          Collection[]
+  RoadmapUserProgress RoadmapUserProgress[]
 }
 
 model VerificationToken {
@@ -86,6 +87,7 @@ model Deck {
   Rehearsal         Rehearsal[]
   DeckRehearsal     DeckRehearsal[]
   CollectionDeck    CollectionDeck[]
+  RoadmapStep       RoadmapStep[]
 }
 
 // Many-to-many between User and Deck
@@ -212,5 +214,33 @@ model Roadmap {
   name        String
   description String?
 
-  course Course?
+  course              Course?
+  RoadmapStep         RoadmapStep[]
+  RoadmapUserProgress RoadmapUserProgress[]
+}
+
+model RoadmapStep {
+  name             String
+  description      String?
+  recommendedLinks String[]
+  sequenceOrder    Int      @default(autoincrement())
+
+  deck      Deck    @relation(fields: [deckId], references: [id])
+  deckId    String
+  roadmap   Roadmap @relation(fields: [roadmapId], references: [id])
+  roadmapId String
+
+  @@id([deckId, roadmapId])
+}
+
+// Many-to-many between Roadmap and User
+model RoadmapUserProgress {
+  currentStep Int @default(0)
+
+  roadmap   Roadmap @relation(fields: [roadmapId], references: [id])
+  roadmapId String
+  user      User    @relation(fields: [userId], references: [id])
+  userId    String
+
+  @@id([roadmapId, userId])
 }

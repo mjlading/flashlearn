@@ -8,7 +8,7 @@ test("gunnartest mirrors entered string", async () => {
 });
 
 test("gunnartest mirrors entered string", async () => {
-  const caller = appRouter.createCaller({ session: null });
+  const caller = appRouter.createCaller({ headers: Headers.prototype, session: null });
 
   expect(await caller.test.hello()).toBe("Hello from tRPC!");
 });

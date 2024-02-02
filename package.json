@@ -3,13 +3,16 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
     "build": "prisma generate && prisma migrate deploy && next build",
     "build-test":"next build",
-    "start-test":"npm run build-test && next start",
+
+    "start-test":"npm run build && next dev",
     "start": "next start",
+    "dev": "next dev",
+
     "lint": "next lint",
 
+    "test-dev-quick":"start-server-and-test dev 3000 vitest-passthrough",
     "test-dev": "start-server-and-test start-test 3000 vitest-passthrough",
     "test": "npm run start-server-and-vitest",
 

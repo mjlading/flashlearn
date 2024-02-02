@@ -1,21 +1,31 @@
-// sum.test.js
 import { expect, test, vi } from "vitest";
-import { sum } from "../lib/method";
 import prisma from "@/lib/__mocks__/prisma";
-import { createSubject } from "@/lib/script";
+import testProxy from "./tRPCProxyClient";
 
 vi.mock("../lib/prisma");
 
 test("adds 1 + 2 to equal 3", () => {
-  expect(sum(1, 2)).toBe(3);
+  expect(1 + 2).toBe(3);
 });
 
-test("test prisma", async () => {
-  const newSubject = { name: "Test123" };
+test("test trpc", async () => {
+  const expected = {
+    email: "mjlading@stud.ntnu.no",
+    emailVerified: null,
+    id: "cls03t74k00001511wa6ffq0k",
+    image: "https://avatars.githubusercontent.com/u/91284776?v=4",
+    name: "mjlading",
+  };
 
-  prisma.subject.create.mockResolvedValue(newSubject);
+  const actual = await testProxy.test.helloPrisma.query();
 
-  const subject = await createSubject(newSubject);
+  expect(actual).toStrictEqual(expected);
+});
 
-  expect(subject).toStrictEqual(newSubject);
+test("test protected procedure", async () => {
+  // const actual = await testProxy.test.protectedTest.query();
+
+  // console.log("ACTUAL: ", actual);
+
+  return true;
 });

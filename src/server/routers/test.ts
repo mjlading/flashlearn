@@ -18,9 +18,5 @@ export const testRouter = router({
     return { mirror: input };
   }),
 
-  protectedTest: protectedProcedure.query(({ ctx }) => {
-    return {
-      secret: "Protected Message",
-    };
-  }),
+  protectedTest: protectedProcedure.query(({ ctx }) => "Protected message"),
 });

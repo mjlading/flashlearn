@@ -7,7 +7,7 @@ export default function TRPCProtectedTest() {
 
   return (
     <>
-      <pre>{protectedTest.data?.secret || "Not authorized"}</pre>
+      <pre>{protectedTest.data || "Not authorized"}</pre>
     </>
   );
 }

@@ -19,7 +19,11 @@ export default function Sidebar() {
       href: "/dashboard",
       icon: <LayoutDashboard size={20} />,
     },
-    { text: "Decks", href: "/dashboard/decks", icon: <Layers3 size={20} /> },
+    {
+      text: "Studiekort",
+      href: "/dashboard/decks",
+      icon: <Layers3 size={20} />,
+    },
     {
       text: "Emner",
       href: "/dashboard/courses",

@@ -1,5 +1,5 @@
 import prisma from "@/db";
-import { publicProcedure, router } from "../trpc";
+import { publicProcedure, protectedProcedure, router } from "../trpc";
 import z from "zod";
 
 // This router is temporary and is used by the dev team for testing purposes
@@ -16,5 +16,12 @@ export const testRouter = router({
 
   gunnartest: publicProcedure.input(z.string()).query(({ input }) => {
     return { mirror: input };
+  }),
+
+  protectedTest: protectedProcedure.query((opts) => {
+    console.log("SESSIONs:: ", JSON.stringify(opts.ctx.session, null, 2));
+    return {
+      secret: "Protected Message",
+    };
   }),
 });

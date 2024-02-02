@@ -1,6 +1,7 @@
 import { auth } from "@/auth";
 import AuthButton from "@/components/AuthButton";
 import Test from "@/components/ClientSessionTest";
+import TRPCProtectedTest from "@/components/TRPCProtectedTest";
 import TRPCTest from "@/components/TRPCTest";
 
 export default async function Home() {
@@ -19,6 +20,9 @@ export default async function Home() {
       <br />
       <h1>tRPC Test:</h1>
       <TRPCTest />
+      <br />
+      <h1>tRPC Protected test:</h1>
+      <TRPCProtectedTest />
       <AuthButton />
     </>
   );

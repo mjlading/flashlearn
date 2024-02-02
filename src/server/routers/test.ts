@@ -1,4 +1,4 @@
-import prisma from "@/db";
+import prisma from "@/lib/prisma";
 import { publicProcedure, protectedProcedure, router } from "../trpc";
 import z from "zod";
 

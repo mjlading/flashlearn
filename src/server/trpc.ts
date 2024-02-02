@@ -17,8 +17,8 @@ export const createTRPCContext = async (opts: { headers: Headers }) => {
   const session = await auth();
 
   return {
-    session,
-    ...opts,
+    user: session?.user,
+    // ...opts,
   };
 };
 
@@ -28,14 +28,14 @@ export const router = t.router;
 export const publicProcedure = t.procedure;
 
 const isAuthed = t.middleware(async ({ ctx, next }) => {
-  if (!ctx.session || !ctx.session.user) {
+  if (!ctx.user) {
     throw new TRPCError({ code: "UNAUTHORIZED" });
   }
 
   return next({
     ctx: {
       // infers the `session` as non-nullable
-      session: { ...ctx.session, user: ctx.session.user },
+      session: { user: ctx.user },
     },
   });
 });

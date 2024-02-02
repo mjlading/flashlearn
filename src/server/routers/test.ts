@@ -18,8 +18,7 @@ export const testRouter = router({
     return { mirror: input };
   }),
 
-  protectedTest: protectedProcedure.query((opts) => {
-    console.log("SESSIONs:: ", JSON.stringify(opts.ctx.session, null, 2));
+  protectedTest: protectedProcedure.query(({ ctx }) => {
     return {
       secret: "Protected Message",
     };

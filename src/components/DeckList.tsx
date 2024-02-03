@@ -5,6 +5,7 @@ import { Skeleton } from "./ui/skeleton";
 import { Button } from "./ui/button";
 import { Layers3 } from "lucide-react";
 import DeckCard from "./DeckCard";
+import AddDeckButton from "./AddDeckButton";
 
 export default function DeckList() {
   const decks = trpc.user.getDecks.useQuery({
@@ -37,9 +38,7 @@ export default function DeckList() {
         <p className="text-muted-foreground">
           Lag et sett for å komme i gang med læringen din!
         </p>
-        <Button size="lg" className="my-5">
-          Lag et sett
-        </Button>
+        <AddDeckButton size="lg" className="my-5" />
         <Layers3 size={80} opacity="0.2" />
       </div>
     );

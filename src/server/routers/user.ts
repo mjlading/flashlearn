@@ -1,4 +1,3 @@
-import prisma from "@/lib/prisma";
 import { protectedProcedure, publicProcedure, router } from "../trpc";
 import z from "zod";
 
@@ -20,17 +19,15 @@ export const userRouter = router({
         pageSize: z.number().min(1),
       })
     )
-    .query(async ({ ctx, input }) => {
+    .query(({ ctx, input }) => {
       const skip = (input.page - 1) * input.pageSize;
 
-      const decks = await prisma.deck.findMany({
+      return ctx.prisma.deck.findMany({
         where: {
-          userId: ctx.user.id,
+          userId: ctx.session.user.id,
         },
         take: input.pageSize,
         skip: skip,
       });
-
-      return decks;
     }),
 });

@@ -1,7 +1,12 @@
+/**
+ * This code is adapted from the T3 stack.
+ * Source: https://create.t3.gg/en/usage/trpc#-pagesapitrpctrpcts
+ */
+
 import { fetchRequestHandler } from "@trpc/server/adapters/fetch";
 import { appRouter } from "@/server/routers";
 import { createTRPCContext } from "@/server/trpc";
-import { NextRequest } from "next/server";
+import { type NextRequest } from "next/server";
 
 /**
  * This wraps the `createTRPCContext` helper and provides the required context for the tRPC API when

@@ -1,4 +1,8 @@
-import { type AppRouter } from "@/server/routers/index";
+/**
+ * Import api from this file to use the tRPC API in client components.
+ */
+
+import { type AppRouter } from "@/server/routers";
 import { createTRPCReact } from "@trpc/react-query";
 
-export const trpc = createTRPCReact<AppRouter>({});
+export const api = createTRPCReact<AppRouter>();

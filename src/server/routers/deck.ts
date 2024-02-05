@@ -8,6 +8,15 @@ const createDeck = z.object({
   averageRating: z.number(),
   academicLevel: z.number(),
   subjectName: z.string(),
+  flashcards: z
+    .array(
+      z.object({
+        front: z.string(),
+        back: z.string(),
+        tag: z.string().optional(),
+      })
+    )
+    .optional(),
 });
 
 export const deckRouter = router({
@@ -18,6 +27,9 @@ export const deckRouter = router({
         data: {
           ...input,
           userId: ctx.session.user.id,
+          flashcards: {
+            create: input.flashcards,
+          },
         },
       });
       return newDeck;

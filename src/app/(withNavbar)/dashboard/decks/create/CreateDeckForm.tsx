@@ -1,5 +1,6 @@
 "use client";
 
+import { api } from "@/app/api/trpc/client";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -16,8 +17,10 @@ import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { z } from "zod";
 
 const formSchema = z.object({
@@ -55,6 +58,9 @@ export default function CreateDeckForm() {
     name: "flashcards",
   });
 
+  const createDeckMutation = api.deck.createDeck.useMutation();
+  const router = useRouter();
+
   const lastFlashcardFront = form.watch(
     `flashcards.${fields.length - 1}.front`
   );
@@ -69,12 +75,43 @@ export default function CreateDeckForm() {
   function onSubmit(values: z.infer<typeof formSchema>) {
     // Remove last flashcard which is always empty
     const flashcardsWithContent = form.getValues("flashcards").slice(0, -1);
+
     const processedValues = {
       ...values,
       flashcards: flashcardsWithContent,
+      averageRating: 1,
+      academicLevel: 1,
+      isPublic: !values.private,
+      subjectName: "Biologi",
     };
 
-    alert(JSON.stringify(processedValues, null, 2));
+    createDeckMutation
+      .mutateAsync(processedValues)
+      .then(() => {
+        // Handle success
+        router.push("/dashboard/decks");
+
+        toast.success(`${values.name} er lagret`, {
+          action: {
+            label: "Øv nå",
+            onClick: () => {
+              // TODO: Navigate to practice page
+            },
+          },
+        });
+      })
+      .catch(() => {
+        // Handle error
+        toast.error("Noe gikk galt", {
+          description: "Settet ble ikke lagret",
+          action: {
+            label: "Prøv igjen",
+            onClick: () => {
+              onSubmit(form.getValues());
+            },
+          },
+        });
+      });
   }
 
   return (
@@ -179,7 +216,11 @@ export default function CreateDeckForm() {
             <span>{form.watch("name")}</span>
             <Separator orientation="vertical" className="h-[20px]" />
             <span>{fields.length - 1} Studiekort</span>
-            <Button size="lg" type="submit">
+            <Button
+              size="lg"
+              type="submit"
+              disabled={createDeckMutation.isLoading}
+            >
               Lagre sett
             </Button>
           </div>

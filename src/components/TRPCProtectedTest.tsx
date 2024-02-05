@@ -1,9 +1,9 @@
 "use client";
 
-import { trpc } from "@/app/api/trpc/client";
+import { api } from "@/app/api/trpc/client";
 
 export default function TRPCProtectedTest() {
-  const protectedTest = trpc.test.protectedTest.useQuery();
+  const protectedTest = api.test.protectedTest.useQuery();
 
   return (
     <>

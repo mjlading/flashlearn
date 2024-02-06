@@ -18,9 +18,8 @@ import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { revalidatePath } from "next/cache";
 import { useRouter } from "next/navigation";
-import { cache, useEffect } from "react";
+import { useEffect } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -78,13 +77,7 @@ export default function CreateDeckForm() {
     },
     onError() {
       toast.error("Noe gikk galt", {
-        description: "Settet ble ikke lagret",
-        action: {
-          label: "Prøv igjen",
-          onClick: () => {
-            onSubmit(form.getValues());
-          },
-        },
+        description: "Settet ble ikke lagret. Vennligst prøv igjen.",
       });
     },
   });

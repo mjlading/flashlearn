@@ -19,15 +19,17 @@ export default async function DecksPage() {
         <NewDeckButton />
       </div>
       <div>
-        <Tabs defaultValue="recent" className="w-[400px]">
-          <TabsList className="grid w-full grid-cols-3">
-            <TabsTrigger value="recent">
-              Nylige ({initialDecks.totalCount})
-            </TabsTrigger>
-            <TabsTrigger value="myDecks">Mine sett</TabsTrigger>
-            <TabsTrigger value="bookmarked">Bokmerkede</TabsTrigger>
-          </TabsList>
-        </Tabs>
+        {initialDecks.decks.length > 0 && (
+          <Tabs defaultValue="recent" className="w-[400px]">
+            <TabsList className="grid w-full grid-cols-3">
+              <TabsTrigger value="recent">
+                Nylige ({initialDecks.totalCount})
+              </TabsTrigger>
+              <TabsTrigger value="myDecks">Mine sett</TabsTrigger>
+              <TabsTrigger value="bookmarked">Bokmerkede</TabsTrigger>
+            </TabsList>
+          </Tabs>
+        )}
       </div>
       <DeckList initialDecks={initialDecks.decks} />
     </div>

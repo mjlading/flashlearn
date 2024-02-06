@@ -131,13 +131,14 @@ model Subject {
   decks Deck[]
 }
 
+// On deck deletion, delete all related flashcards and rehearsals
 model Flashcard {
   id    String  @id @default(cuid())
   front String
   back  String
   tag   String?
 
-  deck   Deck   @relation(fields: [deckId], references: [id])
+  deck   Deck   @relation(fields: [deckId], references: [id], onDelete: Cascade)
   deckId String
 
   flashcardRehearsals FlashcardRehearsal[]

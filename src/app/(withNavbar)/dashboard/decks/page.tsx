@@ -1,11 +1,16 @@
 import DeckList from "@/components/DeckList";
 import NewDeckButton from "@/components/NewDeckButton";
-import { fetchDecks } from "./actions";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { unstable_noStore } from "next/cache";
+import { fetchDecks } from "./actions";
 
 export default async function DecksPage() {
-  unstable_noStore(); // Disable caching for this page so it always fetches the latest data
-  const initialDecks = await fetchDecks({});
+  unstable_noStore(); // Disable caching for this page
+
+  const initialDecks = await fetchDecks({
+    sortBy: "dateCreated",
+    sortOrder: "desc",
+  });
 
   return (
     <div className="flex flex-col space-y-7 h-full">
@@ -13,7 +18,18 @@ export default async function DecksPage() {
         <h1 className="text-3xl font-bold">Studiekort</h1>
         <NewDeckButton />
       </div>
-      <DeckList initialDecks={initialDecks} />
+      <div>
+        <Tabs defaultValue="recent" className="w-[400px]">
+          <TabsList className="grid w-full grid-cols-3">
+            <TabsTrigger value="recent">
+              Nylige ({initialDecks.totalCount})
+            </TabsTrigger>
+            <TabsTrigger value="myDecks">Mine sett</TabsTrigger>
+            <TabsTrigger value="bookmarked">Bokmerkede</TabsTrigger>
+          </TabsList>
+        </Tabs>
+      </div>
+      <DeckList initialDecks={initialDecks.decks} />
     </div>
   );
 }

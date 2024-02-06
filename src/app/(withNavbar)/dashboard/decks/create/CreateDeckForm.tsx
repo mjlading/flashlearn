@@ -1,6 +1,7 @@
 "use client";
 
 import { api } from "@/app/api/trpc/client";
+import { LoadingSpinner } from "@/components/LoadingSpinner";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -17,8 +18,9 @@ import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { revalidatePath } from "next/cache";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { cache, useEffect } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -58,8 +60,34 @@ export default function CreateDeckForm() {
     name: "flashcards",
   });
 
-  const createDeckMutation = api.deck.createDeck.useMutation();
   const router = useRouter();
+
+  const createDeckMutation = api.deck.createDeck.useMutation({
+    onSuccess() {
+      router.push("/dashboard/decks");
+      router.refresh(); // Fetch and display the new deck
+
+      toast.success(`Settet '${form.getValues("name")}' er lagret`, {
+        action: {
+          label: "Øv nå",
+          onClick: () => {
+            // TODO: Navigate to practice page
+          },
+        },
+      });
+    },
+    onError() {
+      toast.error("Noe gikk galt", {
+        description: "Settet ble ikke lagret",
+        action: {
+          label: "Prøv igjen",
+          onClick: () => {
+            onSubmit(form.getValues());
+          },
+        },
+      });
+    },
+  });
 
   const lastFlashcardFront = form.watch(
     `flashcards.${fields.length - 1}.front`
@@ -85,33 +113,7 @@ export default function CreateDeckForm() {
       subjectName: "Biologi",
     };
 
-    createDeckMutation
-      .mutateAsync(processedValues)
-      .then(() => {
-        // Handle success
-        router.push("/dashboard/decks");
-
-        toast.success(`${values.name} er lagret`, {
-          action: {
-            label: "Øv nå",
-            onClick: () => {
-              // TODO: Navigate to practice page
-            },
-          },
-        });
-      })
-      .catch(() => {
-        // Handle error
-        toast.error("Noe gikk galt", {
-          description: "Settet ble ikke lagret",
-          action: {
-            label: "Prøv igjen",
-            onClick: () => {
-              onSubmit(form.getValues());
-            },
-          },
-        });
-      });
+    createDeckMutation.mutate(processedValues);
   }
 
   return (
@@ -221,6 +223,9 @@ export default function CreateDeckForm() {
               type="submit"
               disabled={createDeckMutation.isLoading}
             >
+              {createDeckMutation.isLoading && (
+                <LoadingSpinner className="mr-2" size={20} />
+              )}
               Lagre sett
             </Button>
           </div>

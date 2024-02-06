@@ -22,7 +22,7 @@ export default function RootLayout({
       <body className={cn("min-h-screen antialiased", inter.className)}>
         <Providers>
           {children}
-          <Toaster richColors="true" />
+          <Toaster richColors={true} />
         </Providers>
       </body>
     </html>

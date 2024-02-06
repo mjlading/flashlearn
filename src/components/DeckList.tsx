@@ -1,14 +1,14 @@
 "use client";
 
+import { fetchDecks } from "@/app/(withNavbar)/dashboard/decks/actions";
+import { SerializedStateDates } from "@/lib/utils";
+import Prisma from "@prisma/client";
 import { Layers3 } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useInView } from "react-intersection-observer";
-import NewDeckButton from "./NewDeckButton";
 import DeckCard from "./DeckCard";
+import NewDeckButton from "./NewDeckButton";
 import { Skeleton } from "./ui/skeleton";
-import Prisma from "@prisma/client";
-import { fetchDecks } from "@/app/(withNavbar)/dashboard/decks/actions";
-import { SerializedStateDates } from "@/lib/utils";
 
 interface DeckListProps {
   // Convert types dateCreated and dateChanged from Date to string
@@ -32,8 +32,10 @@ interface DeckListProps {
  */
 export default function DeckList({ initialDecks }: DeckListProps) {
   const [decks, setDecks] = useState(initialDecks);
-  const [page, setPage] = useState(1);
-  const [inViewRef, inView] = useInView();
+  const page = useRef(1);
+  const [inViewRef, inView] = useInView({
+    threshold: 0,
+  });
   const [moreDecksToFetch, setMoreDecksToFetch] = useState(true);
 
   /**
@@ -41,14 +43,14 @@ export default function DeckList({ initialDecks }: DeckListProps) {
    * If no more decks are returned, it sets moreDecksToFetch.current to false.
    */
   const loadMoreDecks = useCallback(async () => {
-    const nextPage = page + 1;
+    const nextPage = page.current + 1;
     const newDecks = await fetchDecks({
       page: nextPage,
     });
 
-    if (newDecks?.length !== 0) {
-      setPage(nextPage);
-      setDecks((prevDecks) => [...prevDecks, ...newDecks]);
+    if (newDecks.decks.length !== 0) {
+      setDecks((prevDecks) => [...prevDecks, ...newDecks.decks]);
+      page.current = nextPage;
     } else {
       // No more decks to fetch
       setMoreDecksToFetch(false);

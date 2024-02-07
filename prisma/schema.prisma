@@ -74,6 +74,7 @@ model Deck {
   academicLevel Int
   dateCreated   DateTime @default(now())
   dateChanged   DateTime @updatedAt
+  numFlashcards Int      @default(0)
 
   userId String
   user   User   @relation(fields: [userId], references: [id])

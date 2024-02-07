@@ -1,6 +1,6 @@
 describe("auth flow test", () => {
   beforeEach(() => {
-    cy.visit("http://localhost:3000/");
+    cy.visit("/");
   });
 
   it("login button is showing in home page when unauthenticated", () => {
@@ -14,14 +14,10 @@ describe("auth flow test", () => {
 
 describe("middleware test", () => {
   it("should redirect to login page when accessing dashboard", () => {
-    cy.visit("http://localhost:3000/dashboard")
-      .url()
-      .should("include", "auth/signIn");
+    cy.visit("/dashboard").url().should("include", "auth/signIn");
   });
 
   it("should redirect to login page when accessing page within dashboard", () => {
-    cy.visit("http://localhost:3000/dashboard/decks/create")
-      .url()
-      .should("include", "auth/signIn");
+    cy.visit("/dashboard/decks/create").url().should("include", "auth/signIn");
   });
 });

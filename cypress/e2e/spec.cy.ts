@@ -1,0 +1,27 @@
+describe("auth flow test", () => {
+  beforeEach(() => {
+    cy.visit("http://localhost:3000/");
+  });
+
+  it("login button is showing in home page when unauthenticated", () => {
+    cy.contains("Logg inn");
+  });
+
+  it("navigates to login screen when clicking login button", () => {
+    cy.contains("Logg inn").click().url().should("include", "/auth/signIn");
+  });
+});
+
+describe("middleware test", () => {
+  it("should redirect to login page when accessing dashboard", () => {
+    cy.visit("http://localhost:3000/dashboard")
+      .url()
+      .should("include", "auth/signIn");
+  });
+
+  it("should redirect to login page when accessing page within dashboard", () => {
+    cy.visit("http://localhost:3000/dashboard/decks/create")
+      .url()
+      .should("include", "auth/signIn");
+  });
+});

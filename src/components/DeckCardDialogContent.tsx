@@ -16,10 +16,14 @@ import {
 } from "./ui/tooltip";
 import { Tabs, TabsList, TabsTrigger } from "./ui/tabs";
 import { Label } from "./ui/label";
-import { Button } from "./ui/button";
+import { Button, buttonVariants } from "./ui/button";
 import { dateDifferenceFromNow } from "@/lib/utils";
+import Link from "next/link";
+import { useRef, useState } from "react";
 
 export default function DeckCardDialogContent({ deck }: DeckCardProps) {
+  const [modeSelected, setModeSelected] = useState("write");
+
   return (
     <DialogContent>
       <DialogHeader>
@@ -71,7 +75,10 @@ export default function DeckCardDialogContent({ deck }: DeckCardProps) {
 
       {/* Rehearsal Mode Selection */}
       <div className="flex flex-col gap-4 py-4">
-        <Tabs defaultValue="write">
+        <Tabs
+          value={modeSelected}
+          onValueChange={(newValue) => setModeSelected(newValue)}
+        >
           <Label htmlFor="rehearsal-mode">Øvemodus</Label>
           <TabsList className="grid w-full grid-cols-3 mt-1">
             <TabsTrigger value="visual">Visuell</TabsTrigger>
@@ -81,7 +88,15 @@ export default function DeckCardDialogContent({ deck }: DeckCardProps) {
         </Tabs>
       </div>
       <DialogFooter>
-        <Button className="w-full">Start</Button>
+        <Link
+          href={`/decks/${deck.id}/rehearsal?mode=${modeSelected}`}
+          className={buttonVariants({
+            size: "lg",
+            className: "w-full",
+          })}
+        >
+          Start
+        </Link>
       </DialogFooter>
     </DialogContent>
   );

@@ -8,6 +8,7 @@ const createDeck = z.object({
   averageRating: z.number(),
   academicLevel: z.number(),
   subjectName: z.string(),
+  numFlashcards: z.number(),
   flashcards: z
     .array(
       z.object({

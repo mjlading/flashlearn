@@ -104,6 +104,7 @@ export default function CreateDeckForm() {
       academicLevel: 1,
       isPublic: !values.private,
       subjectName: "Biologi",
+      numFlashcards: flashcardsWithContent.length,
     };
 
     createDeckMutation.mutate(processedValues);

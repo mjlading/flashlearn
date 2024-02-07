@@ -9,6 +9,7 @@ import { useInView } from "react-intersection-observer";
 import DeckCard from "./DeckCard";
 import NewDeckButton from "./NewDeckButton";
 import { Skeleton } from "./ui/skeleton";
+import { Dialog, DialogContent } from "./ui/dialog";
 
 interface DeckListProps {
   // Convert types dateCreated and dateChanged from Date to string
@@ -77,19 +78,21 @@ export default function DeckList({ initialDecks }: DeckListProps) {
   }
 
   return (
-    <>
-      <div className="flex flex-col space-y-3 pb-12">
-        {decks.map((deck) => {
-          return <DeckCard key={deck.id} deck={deck} />;
-        })}
+    <div className="flex flex-col space-y-3 pb-12">
+      {decks.map((deck) => {
+        return (
+          <Dialog key={deck.id}>
+            <DeckCard deck={deck} />
+          </Dialog>
+        );
+      })}
 
-        {/* Loading skeleton */}
-        {moreDecksToFetch && (
-          <div ref={inViewRef}>
-            <Skeleton className="h-[10rem]" />
-          </div>
-        )}
-      </div>
-    </>
+      {/* Loading skeleton */}
+      {moreDecksToFetch && (
+        <div ref={inViewRef}>
+          <Skeleton className="h-[10rem]" />
+        </div>
+      )}
+    </div>
   );
 }

@@ -126,6 +126,7 @@ export default function CreateDeckForm() {
                   placeholder="Gi settet ditt et navn"
                   {...field}
                   className="max-w-[25rem]"
+                  maxLength={50}
                 />
               </FormControl>
               <FormMessage />

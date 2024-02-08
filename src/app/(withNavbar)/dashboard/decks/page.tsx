@@ -1,12 +1,9 @@
 import DeckList from "@/components/DeckList";
 import NewDeckButton from "@/components/NewDeckButton";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { unstable_noStore } from "next/cache";
 import { fetchDecks } from "./actions";
 
 export default async function DecksPage() {
-  unstable_noStore(); // Disable caching for this page
-
   const initialDecks = await fetchDecks({
     sortBy: "dateCreated",
     sortOrder: "desc",

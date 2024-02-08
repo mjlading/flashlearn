@@ -1,6 +1,6 @@
-import { protectedProcedure, publicProcedure, router } from "../trpc";
 import z from "zod";
-import type { Prisma } from "@prisma/client";
+import { protectedProcedure, publicProcedure, router } from "../trpc";
+import { TRPCError } from "@trpc/server";
 
 const createDeck = z.object({
   name: z.string(),
@@ -34,5 +34,38 @@ export const deckRouter = router({
         },
       });
       return newDeck;
+    }),
+  getDeckById: protectedProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        includeFlashcards: z.boolean().default(false),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      const deck = await ctx.prisma.deck.findUnique({
+        where: {
+          id: input.id,
+        },
+        include: {
+          flashcards: input.includeFlashcards,
+        },
+      });
+
+      if (!deck) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "Deck not found" });
+      }
+
+      // if deck is private and current user is not the owner
+      if (!deck.isPublic && deck.userId !== ctx.session.user.id) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "You don't have permission to access this resource",
+        });
+      }
+
+      console.log("RETURNING");
+
+      return deck;
     }),
 });

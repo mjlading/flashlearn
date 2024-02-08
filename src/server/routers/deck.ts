@@ -64,8 +64,6 @@ export const deckRouter = router({
         });
       }
 
-      console.log("RETURNING");
-
       return deck;
     }),
 });

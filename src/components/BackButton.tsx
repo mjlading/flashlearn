@@ -1,8 +1,8 @@
 "use client";
 
+import { ArrowLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Button, ButtonProps } from "./ui/button";
-import { ArrowLeft } from "lucide-react";
 import {
   Tooltip,
   TooltipContent,
@@ -10,7 +10,14 @@ import {
   TooltipTrigger,
 } from "./ui/tooltip";
 
-export default function BackButton({ ...props }: ButtonProps) {
+interface BackButtonProps extends ButtonProps {
+  tooltipText?: string;
+}
+
+export default function BackButton({
+  tooltipText = "Gå tilbake",
+  ...props
+}: BackButtonProps) {
   const router = useRouter();
   return (
     <TooltipProvider>
@@ -21,7 +28,7 @@ export default function BackButton({ ...props }: ButtonProps) {
           </Button>
         </TooltipTrigger>
         <TooltipContent>
-          <p>Gå tilbake</p>
+          <p>{tooltipText}</p>
         </TooltipContent>
       </Tooltip>
     </TooltipProvider>

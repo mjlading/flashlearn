@@ -1,5 +1,9 @@
+import { dateDifferenceFromNow } from "@/lib/utils";
 import { History, Layers3, Star } from "lucide-react";
+import Link from "next/link";
+import { useState } from "react";
 import { DeckCardProps } from "./DeckCard";
+import { buttonVariants } from "./ui/button";
 import {
   DialogContent,
   DialogDescription,
@@ -7,19 +11,15 @@ import {
   DialogHeader,
   DialogTitle,
 } from "./ui/dialog";
+import { Label } from "./ui/label";
 import { Separator } from "./ui/separator";
+import { Tabs, TabsList, TabsTrigger } from "./ui/tabs";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from "./ui/tooltip";
-import { Tabs, TabsList, TabsTrigger } from "./ui/tabs";
-import { Label } from "./ui/label";
-import { Button, buttonVariants } from "./ui/button";
-import { dateDifferenceFromNow } from "@/lib/utils";
-import Link from "next/link";
-import { useRef, useState } from "react";
 
 export default function DeckCardDialogContent({ deck }: DeckCardProps) {
   const [modeSelected, setModeSelected] = useState("write");
@@ -27,14 +27,14 @@ export default function DeckCardDialogContent({ deck }: DeckCardProps) {
   return (
     <DialogContent>
       <DialogHeader>
-        <DialogTitle>{deck.name}</DialogTitle>
+        <DialogTitle className="mb-2">{deck.name}</DialogTitle>
         <DialogDescription className="flex gap-4">
           {deck.subjectName}
           <Separator orientation="vertical" />
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
-                <div className="flex gap-2">
+                <div className="flex gap-2 items-center">
                   <Layers3 size={18} />
                   {deck.numFlashcards}
                 </div>
@@ -53,7 +53,7 @@ export default function DeckCardDialogContent({ deck }: DeckCardProps) {
           <TooltipTrigger asChild>
             <div className="flex w-fit gap-2 items-center text-muted-foreground text-sm">
               <Star size={18} />
-              <p>{deck.averageRating}/5</p>
+              <p>{deck.averageRating.toFixed(1)}</p>
             </div>
           </TooltipTrigger>
           <TooltipContent>

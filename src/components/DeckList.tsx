@@ -80,11 +80,7 @@ export default function DeckList({ initialDecks }: DeckListProps) {
   return (
     <div className="flex flex-col space-y-3 pb-12">
       {decks.map((deck) => {
-        return (
-          <Dialog key={deck.id}>
-            <DeckCard deck={deck} />
-          </Dialog>
-        );
+        return <DeckCard key={deck.id} deck={deck} />;
       })}
 
       {/* Loading skeleton */}

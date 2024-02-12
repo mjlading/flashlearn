@@ -1,15 +1,18 @@
 "use client";
 
-import { fetchDecks } from "@/app/(withNavbar)/dashboard/decks/actions";
+import {
+  FetchDecksParams,
+  fetchDecks,
+} from "@/app/(withNavbar)/dashboard/decks/actions";
 import { SerializedStateDates } from "@/lib/utils";
 import Prisma from "@prisma/client";
 import { Layers3 } from "lucide-react";
+import { useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useInView } from "react-intersection-observer";
 import DeckCard from "./DeckCard";
 import NewDeckButton from "./NewDeckButton";
 import { Skeleton } from "./ui/skeleton";
-import { Dialog, DialogContent } from "./ui/dialog";
 
 interface DeckListProps {
   // Convert types dateCreated and dateChanged from Date to string
@@ -17,6 +20,7 @@ interface DeckListProps {
     Prisma.Deck,
     "dateCreated" | "dateChanged"
   >[];
+  fetchParams: FetchDecksParams;
 }
 
 /**
@@ -31,13 +35,22 @@ interface DeckListProps {
  * - page: The current page number for fetching more decks.
  * - moreDecksToFetch: A reference indicating whether there are more decks to fetch.
  */
-export default function DeckList({ initialDecks }: DeckListProps) {
+export default function DeckList({ initialDecks, fetchParams }: DeckListProps) {
+  const searchParams = useSearchParams();
   const [decks, setDecks] = useState(initialDecks);
   const page = useRef(1);
   const [inViewRef, inView] = useInView({
     threshold: 0,
   });
-  const [moreDecksToFetch, setMoreDecksToFetch] = useState(true);
+  const [moreDecksToFetch, setMoreDecksToFetch] = useState(
+    initialDecks.length >= 10 // if initialDecks length is < 10, there are no more decks to fetch
+  );
+
+  // updates the list on deck deletion
+  useEffect(() => {
+    setDecks(initialDecks);
+    page.current = 1;
+  }, [initialDecks]);
 
   /**
    * loadMoreDecks function fetches the next page of decks and adds them to the current list of decks.
@@ -46,17 +59,18 @@ export default function DeckList({ initialDecks }: DeckListProps) {
   const loadMoreDecks = useCallback(async () => {
     const nextPage = page.current + 1;
     const newDecks = await fetchDecks({
+      ...fetchParams,
       page: nextPage,
     });
 
-    if (newDecks.decks.length !== 0) {
-      setDecks((prevDecks) => [...prevDecks, ...newDecks.decks]);
+    if (newDecks.length !== 0) {
+      setDecks((prevDecks) => [...prevDecks, ...newDecks]);
       page.current = nextPage;
-    } else {
-      // No more decks to fetch
+    }
+    if (newDecks.length < 10) {
       setMoreDecksToFetch(false);
     }
-  }, [page]);
+  }, [page, fetchParams]);
 
   useEffect(() => {
     if (inView) {
@@ -78,17 +92,19 @@ export default function DeckList({ initialDecks }: DeckListProps) {
   }
 
   return (
-    <div className="flex flex-col space-y-3 pb-12">
-      {decks.map((deck) => {
-        return <DeckCard key={deck.id} deck={deck} />;
-      })}
+    <>
+      <div className="flex flex-col space-y-3 pb-12">
+        {decks.map((deck) => {
+          return <DeckCard key={deck.id} deck={deck} />;
+        })}
 
-      {/* Loading skeleton */}
-      {moreDecksToFetch && (
-        <div ref={inViewRef}>
-          <Skeleton className="h-[10rem]" />
-        </div>
-      )}
-    </div>
+        {/* Loading more decks skeleton */}
+        {moreDecksToFetch && (
+          <div ref={inViewRef}>
+            <Skeleton className="h-[10rem]" />
+          </div>
+        )}
+      </div>
+    </>
   );
 }

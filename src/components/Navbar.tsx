@@ -87,7 +87,10 @@ export default function Navbar() {
       <nav className="flex items-center justify-between flex-wrap gap-2">
         <div>
           <Link className={LINK_STYLE} href="/">
-            Hjem
+            Flashlearn
+          </Link>
+          <Link className={LINK_STYLE} href="/explore">
+            Utforsk
           </Link>
         </div>
         <ProfileButton />

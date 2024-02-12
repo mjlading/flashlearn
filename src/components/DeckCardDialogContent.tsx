@@ -1,7 +1,10 @@
+"use client";
+
 import { dateDifferenceFromNow } from "@/lib/utils";
 import { History, Layers3, Star } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
+import BookmarkButton from "./BookmarkButton";
 import { DeckCardProps } from "./DeckCard";
 import { buttonVariants } from "./ui/button";
 import {
@@ -20,9 +23,12 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "./ui/tooltip";
+import { useSession } from "next-auth/react";
 
 export default function DeckCardDialogContent({ deck }: DeckCardProps) {
   const [modeSelected, setModeSelected] = useState("write");
+  const session = useSession();
+  const isUsersDeck = deck.userId === session?.data?.user.id;
 
   return (
     <DialogContent>
@@ -48,27 +54,34 @@ export default function DeckCardDialogContent({ deck }: DeckCardProps) {
       </DialogHeader>
 
       {/* Deck Information */}
-      <TooltipProvider>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <div className="flex w-fit gap-2 items-center text-muted-foreground text-sm">
-              <Star size={18} />
-              <p>{deck.averageRating.toFixed(1)}</p>
-            </div>
-          </TooltipTrigger>
-          <TooltipContent>
-            <p>Gjennomsnittlig vurdering</p>
-          </TooltipContent>
-        </Tooltip>
-      </TooltipProvider>
+      <div className="flex justify-between">
+        <div>
+          {/* Average star rating */}
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <div className="flex w-fit gap-2 items-center text-muted-foreground text-sm mb-2">
+                  <Star size={18} />
+                  <p>{deck.averageRating.toFixed(1)}</p>
+                </div>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Gjennomsnittlig vurdering</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
 
-      <div className="flex gap-2 items-center text-muted-foreground text-sm">
-        <History size={18} />
-        {deck.dateChanged.valueOf() === deck.dateCreated.valueOf() ? (
-          <p>Opprettet {dateDifferenceFromNow(deck.dateCreated)}</p>
-        ) : (
-          <p>Sist endret {dateDifferenceFromNow(deck.dateChanged)}</p>
-        )}
+          {/* Time ago created/changed */}
+          <div className="flex gap-2 items-center text-muted-foreground text-sm">
+            <History size={18} />
+            {deck.dateChanged.valueOf() === deck.dateCreated.valueOf() ? (
+              <p>Opprettet {dateDifferenceFromNow(deck.dateCreated)}</p>
+            ) : (
+              <p>Sist endret {dateDifferenceFromNow(deck.dateChanged)}</p>
+            )}
+          </div>
+        </div>
+        {!isUsersDeck && <BookmarkButton deckId={deck.id} />}
       </div>
 
       <Separator className="my-4" />

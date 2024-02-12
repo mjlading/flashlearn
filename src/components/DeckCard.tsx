@@ -1,3 +1,5 @@
+"use client";
+
 import type { SerializedStateDates } from "@/lib/utils";
 import Prisma from "@prisma/client";
 import { Dialog } from "@radix-ui/react-dialog";
@@ -5,13 +7,7 @@ import { Layers3, Star } from "lucide-react";
 import DeckCardDialogContent from "./DeckCardDialogContent";
 import DeleteDeckButton from "./DeleteDeckButton";
 import { Badge } from "./ui/badge";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "./ui/card";
+import { Card, CardFooter, CardHeader, CardTitle } from "./ui/card";
 import { DialogTrigger } from "./ui/dialog";
 import { Separator } from "./ui/separator";
 import {
@@ -20,6 +16,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "./ui/tooltip";
+import { useSession } from "next-auth/react";
 
 export interface DeckCardProps {
   // Convert types dateCreated and dateChanged from Date to string
@@ -27,6 +24,8 @@ export interface DeckCardProps {
 }
 
 export default function DeckCard({ deck }: DeckCardProps) {
+  const session = useSession();
+
   // Mock these for now
   const tags = [
     "Algebra",
@@ -43,52 +42,56 @@ export default function DeckCard({ deck }: DeckCardProps) {
       <Card className="text-left">
         <DialogTrigger asChild>
           <div className="cursor-pointer">
-            <CardHeader>
-              <CardTitle className="text-xl">{deck.name}</CardTitle>
-            </CardHeader>
-            <CardContent className="flex gap-4 text-muted-foreground text-sm">
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <div className="flex w-fit gap-2 items-center text-muted-foreground text-sm">
-                      <Star size={18} />
-                      <p>{deck.averageRating.toFixed(1)}</p>
-                    </div>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>Gjennomsnittlig vurdering</p>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-              <div>
-                <Separator orientation="vertical" />
+            <CardHeader className="pt-3 pb-3 flex flex-row items-center justify-between">
+              <CardTitle className="text-lg">{deck.name}</CardTitle>
+              <div className="flex gap-4 text-muted-foreground text-sm">
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <div className="flex gap-2 items-center">
+                        <Layers3 size={18} />
+                        {deck.numFlashcards}
+                      </div>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Antall studiekort</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+                <div>
+                  <Separator orientation="vertical" />
+                </div>
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <div className="flex w-fit gap-2 items-center text-muted-foreground text-sm">
+                        <Star size={18} />
+                        <p>{deck.averageRating.toFixed(1)}</p>
+                      </div>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Gjennomsnittlig vurdering</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
               </div>
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <div className="flex gap-2 items-center">
-                      <Layers3 size={18} />
-                      {deck.numFlashcards}
-                    </div>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>Antall studiekort</p>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-            </CardContent>
+            </CardHeader>
           </div>
         </DialogTrigger>
 
-        <CardFooter className="flex justify-between">
-          <div>
-            {tags.map((tag) => (
+        <CardFooter className="flex justify-between pt-0 pb-3">
+          {/* Tags */}
+          <div className="pb-1">
+            {tags.slice(0, 5).map((tag) => (
               <Badge className="mr-1" variant="secondary" key={tag}>
                 {tag}
               </Badge>
             ))}
           </div>
-          <DeleteDeckButton deckName={deck.name} />
+          {/* Delete button */}
+          {deck.userId === session?.data?.user.id && (
+            <DeleteDeckButton deck={deck} />
+          )}
         </CardFooter>
       </Card>
 

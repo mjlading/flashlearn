@@ -96,7 +96,7 @@ model Deck {
 model BookmarkedDeck {
   user   User   @relation(fields: [userId], references: [id])
   userId String
-  deck   Deck   @relation(fields: [deckId], references: [id])
+  deck   Deck   @relation(fields: [deckId], references: [id], onDelete: Cascade)
   deckId String
 
   @@id([userId, deckId])
@@ -108,7 +108,7 @@ model DeckRating {
 
   user   User   @relation(fields: [userId], references: [id])
   userId String
-  deck   Deck   @relation(fields: [deckId], references: [id])
+  deck   Deck   @relation(fields: [deckId], references: [id], onDelete: Cascade)
   deckId String
 
   @@id([userId, deckId])
@@ -120,7 +120,7 @@ model UserDeckKnowledge {
 
   user   User   @relation(fields: [userId], references: [id])
   userId String
-  deck   Deck   @relation(fields: [deckId], references: [id])
+  deck   Deck   @relation(fields: [deckId], references: [id], onDelete: Cascade)
   deckId String
 
   @@id([userId, deckId])

@@ -1,9 +1,15 @@
 "use client";
 
+import { api } from "@/app/api/trpc/client";
 import { AlertCircle, Trash } from "lucide-react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { toast } from "sonner";
+import { DeckCardProps } from "./DeckCard";
+import { LoadingSpinner } from "./LoadingSpinner";
 import { Button } from "./ui/button";
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
   DialogFooter,
@@ -12,15 +18,40 @@ import {
   DialogTrigger,
 } from "./ui/dialog";
 
-export default function DeleteDeckButton({ deckName }: { deckName: string }) {
+export default function DeleteDeckButton({ deck }: DeckCardProps) {
+  const router = useRouter();
+
+  const deleteDeckMutation = api.deck.deleteDeckById.useMutation({
+    onSuccess() {
+      router.refresh();
+
+      toast(
+        <span>
+          Settet <span className="font-semibold">{deck.name}</span> er slettet
+        </span>
+      );
+    },
+    onError() {
+      toast.error("Noe gikk galt", {
+        description: "Settet ble ikke slettet. Vennligst prøv igjen.",
+      });
+    },
+  });
+
+  function handleDeleteDeck() {
+    deleteDeckMutation.mutate(deck.id);
+  }
+
   return (
     <Dialog>
       <DialogTrigger asChild>
         <Button
+          size="icon"
           variant="ghost"
-          className="text-destructive hover:text-destructive"
+          className="text-destructive hover:text-destructive h-7"
         >
-          <Trash size={18} />
+          {deleteDeckMutation.isLoading && <LoadingSpinner size={16} />}
+          <Trash size={16} />
         </Button>
       </DialogTrigger>
 
@@ -28,7 +59,7 @@ export default function DeleteDeckButton({ deckName }: { deckName: string }) {
       <DialogContent>
         <DialogHeader>
           <DialogTitle>
-            Slett <span className="font-bold">{deckName}</span>
+            Slett <span className="font-bold">{deck.name}</span>
           </DialogTitle>
           <DialogDescription>
             <div className="flex items-center gap-2 text-destructive">
@@ -38,7 +69,11 @@ export default function DeleteDeckButton({ deckName }: { deckName: string }) {
           </DialogDescription>
         </DialogHeader>
         <DialogFooter>
-          <Button variant="destructive">Slett sett</Button>
+          <DialogClose asChild>
+            <Button onClick={handleDeleteDeck} variant="destructive">
+              Slett sett
+            </Button>
+          </DialogClose>
         </DialogFooter>
       </DialogContent>
     </Dialog>

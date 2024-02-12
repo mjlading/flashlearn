@@ -66,4 +66,88 @@ export const deckRouter = router({
 
       return deck;
     }),
+
+  getDecksBySubjectName: publicProcedure
+    .input(
+      z.object({
+        page: z.number().min(1),
+        pageSize: z.number().min(1),
+        sortBy: z.string().default("dateCreated"),
+        sortOrder: z.enum(["asc", "desc"]).default("desc"),
+        subjectName: z.string(),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      const { page, pageSize, sortBy, sortOrder, subjectName } = input;
+
+      const skip = (page - 1) * pageSize;
+
+      return await ctx.prisma.deck.findMany({
+        where: {
+          subjectName: input.subjectName,
+          isPublic: true,
+        },
+        take: pageSize,
+        skip: skip,
+        orderBy: {
+          [sortBy]: sortOrder,
+        },
+      });
+    }),
+  deleteDeckById: protectedProcedure
+    .input(z.string())
+    .mutation(async ({ ctx, input }) => {
+      const deckToDelete = await ctx.prisma.deck.findUnique({
+        where: {
+          id: input,
+        },
+      });
+
+      if (!deckToDelete) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Deck not found",
+        });
+      }
+
+      if (deckToDelete.userId !== ctx.session.user.id) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+        });
+      }
+
+      return await ctx.prisma.deck.delete({
+        where: {
+          id: input,
+        },
+      });
+    }),
+  countDecksByCategory: protectedProcedure
+    .input(
+      z.object({
+        category: z.enum(["bookmarked", "recent", "created"]),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      let count = 0;
+
+      if (input.category === "bookmarked") {
+        count = await ctx.prisma.bookmarkedDeck.count({
+          where: {
+            userId: ctx.session.user.id,
+          },
+        });
+      } else if (input.category === "created") {
+        count = await ctx.prisma.deck.count({
+          where: {
+            userId: ctx.session.user.id,
+          },
+        });
+      } else {
+        // category = recent
+        // TODO
+      }
+
+      return count;
+    }),
 });

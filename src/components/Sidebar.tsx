@@ -23,6 +23,7 @@ export default function Sidebar() {
       text: "Studiekort",
       href: "/dashboard/decks",
       icon: <Layers3 size={20} />,
+      query: "?category=recent",
     },
     {
       text: "Emner",
@@ -42,7 +43,7 @@ export default function Sidebar() {
         {links.map((link) => (
           <Link
             key={link.href}
-            href={link.href}
+            href={link.href + (link.query ? link.query : "")}
             className={cn(
               pathname == link.href ? "bg-accent text-accent-foreground" : "",
               "rounded-md px-3 py-2 flex gap-2 items-center hover:bg-accent hover:text-accent-foreground"

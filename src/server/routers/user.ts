@@ -8,10 +8,11 @@ export const userRouter = router({
    * @param {number} input.page - The page number to fetch. Must be a number greater than or equal to 1.
    * @param {number} input.pageSize - The number of decks to fetch per page. Must be a number greater than or equal to 1.
    *
-   * @returns An array of decks and the total count of decks for the user.
+   * @returns An array of decks for the user.
    *
    * @throws Will throw an error if the input is not valid or user auth is missing.
    */
+
   getDecks: protectedProcedure
     .input(
       z.object({
@@ -19,31 +20,49 @@ export const userRouter = router({
         pageSize: z.number().min(1),
         sortBy: z.string().default("dateCreated"),
         sortOrder: z.enum(["asc", "desc"]).default("desc"),
+        category: z.enum(["recent", "created", "bookmarked"]),
       })
     )
     .query(async ({ ctx, input }) => {
-      const skip = (input.page - 1) * input.pageSize;
+      const { page, pageSize, sortBy, sortOrder, category } = input;
 
-      const decks = await ctx.prisma.deck.findMany({
-        where: {
-          userId: ctx.session.user.id,
-        },
-        take: input.pageSize,
-        skip: skip,
-        orderBy: {
-          [input.sortBy]: input.sortOrder,
-        },
-      });
+      const skip = (page - 1) * pageSize;
 
-      const totalCount = await ctx.prisma.deck.count({
-        where: {
-          userId: ctx.session.user.id,
-        },
-      });
-
-      return {
-        decks,
-        totalCount,
-      };
+      if (category === "recent") {
+        return await ctx.prisma.deck.findMany({
+          where: {
+            userId: ctx.session.user.id,
+          },
+          take: pageSize,
+          skip: skip,
+          orderBy: {
+            [sortBy]: sortOrder,
+          },
+        });
+      } else if (category === "created") {
+        return await ctx.prisma.deck.findMany({
+          where: {
+            userId: ctx.session.user.id,
+          },
+          take: pageSize,
+          skip: skip,
+          orderBy: {
+            [sortBy]: sortOrder,
+          },
+        });
+      } else {
+        // category = "bookmarked"
+        const bookmarks = await ctx.prisma.bookmarkedDeck.findMany({
+          where: {
+            userId: ctx.session.user.id,
+          },
+          take: pageSize,
+          skip: skip,
+          include: {
+            deck: true,
+          },
+        });
+        return bookmarks.map((bookmark) => bookmark.deck);
+      }
     }),
 });

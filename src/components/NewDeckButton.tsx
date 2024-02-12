@@ -1,6 +1,6 @@
 import { Plus } from "lucide-react";
-import { Button, ButtonProps, buttonVariants } from "./ui/button";
 import Link from "next/link";
+import { ButtonProps, buttonVariants } from "./ui/button";
 
 export default function NewDeckButton({ ...props }: ButtonProps) {
   return (

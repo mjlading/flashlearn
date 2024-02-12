@@ -16,7 +16,7 @@ export default async function RehearsalLayout({
 
   return (
     <div className="h-screen">
-      <header className="h-[60px] flex gap-4 items-center justify-between px-4">
+      <header className="h-[60px] flex gap-4 items-center justify-between px-8">
         <BackButton variant="ghost" tooltipText="Forlat øving" />
         <h2 className="text-muted-foreground font-semibold">{deck?.name}</h2>
         <HelpButton />

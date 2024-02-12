@@ -1,16 +1,20 @@
 import DeckList from "@/components/DeckList";
 import NewDeckButton from "@/components/NewDeckButton";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import CategoryTabs from "./CategoryTabs";
 import { fetchDecks } from "./actions";
-import { unstable_noStore } from "next/cache";
 
-export default async function DecksPage() {
-  unstable_noStore();
+export default async function DecksPage({
+  searchParams,
+}: {
+  searchParams: {
+    category: string;
+  };
+}) {
+  const fetchParams = {
+    category: searchParams.category as "recent" | "created" | "bookmarked",
+  };
 
-  const initialDecks = await fetchDecks({
-    sortBy: "dateCreated",
-    sortOrder: "desc",
-  });
+  const initialDecks = await fetchDecks(fetchParams);
 
   return (
     <div className="flex flex-col space-y-7 h-full">
@@ -18,20 +22,8 @@ export default async function DecksPage() {
         <h1 className="text-3xl font-bold">Studiekort</h1>
         <NewDeckButton />
       </div>
-      <div>
-        {initialDecks.decks.length > 0 && (
-          <Tabs defaultValue="recent" className="w-[400px]">
-            <TabsList className="grid w-full grid-cols-3">
-              <TabsTrigger value="recent">
-                Nylige ({initialDecks.totalCount})
-              </TabsTrigger>
-              <TabsTrigger value="myDecks">Mine sett</TabsTrigger>
-              <TabsTrigger value="bookmarked">Bokmerkede</TabsTrigger>
-            </TabsList>
-          </Tabs>
-        )}
-      </div>
-      <DeckList initialDecks={initialDecks.decks} />
+      <CategoryTabs />
+      <DeckList initialDecks={initialDecks} fetchParams={fetchParams} />
     </div>
   );
 }

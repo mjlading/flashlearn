@@ -63,7 +63,7 @@ export default function CreateDeckForm() {
 
   const createDeckMutation = api.deck.createDeck.useMutation({
     onSuccess() {
-      router.push("/dashboard/decks");
+      router.push("/dashboard/decks?category=created");
       router.refresh(); // Fetch and display the new deck
 
       toast.success(`Settet '${form.getValues("name")}' er lagret`, {

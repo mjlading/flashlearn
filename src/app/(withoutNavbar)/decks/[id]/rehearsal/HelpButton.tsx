@@ -38,20 +38,20 @@ export default function HelpButton() {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button className="rounded-full px-[2px]" variant="ghost">
+        <div>
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
-                <div className="rounded-full p-1">
+                <Button variant="ghost">
                   <HelpCircle size={28} />
-                </div>
+                </Button>
               </TooltipTrigger>
               <TooltipContent>
                 <p>Tips</p>
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>
-        </Button>
+        </div>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>

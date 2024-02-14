@@ -100,7 +100,6 @@ export default function CreateDeckForm() {
     const processedValues = {
       ...values,
       flashcards: flashcardsWithContent,
-      averageRating: 1,
       academicLevel: 1,
       isPublic: !values.private,
       subjectName: "Biology",

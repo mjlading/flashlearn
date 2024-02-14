@@ -5,7 +5,6 @@ import { TRPCError } from "@trpc/server";
 const createDeck = z.object({
   name: z.string(),
   isPublic: z.boolean().default(true),
-  averageRating: z.number(),
   academicLevel: z.number(),
   subjectName: z.string(),
   numFlashcards: z.number(),

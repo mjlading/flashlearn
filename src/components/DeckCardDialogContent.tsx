@@ -24,6 +24,7 @@ import {
   TooltipTrigger,
 } from "./ui/tooltip";
 import { useSession } from "next-auth/react";
+import StarRating from "./StarRating";
 
 export default function DeckCardDialogContent({ deck }: DeckCardProps) {
   const [modeSelected, setModeSelected] = useState("write");
@@ -57,19 +58,7 @@ export default function DeckCardDialogContent({ deck }: DeckCardProps) {
       <div className="flex justify-between">
         <div>
           {/* Average star rating */}
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <div className="flex w-fit gap-2 items-center text-muted-foreground text-sm mb-2">
-                  <Star size={18} />
-                  <p>{deck.averageRating.toFixed(1)}</p>
-                </div>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>Gjennomsnittlig vurdering</p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
+          <StarRating stars={deck.averageRating} />
 
           {/* Time ago created/changed */}
           <div className="flex gap-2 items-center text-muted-foreground text-sm">

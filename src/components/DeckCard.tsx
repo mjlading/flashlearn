@@ -17,6 +17,7 @@ import {
   TooltipTrigger,
 } from "./ui/tooltip";
 import { useSession } from "next-auth/react";
+import StarRating from "./StarRating";
 
 export interface DeckCardProps {
   // Convert types dateCreated and dateChanged from Date to string
@@ -45,6 +46,7 @@ export default function DeckCard({ deck }: DeckCardProps) {
             <CardHeader className="pt-3 pb-3 flex flex-row items-center justify-between">
               <CardTitle className="text-lg">{deck.name}</CardTitle>
               <div className="flex gap-4 text-muted-foreground text-sm">
+                {/* Number of flashcards */}
                 <TooltipProvider>
                   <Tooltip>
                     <TooltipTrigger asChild>
@@ -61,19 +63,8 @@ export default function DeckCard({ deck }: DeckCardProps) {
                 <div>
                   <Separator orientation="vertical" />
                 </div>
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <div className="flex w-fit gap-2 items-center text-muted-foreground text-sm">
-                        <Star size={18} />
-                        <p>{deck.averageRating.toFixed(1)}</p>
-                      </div>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <p>Gjennomsnittlig vurdering</p>
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
+                {/* Average star rating */}
+                <StarRating stars={deck.averageRating} />
               </div>
             </CardHeader>
           </div>

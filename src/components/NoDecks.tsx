@@ -27,7 +27,7 @@ export default function NoDecks({
     } else {
       // category = 'bookmarked'
       title = "Du har ingen bokmerkede sett";
-      description = "Bokmerkede sett vil vises her";
+      description = "Dine bokmerkede sett vil vises her";
       icon = Bookmark;
     }
 

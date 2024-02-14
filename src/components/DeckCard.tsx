@@ -19,6 +19,7 @@ import {
 import { useSession } from "next-auth/react";
 import StarRating from "./StarRating";
 import NumFlashcards from "./NumFlashcards";
+import { Button } from "./ui/button";
 
 export interface DeckCardProps {
   // Convert types dateCreated and dateChanged from Date to string
@@ -43,8 +44,8 @@ export default function DeckCard({ deck }: DeckCardProps) {
     <Dialog>
       <Card className="text-left">
         <DialogTrigger asChild>
-          <div className="cursor-pointer">
-            <CardHeader className="py-3 flex flex-row items-center justify-between">
+          <button className="w-full">
+            <CardHeader className="flex flex-row items-center justify-between py-3 cursor-pointer">
               <CardTitle className="text-lg">{deck.name}</CardTitle>
               <div className="flex gap-4">
                 {/* Number of flashcards */}
@@ -56,7 +57,7 @@ export default function DeckCard({ deck }: DeckCardProps) {
                 <StarRating stars={deck.averageRating} />
               </div>
             </CardHeader>
-          </div>
+          </button>
         </DialogTrigger>
 
         <CardFooter className="flex justify-between pt-0 pb-3">

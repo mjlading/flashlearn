@@ -103,7 +103,7 @@ export default function CreateDeckForm() {
       averageRating: 1,
       academicLevel: 1,
       isPublic: !values.private,
-      subjectName: "Biologi",
+      subjectName: "Biology",
       numFlashcards: flashcardsWithContent.length,
     };
 

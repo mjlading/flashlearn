@@ -12,9 +12,10 @@ import {
 } from "./ui/tooltip";
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 export default function BookmarkButton({ deckId }: { deckId: string }) {
-  const session = useSession();
+  const router = useRouter();
 
   const isBookmarkedQuery = api.bookmark.isBookmarked.useQuery({
     deckId: deckId,
@@ -35,7 +36,9 @@ export default function BookmarkButton({ deckId }: { deckId: string }) {
       // Optimistic rendering
       setIsBookmarked(true);
     },
-    onSuccess() {},
+    onSuccess() {
+      router.refresh();
+    },
     onError() {
       // Undo optimistic rendering
       setIsBookmarked(false);
@@ -50,7 +53,9 @@ export default function BookmarkButton({ deckId }: { deckId: string }) {
       // Optimistic rendering
       setIsBookmarked(false);
     },
-    onSuccess() {},
+    onSuccess() {
+      router.refresh();
+    },
     onError() {
       // Undo optimistic rendering
       setIsBookmarked(true);

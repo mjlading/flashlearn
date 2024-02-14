@@ -152,10 +152,10 @@ enum Mode {
 }
 
 model Rehearsal {
-  id        String   @id @default(cuid())
+  id        String    @id @default(cuid())
   mode      Mode
-  dateStart DateTime @default(now())
-  dateEnd   DateTime
+  dateStart DateTime  @default(now())
+  dateEnd   DateTime?
 
   user   User   @relation(fields: [userId], references: [id])
   userId String

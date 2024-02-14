@@ -13,6 +13,7 @@ import { useInView } from "react-intersection-observer";
 import DeckCard from "./DeckCard";
 import NewDeckButton from "./NewDeckButton";
 import { Skeleton } from "./ui/skeleton";
+import NoDecks from "./NoDecks";
 
 interface DeckListProps {
   // Convert types dateCreated and dateChanged from Date to string
@@ -79,16 +80,7 @@ export default function DeckList({ initialDecks, fetchParams }: DeckListProps) {
   }, [inView, loadMoreDecks]);
 
   if (decks.length === 0) {
-    return (
-      <div className="h-full text-center flex flex-col items-center justify-center gap-4">
-        <h2 className="font-semibold text-lg">Du har ingen studiekort 😔</h2>
-        <p className="text-muted-foreground">
-          Lag et sett for å komme i gang med læringen din!
-        </p>
-        <NewDeckButton size="lg" className="my-5" />
-        <Layers3 size={80} opacity="0.2" />
-      </div>
-    );
+    return <NoDecks fetchParams={fetchParams} />;
   }
 
   return (

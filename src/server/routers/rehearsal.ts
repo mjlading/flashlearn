@@ -11,11 +11,27 @@ export const rehearsalRouter = router({
       })
     )
     .mutation(async ({ ctx, input }) => {
-      await ctx.prisma.rehearsal.create({
+      return await ctx.prisma.rehearsal.create({
         data: {
           userId: ctx.session.user.id,
           deckId: input.deckId,
           mode: input.mode.toUpperCase() as Mode,
+        },
+      });
+    }),
+  saveRehearsalFinished: protectedProcedure
+    .input(
+      z.object({
+        rehearsalId: z.string(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      return await ctx.prisma.rehearsal.update({
+        where: {
+          id: input.rehearsalId,
+        },
+        data: {
+          dateEnd: new Date(),
         },
       });
     }),

@@ -1,9 +1,11 @@
 "use client";
 
+import { api } from "@/app/api/trpc/client";
 import { Progress } from "@/components/ui/progress";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Flashcard } from "@prisma/client";
-import { useEffect, useMemo, useState } from "react";
+import { useParams, useSearchParams } from "next/navigation";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 export default function VisualRehearsal({
   flashcards,
@@ -14,11 +16,27 @@ export default function VisualRehearsal({
   const [currentFlashcard, setCurrentFlashcard] = useState(flashcards[0]);
   const [showBack, setShowBack] = useState(false);
   const [progress, setProgress] = useState(0);
+  const searchParams = useSearchParams();
+  const params = useParams<{ id: string }>();
+  const saveRehearsalStartedMutation =
+    api.rehearsal.saveRehearsalStarted.useMutation();
+  const savedRehearsalStarted = useRef(false);
 
   useEffect(() => {
     setCurrentFlashcard(flashcards[currentIndex]);
     setProgress(((currentIndex + 1) / flashcards.length) * 100);
   }, [currentIndex, flashcards]);
+
+  // Save that the rehearsal is started in db
+  useEffect(() => {
+    if (!savedRehearsalStarted.current) {
+      saveRehearsalStartedMutation.mutate({
+        mode: searchParams.get("mode") as "visual" | "write" | "oral",
+        deckId: params.id as string,
+      });
+      savedRehearsalStarted.current = true;
+    }
+  }, [params.id, searchParams, saveRehearsalStartedMutation]);
 
   useEffect(() => {
     window.addEventListener("keydown", handleKeydown);

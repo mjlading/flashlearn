@@ -18,6 +18,7 @@ import {
 } from "./ui/tooltip";
 import { useSession } from "next-auth/react";
 import StarRating from "./StarRating";
+import NumFlashcards from "./NumFlashcards";
 
 export interface DeckCardProps {
   // Convert types dateCreated and dateChanged from Date to string
@@ -43,23 +44,11 @@ export default function DeckCard({ deck }: DeckCardProps) {
       <Card className="text-left">
         <DialogTrigger asChild>
           <div className="cursor-pointer">
-            <CardHeader className="pt-3 pb-3 flex flex-row items-center justify-between">
+            <CardHeader className="py-3 flex flex-row items-center justify-between">
               <CardTitle className="text-lg">{deck.name}</CardTitle>
-              <div className="flex gap-4 text-muted-foreground text-sm">
+              <div className="flex gap-4">
                 {/* Number of flashcards */}
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <div className="flex gap-2 items-center">
-                        <Layers3 size={18} />
-                        {deck.numFlashcards}
-                      </div>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <p>Antall studiekort</p>
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
+                <NumFlashcards numFlashcards={deck.numFlashcards} />
                 <div>
                   <Separator orientation="vertical" />
                 </div>

@@ -25,6 +25,8 @@ import {
 } from "./ui/tooltip";
 import { useSession } from "next-auth/react";
 import StarRating from "./StarRating";
+import { subjectNameToNorwegian } from "@/lib/subject";
+import NumFlashcards from "./NumFlashcards";
 
 export default function DeckCardDialogContent({ deck }: DeckCardProps) {
   const [modeSelected, setModeSelected] = useState("write");
@@ -36,27 +38,15 @@ export default function DeckCardDialogContent({ deck }: DeckCardProps) {
       <DialogHeader>
         <DialogTitle className="mb-2">{deck.name}</DialogTitle>
         <DialogDescription className="flex gap-4">
-          {deck.subjectName}
+          {subjectNameToNorwegian(deck.subjectName)}
           <Separator orientation="vertical" />
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <div className="flex gap-2 items-center">
-                  <Layers3 size={18} />
-                  {deck.numFlashcards}
-                </div>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>Antall studiekort</p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
+          <NumFlashcards numFlashcards={deck.numFlashcards} />
         </DialogDescription>
       </DialogHeader>
 
-      {/* Deck Information */}
       <div className="flex justify-between">
-        <div>
+        {/* Deck Information */}
+        <div className="space-y-2">
           {/* Average star rating */}
           <StarRating stars={deck.averageRating} />
 
@@ -70,6 +60,7 @@ export default function DeckCardDialogContent({ deck }: DeckCardProps) {
             )}
           </div>
         </div>
+        {/* Bookmark button */}
         {!isUsersDeck && <BookmarkButton deckId={deck.id} />}
       </div>
 

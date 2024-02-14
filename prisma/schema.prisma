@@ -145,8 +145,15 @@ model Flashcard {
   flashcardRehearsals FlashcardRehearsal[]
 }
 
+enum Mode {
+  VISUAL
+  WRITE
+  ORAL
+}
+
 model Rehearsal {
   id        String   @id @default(cuid())
+  mode      Mode
   dateStart DateTime @default(now())
   dateEnd   DateTime
 

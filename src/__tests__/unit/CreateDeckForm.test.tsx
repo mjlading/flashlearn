@@ -30,4 +30,12 @@ describe("CreateDeckForm", () => {
       await screen.findByText("Navnet må være minst 2 tegn")
     ).toBeDefined();
   });
+  it("displays error if no flashcards added", async () => {
+    render(<CreateDeckForm />);
+    const nameInput = screen.getByLabelText("Navn");
+    const submitButton = screen.getByRole("button", { name: "Lagre sett" });
+
+    await userEvent.type(nameInput, "valid");
+    userEvent.click(submitButton);
+  });
 });

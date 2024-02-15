@@ -43,19 +43,3 @@ export async function fetchDecks({
 
   throw new Error("Invalid input params to fetchDecks function");
 }
-
-export async function fetchDeckCounts() {
-  // fetch data in parallel
-  const [numBookmarkedDecks, numCreatedDecks] = await Promise.all([
-    await api.deck.countDecksByCategory.query({
-      category: "bookmarked",
-    }),
-    api.deck.countDecksByCategory.query({
-      category: "created",
-    }),
-  ]);
-  return {
-    numBookmarkedDecks: numBookmarkedDecks,
-    numCreatedDecks: numCreatedDecks,
-  };
-}

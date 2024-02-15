@@ -121,32 +121,25 @@ export const deckRouter = router({
         },
       });
     }),
-  countDecksByCategory: protectedProcedure
-    .input(
-      z.object({
-        category: z.enum(["bookmarked", "recent", "created"]),
-      })
-    )
-    .query(async ({ ctx, input }) => {
-      let count = 0;
+  countDecksByCategories: protectedProcedure.query(async ({ ctx }) => {
+    const countCreated = ctx.prisma.deck.count({
+      where: {
+        userId: ctx.session.user.id,
+      },
+    });
+    const countBookmarked = ctx.prisma.bookmarkedDeck.count({
+      where: {
+        userId: ctx.session.user.id,
+      },
+    });
 
-      if (input.category === "bookmarked") {
-        count = await ctx.prisma.bookmarkedDeck.count({
-          where: {
-            userId: ctx.session.user.id,
-          },
-        });
-      } else if (input.category === "created") {
-        count = await ctx.prisma.deck.count({
-          where: {
-            userId: ctx.session.user.id,
-          },
-        });
-      } else {
-        // category = recent
-        // TODO
-      }
+    // Fetch in parallell
+    const counts = await Promise.all([countCreated, countBookmarked]);
 
-      return count;
-    }),
+    return {
+      countCreated: counts[0],
+      countBookmarked: counts[1],
+      countRecent: 0, // TODO
+    };
+  }),
 });

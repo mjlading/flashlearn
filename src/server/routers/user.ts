@@ -29,16 +29,7 @@ export const userRouter = router({
       const skip = (page - 1) * pageSize;
 
       if (category === "recent") {
-        return await ctx.prisma.deck.findMany({
-          where: {
-            userId: ctx.session.user.id,
-          },
-          take: pageSize,
-          skip: skip,
-          orderBy: {
-            [sortBy]: sortOrder,
-          },
-        });
+        return []; // TODO
       } else if (category === "created") {
         return await ctx.prisma.deck.findMany({
           where: {

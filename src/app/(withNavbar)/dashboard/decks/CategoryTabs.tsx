@@ -3,12 +3,17 @@
 import { api } from "@/app/api/trpc/client";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useEffect } from "react";
 
 export default function CategoryTabs() {
   const deckCounts = api.deck.countDecksByCategories.useQuery();
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const { replace } = useRouter();
+
+  useEffect(() => {
+    deckCounts.refetch();
+  });
 
   function handleTabChange(newValue: string) {
     // change value of 'category' query param

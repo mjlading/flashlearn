@@ -16,27 +16,11 @@ export default function VisualRehearsal({
   const [currentFlashcard, setCurrentFlashcard] = useState(flashcards[0]);
   const [showBack, setShowBack] = useState(false);
   const [progress, setProgress] = useState(0);
-  const searchParams = useSearchParams();
-  const params = useParams<{ id: string }>();
-  const saveRehearsalStartedMutation =
-    api.rehearsal.saveRehearsalStarted.useMutation();
-  const savedRehearsalStarted = useRef(false);
 
   useEffect(() => {
     setCurrentFlashcard(flashcards[currentIndex]);
     setProgress(((currentIndex + 1) / flashcards.length) * 100);
   }, [currentIndex, flashcards]);
-
-  // Save that the rehearsal is started in db
-  useEffect(() => {
-    if (!savedRehearsalStarted.current) {
-      saveRehearsalStartedMutation.mutate({
-        mode: searchParams.get("mode") as "visual" | "write" | "oral",
-        deckId: params.id as string,
-      });
-      savedRehearsalStarted.current = true;
-    }
-  }, [params.id, searchParams, saveRehearsalStartedMutation]);
 
   useEffect(() => {
     window.addEventListener("keydown", handleKeydown);

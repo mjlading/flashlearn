@@ -44,7 +44,7 @@ export default function DeckList({ initialDecks, fetchParams }: DeckListProps) {
     threshold: 0,
   });
   const [moreDecksToFetch, setMoreDecksToFetch] = useState(
-    initialDecks.length >= 10 // if initialDecks length is < 10, there are no more decks to fetch
+    initialDecks.length >= (fetchParams.pageSize ? fetchParams.pageSize : 10) // if initialDecks length is < pageSize, there are no more decks to fetch
   );
 
   // updates the list on deck deletion

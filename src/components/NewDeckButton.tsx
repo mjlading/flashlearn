@@ -13,7 +13,7 @@ export default function NewDeckButton({ ...props }: ButtonProps) {
       })}
     >
       <Plus size={20} className="mr-1" />
-      <span>Nytt sett</span>
+      Nytt sett
     </Link>
   );
 }

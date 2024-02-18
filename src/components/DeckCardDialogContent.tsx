@@ -1,11 +1,15 @@
 "use client";
 
+import { subjectNameMap } from "@/lib/subject";
 import { dateDifferenceFromNow } from "@/lib/utils";
-import { History, Layers3, Star } from "lucide-react";
+import { GraduationCap, History } from "lucide-react";
+import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useState } from "react";
 import BookmarkButton from "./BookmarkButton";
 import { DeckCardProps } from "./DeckCard";
+import NumFlashcards from "./NumFlashcards";
+import StarRating from "./StarRating";
 import { buttonVariants } from "./ui/button";
 import {
   DialogContent,
@@ -17,16 +21,7 @@ import {
 import { Label } from "./ui/label";
 import { Separator } from "./ui/separator";
 import { Tabs, TabsList, TabsTrigger } from "./ui/tabs";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "./ui/tooltip";
-import { useSession } from "next-auth/react";
-import StarRating from "./StarRating";
-import { subjectNameToNorwegian } from "@/lib/subject";
-import NumFlashcards from "./NumFlashcards";
+import { academicLevelMap } from "@/lib/academicLevel";
 
 export default function DeckCardDialogContent({ deck }: DeckCardProps) {
   const [modeSelected, setModeSelected] = useState("write");
@@ -38,7 +33,7 @@ export default function DeckCardDialogContent({ deck }: DeckCardProps) {
       <DialogHeader>
         <DialogTitle className="mb-2">{deck.name}</DialogTitle>
         <DialogDescription className="flex gap-4">
-          {subjectNameToNorwegian(deck.subjectName)}
+          {subjectNameMap[deck.subjectName]}
           <Separator orientation="vertical" />
           <NumFlashcards numFlashcards={deck.numFlashcards} />
         </DialogDescription>
@@ -49,6 +44,12 @@ export default function DeckCardDialogContent({ deck }: DeckCardProps) {
         <div className="space-y-2">
           {/* Average star rating */}
           <StarRating stars={deck.averageRating} />
+
+          {/* Academic level */}
+          <div className="flex gap-2 items-center text-muted-foreground text-sm">
+            <GraduationCap size={18} />
+            <p>{academicLevelMap[deck.academicLevel]}</p>
+          </div>
 
           {/* Time ago created/changed */}
           <div className="flex gap-2 items-center text-muted-foreground text-sm">

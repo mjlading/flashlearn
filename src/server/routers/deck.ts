@@ -1,11 +1,13 @@
+import { academicLevelMap } from "@/lib/academicLevel";
+import { AcademicLevel } from "@prisma/client";
+import { TRPCError } from "@trpc/server";
 import z from "zod";
 import { protectedProcedure, publicProcedure, router } from "../trpc";
-import { TRPCError } from "@trpc/server";
 
 const createDeck = z.object({
   name: z.string(),
   isPublic: z.boolean().default(true),
-  academicLevel: z.number(),
+  academicLevel: z.enum(Object.keys(academicLevelMap) as [string, ...string[]]),
   subjectName: z.string(),
   numFlashcards: z.number(),
   flashcards: z
@@ -30,6 +32,7 @@ export const deckRouter = router({
           flashcards: {
             create: input.flashcards,
           },
+          academicLevel: input.academicLevel as AcademicLevel,
         },
       });
       return newDeck;
@@ -83,7 +86,7 @@ export const deckRouter = router({
 
       return await ctx.prisma.deck.findMany({
         where: {
-          subjectName: input.subjectName,
+          subjectName: subjectName,
           isPublic: true,
         },
         take: pageSize,

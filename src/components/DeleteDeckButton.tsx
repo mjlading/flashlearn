@@ -2,7 +2,7 @@
 
 import { api } from "@/app/api/trpc/client";
 import { AlertCircle, Trash } from "lucide-react";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { DeckCardProps } from "./DeckCard";
 import { LoadingSpinner } from "./LoadingSpinner";

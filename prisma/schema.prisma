@@ -65,15 +65,23 @@ model VerificationToken {
   @@unique([identifier, token])
 }
 
+enum AcademicLevel {
+  MIDDLE_SCHOOL
+  HIGH_SCHOOL
+  BACHELOR
+  MASTER
+  PHD
+}
+
 // Entities defined from our own ER-diagram
 model Deck {
-  id            String   @id @default(cuid())
+  id            String        @id @default(cuid())
   name          String
-  isPublic      Boolean  @default(false)
+  isPublic      Boolean       @default(false)
   averageRating Float?
-  academicLevel Int
-  dateCreated   DateTime @default(now())
-  dateChanged   DateTime @updatedAt
+  academicLevel AcademicLevel
+  dateCreated   DateTime      @default(now())
+  dateChanged   DateTime      @updatedAt
   numFlashcards Int
 
   userId String

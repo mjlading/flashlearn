@@ -31,7 +31,7 @@ export const subjectStyles: SubjectStyles = {
   Philosophy: { color: "bg-blue-400", icon: MessageCircleQuestion },
 };
 
-const subjectNameMap = {
+export const subjectNameMap: { [key: string]: string } = {
   Mathematics: "Matematikk",
   Science: "Naturfag",
   History: "Historie",
@@ -44,10 +44,3 @@ const subjectNameMap = {
   Chemistry: "Kjemi",
   Philosophy: "Filosofi",
 };
-
-export function subjectNameToNorwegian(subjectName: string) {
-  return subjectNameMap[subjectName as keyof typeof subjectNameMap].replaceAll(
-    "-",
-    " "
-  );
-}

@@ -1,9 +1,8 @@
-import { subjectNameToNorwegian, subjectStyles } from "@/lib/subject";
+import { subjectNameMap, subjectStyles } from "@/lib/subject";
 import { Subject } from "@prisma/client";
 import { GraduationCap } from "lucide-react";
 import Link from "next/link";
 import React from "react";
-
 
 export default function SubjectList({ subjects }: { subjects: Subject[] }) {
   return (
@@ -14,7 +13,7 @@ export default function SubjectList({ subjects }: { subjects: Subject[] }) {
           color: "bg-gray-200",
           icon: GraduationCap,
         };
-        const norwegianSubjectName = subjectNameToNorwegian(subject.name)
+        const norwegianSubjectName = subjectNameMap[subject.name];
 
         return (
           <div
@@ -25,7 +24,7 @@ export default function SubjectList({ subjects }: { subjects: Subject[] }) {
               href={`/explore/${subject.name}`}
               className="flex flex-col items-center justify-center gap-5 p-7"
             >
-              {React.createElement(style.icon, {size: 32})}
+              {React.createElement(style.icon, { size: 32 })}
               <h3 className="text-xl font-semibold">{norwegianSubjectName}</h3>
             </Link>
           </div>

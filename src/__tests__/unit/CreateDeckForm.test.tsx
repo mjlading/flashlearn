@@ -15,6 +15,14 @@ vi.mock("@/app/api/trpc/client", () => ({
         })),
       },
     },
+    ai: {
+      classifySubject: {
+        useMutation: vi.fn(() => ({
+          mutate: vi.fn(),
+          isLoaing: false,
+        })),
+      },
+    },
   },
 }));
 

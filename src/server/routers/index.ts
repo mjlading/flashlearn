@@ -1,4 +1,5 @@
 import { router } from "../trpc";
+import { aiRouter } from "./ai";
 import { bookmarkRouter } from "./bookmark";
 import { deckRouter } from "./deck";
 import { rehearsalRouter } from "./rehearsal";
@@ -13,6 +14,7 @@ export const appRouter = router({
   subject: subjectRouter,
   bookmark: bookmarkRouter,
   rehearsal: rehearsalRouter,
+  ai: aiRouter,
 });
 
 export type AppRouter = typeof appRouter;

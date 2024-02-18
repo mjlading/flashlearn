@@ -1,6 +1,9 @@
+"use server";
+
 import { JSDOM } from "jsdom";
 
-type CourseInfo = {
+export type CourseInfo = {
+  name: string;
   courseContent: string;
   learningGoal: string;
   learningMethod: string;
@@ -32,6 +35,10 @@ export async function getCourseInfo(
 
   const dom = new JSDOM(html);
 
+  // Get name
+  let name =
+    dom.window.document.querySelector("#course-details h1")?.textContent;
+
   // Get main content info
   const courseContent = dom.window.document.getElementById(
     "course-content-toggler"
@@ -43,10 +50,14 @@ export async function getCourseInfo(
     "learning-method-toggler"
   )?.textContent;
 
-  if (!courseContent || !learningGoal || !learningMethod) {
+  if (!courseContent || !learningGoal || !learningMethod || !name) {
     console.warn("No course info found");
     return null;
   }
+
+  // Remove course code prefix in name
+  const cutoff = name.indexOf("-");
+  name = name.slice(cutoff + 1);
 
   // Get the study level and language
   const cardps = dom.window.document.querySelectorAll(".card-body p");
@@ -82,6 +93,7 @@ export async function getCourseInfo(
 
   // The Regex below removes repeated whitespace in text
   return {
+    name: name.trim(),
     courseContent: courseContent.replace(/\s+/g, " ").trim(),
     learningGoal: learningGoal.replace(/\s+/g, " ").trim(),
     learningMethod: learningMethod.replace(/\s+/g, " ").trim(),

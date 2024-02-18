@@ -1,55 +1,37 @@
-"use client";
-
-import { api } from "@/app/api/trpc/client";
+import { api } from "@/app/api/trpc/server";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useEffect } from "react";
+import Link from "next/link";
 
-export default function CategoryTabs() {
-  const deckCounts = api.deck.countDecksByCategories.useQuery();
-  const searchParams = useSearchParams();
-  const pathname = usePathname();
-  const { replace } = useRouter();
-
-  useEffect(() => {
-    deckCounts.refetch();
-  });
-
-  function handleTabChange(newValue: string) {
-    // change value of 'category' query param
-    const params = new URLSearchParams(searchParams);
-    params.set("category", newValue);
-    replace(`${pathname}?${params.toString()}`);
-  }
+export default async function CategoryTabs({
+  initialCategory,
+}: {
+  initialCategory: string;
+}) {
+  const deckCounts = await api.deck.countDecksByCategories.query();
 
   function formattedDeckCount(numDecks: number) {
     return numDecks === 0 ? "" : `(${numDecks})`;
   }
 
   return (
-    <>
-      <Tabs
-        value={searchParams.get("category") || "recent"}
-        onValueChange={handleTabChange}
-        className="w-[25rem]"
-      >
-        <TabsList className="grid w-full grid-cols-3">
-          <TabsTrigger value="recent">
-            Nylige{" "}
-            {deckCounts.data && formattedDeckCount(deckCounts.data.countRecent)}
-          </TabsTrigger>
-          <TabsTrigger value="created">
-            Laget{" "}
-            {deckCounts.data &&
-              formattedDeckCount(deckCounts.data.countCreated)}
-          </TabsTrigger>
-          <TabsTrigger value="bookmarked">
-            Bokmerkede{" "}
-            {deckCounts.data &&
-              formattedDeckCount(deckCounts.data.countBookmarked)}
-          </TabsTrigger>
-        </TabsList>
-      </Tabs>
-    </>
+    <Tabs value={initialCategory || "recent"} className="w-[25rem]">
+      <TabsList className="grid w-full grid-cols-3">
+        <TabsTrigger value="recent" asChild>
+          <Link href={`/dashboard/decks?category=recent`}>
+            Nylige {formattedDeckCount(deckCounts.countRecent)}
+          </Link>
+        </TabsTrigger>
+        <TabsTrigger value="created" asChild>
+          <Link href={`/dashboard/decks?category=created`}>
+            Laget {formattedDeckCount(deckCounts.countCreated)}{" "}
+          </Link>
+        </TabsTrigger>
+        <TabsTrigger value="bookmarked" asChild>
+          <Link href={`/dashboard/decks?category=bookmarked`}>
+            Bokmerkede {formattedDeckCount(deckCounts.countBookmarked)}
+          </Link>
+        </TabsTrigger>
+      </TabsList>
+    </Tabs>
   );
 }

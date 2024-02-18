@@ -22,7 +22,7 @@ export default async function DecksPage({
         <h1 className="text-3xl font-bold">Studiekort</h1>
         <NewDeckButton />
       </div>
-      <CategoryTabs />
+      <CategoryTabs initialCategory={searchParams.category} />
       <DeckList initialDecks={initialDecks} fetchParams={fetchParams} />
     </div>
   );

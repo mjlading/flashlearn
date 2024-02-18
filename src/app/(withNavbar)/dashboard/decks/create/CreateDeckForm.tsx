@@ -29,7 +29,7 @@ import { academicLevelMap } from "@/lib/academicLevel";
 import { subjectNameMap } from "@/lib/subject";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -98,6 +98,23 @@ export default function CreateDeckForm() {
     },
   });
 
+  const classifySubjectMutation = api.ai.classifySubject.useMutation({
+    onError() {
+      toast.error("Noe gikk galt", {
+        description:
+          "Vi kunne ikke generere et Fagområde. Vennligst prøv igjen eller velg et Fagområde manuelt.",
+      });
+    },
+  });
+
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    const isAnyLoading =
+      createDeckMutation.isLoading || classifySubjectMutation.isLoading;
+    setIsLoading(isAnyLoading);
+  }, [createDeckMutation.isLoading, classifySubjectMutation.isLoading]);
+
   const lastFlashcardFront = form.watch(
     `flashcards.${fields.length - 1}.front`
   );
@@ -109,15 +126,24 @@ export default function CreateDeckForm() {
     }
   }, [lastFlashcardFront, append]);
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  async function onSubmit(values: z.infer<typeof formSchema>) {
     // Remove last flashcard which is always empty
     const flashcardsWithContent = form.getValues("flashcards").slice(0, -1);
+
+    let predictedSubject: undefined | string = undefined;
+    if (values.subjectName === "Auto") {
+      const prediction = await classifySubjectMutation.mutateAsync(
+        flashcardsWithContent[0].front
+      );
+      predictedSubject = prediction.predictedSubject;
+    }
 
     const processedValues = {
       ...values,
       flashcards: flashcardsWithContent,
       isPublic: !values.private,
       numFlashcards: flashcardsWithContent.length,
+      subjectName: predictedSubject ? predictedSubject : values.subjectName,
     };
 
     createDeckMutation.mutate(processedValues);
@@ -298,14 +324,8 @@ export default function CreateDeckForm() {
             <span>{form.watch("name")}</span>
             <Separator orientation="vertical" className="h-[20px]" />
             <span>{fields.length - 1} Studiekort</span>
-            <Button
-              size="lg"
-              type="submit"
-              disabled={createDeckMutation.isLoading}
-            >
-              {createDeckMutation.isLoading && (
-                <LoadingSpinner className="mr-2" size={20} />
-              )}
+            <Button size="lg" type="submit" disabled={isLoading}>
+              {isLoading && <LoadingSpinner className="mr-2" size={20} />}
               Lagre sett
             </Button>
           </div>

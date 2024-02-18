@@ -1,11 +1,11 @@
 "use client";
 
-import { subjectNameMap } from "@/lib/subject";
-import { dateDifferenceFromNow } from "@/lib/utils";
+import { subjectNameMap, subjectStyles } from "@/lib/subject";
+import { cn, dateDifferenceFromNow } from "@/lib/utils";
 import { GraduationCap, History } from "lucide-react";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
-import { useState } from "react";
+import React, { useState } from "react";
 import BookmarkButton from "./BookmarkButton";
 import { DeckCardProps } from "./DeckCard";
 import NumFlashcards from "./NumFlashcards";
@@ -27,13 +27,20 @@ export default function DeckCardDialogContent({ deck }: DeckCardProps) {
   const [modeSelected, setModeSelected] = useState("write");
   const session = useSession();
   const isUsersDeck = deck.userId === session?.data?.user.id;
+  const style = subjectStyles[deck.subjectName];
 
   return (
     <DialogContent>
       <DialogHeader>
         <DialogTitle className="mb-2">{deck.name}</DialogTitle>
         <DialogDescription className="flex gap-4">
-          {subjectNameMap[deck.subjectName]}
+          <div className="flex items-center gap-2">
+            <div className={cn(style.color, "rounded-full p-1 text-black")}>
+              {React.createElement(style.icon, { size: 20 })}
+            </div>
+            {subjectNameMap[deck.subjectName]}
+          </div>
+
           <Separator orientation="vertical" />
           <NumFlashcards numFlashcards={deck.numFlashcards} />
         </DialogDescription>

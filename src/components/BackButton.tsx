@@ -23,8 +23,13 @@ export default function BackButton({
     <TooltipProvider>
       <Tooltip>
         <TooltipTrigger asChild>
-          <Button onClick={() => router.back()} {...props}>
-            <ArrowLeft size={28} />
+          <Button
+            onClick={() => router.back()}
+            {...props}
+            variant="ghost"
+            size="icon"
+          >
+            <ArrowLeft />
           </Button>
         </TooltipTrigger>
         <TooltipContent>

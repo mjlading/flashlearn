@@ -43,9 +43,9 @@ export default function VisualRehearsal({
   }
 
   return (
-    <>
-      <Progress value={progress} />
+    <div className="flex flex-col gap-8">
+      <Progress value={progress} className="h-2" />
       <Flashcard flashcard={currentFlashcard} />
-    </>
+    </div>
   );
 }

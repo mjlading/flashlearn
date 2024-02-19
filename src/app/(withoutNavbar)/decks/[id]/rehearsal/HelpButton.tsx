@@ -42,12 +42,16 @@ export default function HelpButton() {
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
-                <Button variant="ghost">
-                  <HelpCircle size={28} />
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="hover:bg-transparent"
+                >
+                  <HelpCircle />
                 </Button>
               </TooltipTrigger>
               <TooltipContent>
-                <p>Tips</p>
+                <p>Hjelp</p>
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>
@@ -55,7 +59,7 @@ export default function HelpButton() {
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Øvingstips</DialogTitle>
+          <DialogTitle>Hjelp</DialogTitle>
           <DialogDescription>
             Her er noen nyttige snarveider for å navigere i øvingen.
           </DialogDescription>

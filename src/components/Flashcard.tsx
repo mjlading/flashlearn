@@ -66,7 +66,7 @@ export default function Flashcard({ flashcard }: { flashcard: Flashcard }) {
   return (
     <div
       onClick={() => setShowBack(!showBack)}
-      className="h-[20rem] w-[30rem] rounded-xl bg-muted/40 leading-relaxed break-words mt-8"
+      className="h-[20rem] w-[30rem] rounded-xl bg-muted/40 leading-relaxed break-words"
       style={flipStyle}
     >
       {/* The front of the flashcard */}

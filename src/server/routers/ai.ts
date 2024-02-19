@@ -15,21 +15,12 @@ export const aiRouter = router({
     .mutation(async ({ input }) => {
       const subjects = Object.keys(subjectNameMap);
 
-      const subjectEmbeddingsPromise = client.embeddings.create({
-        model: "text-embedding-3-small",
-        input: subjects,
-      });
-      const textEmbeddingPromise = client.embeddings.create({
-        model: "text-embedding-3-small",
-        input: input,
-      });
-
-      let embeddings;
+      let response;
       try {
-        embeddings = await Promise.all([
-          subjectEmbeddingsPromise,
-          textEmbeddingPromise,
-        ]);
+        response = await client.embeddings.create({
+          model: "text-embedding-3-small",
+          input: [input, ...subjects], // batch requests
+        });
       } catch (error) {
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
@@ -37,10 +28,14 @@ export const aiRouter = router({
         });
       }
 
-      const subjectEmbeddings = embeddings[0].data.map(
-        (subjectEmbedding) => subjectEmbedding.embedding
-      );
-      const textEmbedding = embeddings[1].data[0].embedding;
+      // Needed since the the response object may not return embeddings in the order of the inputs
+      const embeddings = new Array(response.data.length);
+      for (const embedding of response.data) {
+        embeddings[embedding.index] = embedding.embedding;
+      }
+
+      const textEmbedding = embeddings[0];
+      const subjectEmbeddings = embeddings.slice(1);
 
       const scores = getCosineScores(textEmbedding, subjectEmbeddings);
 

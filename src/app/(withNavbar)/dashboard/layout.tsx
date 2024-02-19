@@ -5,8 +5,8 @@ export default function DashboardLayout({ children }: PropsWithChildren) {
   return (
     <div className="flex height-minus-navbar">
       <Sidebar />
-      <div className="overflow-auto w-full">
-        <main className="flex-grow my-7 mx-12">{children}</main>
+      <div className="overflow-auto py-7 w-full">
+        <main className="flex-grow mx-12 h-full">{children}</main>
       </div>
     </div>
   );

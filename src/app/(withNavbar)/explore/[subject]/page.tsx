@@ -25,7 +25,7 @@ export default async function SubjectPage({
   const style = subjectStyles[subject];
 
   return (
-    <div className="w-[50rem]">
+    <div className="max-w-full md:w-[40rem] lg:w-[50rem]">
       <div className={`flex items-center mb-4 gap-2`}>
         <div className={`rounded-full p-1 ${style.color}`}>
           {React.createElement(style.icon, { size: 32 })}

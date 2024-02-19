@@ -38,8 +38,8 @@ export default function Sidebar() {
   ];
 
   return (
-    <aside className="border-r w-[15rem]">
-      <nav className="p-7 flex flex-col gap-2">
+    <aside className="sticky top-[61px] height-minus-navbar overflow-none border-r min-w-[10rem] lg:min-w-[15rem]">
+      <nav className="pt-7 px-3 lg:px-7 flex flex-col gap-2">
         {links.map((link) => (
           <Link
             key={link.href}

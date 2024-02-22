@@ -3,23 +3,17 @@
 import type { SerializedStateDates } from "@/lib/utils";
 import Prisma from "@prisma/client";
 import { Dialog } from "@radix-ui/react-dialog";
-import { Layers3, Star } from "lucide-react";
+import { useSession } from "next-auth/react";
 import DeckCardDialogContent from "./DeckCardDialogContent";
 import DeleteDeckButton from "./DeleteDeckButton";
+import NumFlashcards from "./NumFlashcards";
+import StarRating from "./StarRating";
 import { Badge } from "./ui/badge";
 import { Card, CardFooter, CardHeader, CardTitle } from "./ui/card";
 import { DialogTrigger } from "./ui/dialog";
 import { Separator } from "./ui/separator";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "./ui/tooltip";
-import { useSession } from "next-auth/react";
-import StarRating from "./StarRating";
-import NumFlashcards from "./NumFlashcards";
-import { Button } from "./ui/button";
+import { api } from "@/app/api/trpc/client";
+import TagsSkeleton from "./TagsSkeleton";
 
 export interface DeckCardProps {
   // Convert types dateCreated and dateChanged from Date to string
@@ -29,16 +23,11 @@ export interface DeckCardProps {
 export default function DeckCard({ deck }: DeckCardProps) {
   const session = useSession();
 
-  // Mock these for now
-  const tags = [
-    "Algebra",
-    "Geometri",
-    "Trigonometri",
-    "Kalkulus",
-    "Statistikk",
-    "Sannsynlighet",
-    "Differensiallikninger",
-  ];
+  // Fetch the tags
+  const tags = api.deck.getTagsByDeckId.useQuery({
+    deckId: deck.id,
+    n: 5,
+  });
 
   return (
     <Dialog>
@@ -62,12 +51,16 @@ export default function DeckCard({ deck }: DeckCardProps) {
 
         <CardFooter className="flex justify-between pt-0 pb-3">
           {/* Tags */}
-          <div className="pb-1">
-            {tags.slice(0, 5).map((tag) => (
-              <Badge className="mr-1" variant="secondary" key={tag}>
-                {tag}
-              </Badge>
-            ))}
+          <div className="h-7">
+            {tags.isLoading ? (
+              <TagsSkeleton />
+            ) : (
+              tags.data?.map((tag) => (
+                <Badge className="mr-1" variant="secondary" key={tag}>
+                  {tag}
+                </Badge>
+              ))
+            )}
           </div>
           {/* Delete button */}
           {deck.userId === session?.data?.user.id && (

@@ -145,4 +145,20 @@ export const deckRouter = router({
       countRecent: 0, // TODO
     };
   }),
+  getTagsByDeckId: protectedProcedure
+    .input(z.object({ deckId: z.string(), n: z.number() }))
+    .query(async ({ ctx, input }) => {
+      const { deckId, n } = input;
+      const tags = ctx.prisma.flashcard.findMany({
+        where: {
+          deckId: deckId,
+        },
+        select: {
+          tag: true,
+        },
+        distinct: ["tag"],
+        take: n,
+      });
+      return (await tags).map((tag) => tag.tag);
+    }),
 });

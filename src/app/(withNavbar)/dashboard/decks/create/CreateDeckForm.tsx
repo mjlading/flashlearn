@@ -53,6 +53,7 @@ const formSchema = z.object({
           .string()
           // .min(2, "Baksiden må være minst 2 tegn")
           .max(1500, "Baksiden kan være maks 1500 tegn"),
+        tag: z.string(),
       })
     )
     .min(3, "Settet må ha minst 2 studiekort"), // min 3 because last card is always empty
@@ -64,7 +65,7 @@ export default function CreateDeckForm() {
     defaultValues: {
       name: "",
       private: false,
-      flashcards: [{ front: "", back: "" }],
+      flashcards: [{ front: "", back: "", tag: "" }],
       subjectName: "Auto",
       academicLevel: "BACHELOR",
     },
@@ -107,13 +108,27 @@ export default function CreateDeckForm() {
     },
   });
 
+  const generateTagsMutation = api.ai.generateTags.useMutation({
+    onError() {
+      toast.error("Noe gikk galt", {
+        description: "Vi kunne ikke generere stikkord. Vennligst prøv igjen.",
+      });
+    },
+  });
+
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const isAnyLoading =
-      createDeckMutation.isLoading || classifySubjectMutation.isLoading;
+      createDeckMutation.isLoading ||
+      classifySubjectMutation.isLoading ||
+      generateTagsMutation.isLoading;
     setIsLoading(isAnyLoading);
-  }, [createDeckMutation.isLoading, classifySubjectMutation.isLoading]);
+  }, [
+    createDeckMutation.isLoading,
+    classifySubjectMutation.isLoading,
+    generateTagsMutation.isLoading,
+  ]);
 
   const lastFlashcardFront = form.watch(
     `flashcards.${fields.length - 1}.front`
@@ -122,20 +137,37 @@ export default function CreateDeckForm() {
   useEffect(() => {
     // Add a new flashcard if the last one has content
     if (lastFlashcardFront.length > 1) {
-      append({ front: "", back: "" }, { shouldFocus: false });
+      append({ front: "", back: "", tag: "" }, { shouldFocus: false });
     }
   }, [lastFlashcardFront, append]);
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    // Remove last flashcard which is always empty
-    const flashcardsWithContent = form.getValues("flashcards").slice(0, -1);
+    const flashcardsWithContent = form
+      .getValues("flashcards")
+      .slice(0, -1) // Remove last flashcard which is always empty
+      .filter((flashcard) => flashcard.front !== "" && flashcard.back !== "");
 
+    // Classify subject if "Auto" selected
     let predictedSubject: undefined | string = undefined;
     if (values.subjectName === "Auto") {
       const prediction = await classifySubjectMutation.mutateAsync(
         flashcardsWithContent[0].front
       );
-      predictedSubject = prediction.predictedSubject;
+      predictedSubject = prediction.subject;
+    }
+
+    // Generate tags
+    const nTags = Math.min(Math.min(flashcardsWithContent.length, 5));
+    const tags = await generateTagsMutation.mutateAsync({
+      subject: predictedSubject ? predictedSubject : values.subjectName,
+      text: flashcardsWithContent
+        .slice(0, nTags)
+        .map((f) => f.front)
+        .join("\n\n"),
+      n: nTags,
+    });
+    for (let i = 0; i < tags.length; i++) {
+      flashcardsWithContent[i].tag = tags[i];
     }
 
     const processedValues = {
@@ -261,7 +293,7 @@ export default function CreateDeckForm() {
         </div>
 
         {/* Flashcards input */}
-        <div className="pt-4">
+        <div className="pt-6 pb-10">
           <h4 className="mb-4 text-2xl font-semibold">Legg til studiekort</h4>
           <Separator />
           <p className="mt-4 mb-4 text-muted-foreground">
@@ -318,15 +350,25 @@ export default function CreateDeckForm() {
           </FormMessage>
         </div>
 
+        <div className="py-12"></div>
+
         {/* Footer */}
-        <footer className="sticky bottom-0 backdrop-blur rounded-md w-full">
-          <div className="mb-5 flex justify-end items-center gap-8">
+        <footer className="sticky bottom-[-1.75rem] py-2 backdrop-blur w-full">
+          <div className="flex justify-end items-center gap-8">
             <span>{form.watch("name")}</span>
             <Separator orientation="vertical" className="h-[20px]" />
             <span>{fields.length - 1} Studiekort</span>
             <Button size="lg" type="submit" disabled={isLoading}>
-              {isLoading && <LoadingSpinner className="mr-2" size={20} />}
-              Lagre sett
+              {isLoading ? (
+                <>
+                  <LoadingSpinner className="mr-2" size={20} />
+                  {classifySubjectMutation.isLoading && "Bestemmer fagområde"}
+                  {generateTagsMutation.isLoading && "Genererer nøkkelord"}
+                  {createDeckMutation.isLoading && "Lagrer"}
+                </>
+              ) : (
+                "Lagre sett"
+              )}
             </Button>
           </div>
         </footer>

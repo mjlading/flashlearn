@@ -1,50 +1,115 @@
-import client, { getCosineScores } from "@/lib/ai";
+import openai, { generateEmbedding, getCosineSimilarities } from "@/lib/ai";
 import { z } from "zod";
 import { protectedProcedure, router } from "../trpc";
-import { subjectNameMap } from "@/lib/subject";
-import { TRPCError } from "@trpc/server";
 
-/**
- * Returns the most fitting subject given some input text.
- * Uses embeddings, calculates similarity by cosine similarity
- * @param text the text to assign a subject to
- */
 export const aiRouter = router({
+  /**
+   * Returns the most fitting subject given some input text.
+   * Uses embeddings, calculates similarity by cosine similarity
+   * @param text the text to assign a subject to
+   */
   classifySubject: protectedProcedure
     .input(z.string())
-    .mutation(async ({ input }) => {
-      const subjects = Object.keys(subjectNameMap);
+    .mutation(async ({ input, ctx }) => {
+      console.time("classifySubject time");
+      const subjects = (
+        await ctx.prisma.$queryRaw<
+          {
+            name: string;
+            embedding: string;
+          }[]
+        >`
+      SELECT
+        "name",
+        "embedding"::text as embedding
+      FROM "Subject"
+    `
+      ).map((e) => ({
+        name: e.name,
+        embedding: JSON.parse(e.embedding),
+      }));
 
-      let response;
-      try {
-        response = await client.embeddings.create({
-          model: "text-embedding-3-small",
-          input: [input, ...subjects], // batch requests
-        });
-      } catch (error) {
-        throw new TRPCError({
-          code: "INTERNAL_SERVER_ERROR",
-          message: `Failed to retrieve embeddings:${error}`,
-        });
-      }
+      const inputEmbedding = await generateEmbedding(input);
+      const subjectEmbeddings = subjects.map((subject) => [
+        ...subject.embedding,
+      ]);
 
-      // Needed since the the response object may not return embeddings in the order of the inputs
-      const embeddings = new Array(response.data.length);
-      for (const embedding of response.data) {
-        embeddings[embedding.index] = embedding.embedding;
-      }
+      const similarities = getCosineSimilarities(
+        inputEmbedding,
+        subjectEmbeddings
+      );
 
-      const textEmbedding = embeddings[0];
-      const subjectEmbeddings = embeddings.slice(1);
+      const highestSimilarity = Math.max(...similarities);
+      const predictedSubject =
+        subjects[similarities.indexOf(highestSimilarity)].name;
 
-      const scores = getCosineScores(textEmbedding, subjectEmbeddings);
-
-      const predictionConfidence = Math.max(...scores);
-      const predictedSubject = subjects[scores.indexOf(predictionConfidence)];
+      console.timeEnd("classifySubject time");
 
       return {
-        predictedSubject: predictedSubject,
-        predictionConfidence: predictionConfidence,
+        subject: predictedSubject,
+        similarity: highestSimilarity,
       };
+    }),
+
+  generateTags: protectedProcedure
+    .input(
+      z.object({
+        text: z.string(),
+        subject: z.string(),
+        n: z.number(),
+      })
+    )
+    .mutation(async ({ input }) => {
+      const { text, subject, n } = input;
+      console.time("tagsTime");
+
+      // Define tools used for function calling
+      const tools: any = [
+        {
+          type: "function",
+          function: {
+            name: "generate_tags",
+            description: `Generates ${n} specific keywords for the following text related to ${subject}. Excludes the subject itself from the keywords. Avoids redundancy.`,
+            parameters: {
+              type: "object",
+              properties: {
+                tags: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                    description:
+                      "A spesific keyword e.g. 'Addition', 'Socratic Method', 'Polymorphism', 'Quadratic Equations'",
+                  },
+                  description: `${n} unique and specific keywords that closely align with the provided text's context, excluding the primary subject '${subject}' to ensure diversity and relevance.`,
+                },
+              },
+              required: ["tags"],
+            },
+          },
+        },
+      ];
+
+      const completion = await openai.chat.completions.create({
+        model: "gpt-3.5-turbo",
+        tools: tools,
+        tool_choice: { type: "function", function: { name: "generate_tags" } }, // Forces function_call
+        messages: [
+          {
+            role: "user",
+            content: `Generate ${n} specific, concise and short (~1-2 words) keywords for the following text related to ${subject}. Exclude the subject name from the keywords.
+              
+              ${text}
+              `,
+          },
+        ],
+      });
+
+      const tags: string[] = JSON.parse(
+        completion.choices[0].message.tool_calls![0].function.arguments
+      ).tags;
+
+      console.timeEnd("tagsTime");
+
+      return tags;
     }),
 });

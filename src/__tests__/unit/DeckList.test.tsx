@@ -27,6 +27,16 @@ vi.mock("@/app/api/trpc/server", () => ({
   },
 }));
 
+vi.mock("@/app/api/trpc/client", () => ({
+  api: {
+    deck: {
+      getTagsByDeckId: {
+        useQuery: vi.fn(() => []),
+      },
+    },
+  },
+}));
+
 describe("DeckList", () => {
   it("Displays placeholder text and CTA if user has no created decks", async () => {
     const fetchParams = {

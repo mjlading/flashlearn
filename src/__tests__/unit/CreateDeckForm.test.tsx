@@ -19,8 +19,11 @@ vi.mock("@/app/api/trpc/client", () => ({
       classifySubject: {
         useMutation: vi.fn(() => ({
           mutate: vi.fn(),
-          isLoaing: false,
+          isLoading: false,
         })),
+      },
+      generateTags: {
+        useMutation: vi.fn(() => []),
       },
     },
   },

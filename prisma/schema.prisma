@@ -155,6 +155,8 @@ model Flashcard {
   deckId String
 
   flashcardRehearsals FlashcardRehearsal[]
+
+  embedding Unsupported("vector(1536)")?
 }
 
 enum Mode {

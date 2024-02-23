@@ -34,6 +34,9 @@ export const deckRouter = router({
           },
           academicLevel: input.academicLevel as AcademicLevel,
         },
+        include: {
+          flashcards: true,
+        },
       });
       return newDeck;
     }),

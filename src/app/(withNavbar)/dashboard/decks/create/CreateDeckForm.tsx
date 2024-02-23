@@ -26,13 +26,15 @@ import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import { academicLevelMap } from "@/lib/academicLevel";
+import { generateEmbeddings } from "@/lib/ai";
 import { subjectNameMap } from "@/lib/subject";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
+import { Flashcard } from "@prisma/client";
 
 const formSchema = z.object({
   name: z
@@ -78,8 +80,11 @@ export default function CreateDeckForm() {
 
   const router = useRouter();
 
+  const createAndSaveEmbeddingsMutation =
+    api.flascard.createAndSaveEmbeddings.useMutation();
+
   const createDeckMutation = api.deck.createDeck.useMutation({
-    onSuccess() {
+    onSuccess(data) {
       router.push("/dashboard/decks?category=created");
       router.refresh(); // Fetch and display the new deck
 
@@ -87,10 +92,13 @@ export default function CreateDeckForm() {
         action: {
           label: "Øv nå",
           onClick: () => {
-            // TODO: Navigate to practice page
+            router.push(`/decks/${data.id}/rehearsal?mode=visual`); // TODO: set mode to preffered mode
           },
         },
       });
+
+      // Create embeddings for flashcards in the background
+      createAndSaveEmbeddingsMutation.mutate(data.flashcards);
     },
     onError() {
       toast.error("Noe gikk galt", {

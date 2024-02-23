@@ -15,7 +15,7 @@ export const appRouter = router({
   subject: subjectRouter,
   bookmark: bookmarkRouter,
   rehearsal: rehearsalRouter,
-  flascard: flashcardRouter,
+  flashcard: flashcardRouter,
   ai: aiRouter,
 });
 

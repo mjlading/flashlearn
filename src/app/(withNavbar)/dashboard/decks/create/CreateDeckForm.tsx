@@ -81,7 +81,7 @@ export default function CreateDeckForm() {
   const router = useRouter();
 
   const createAndSaveEmbeddingsMutation =
-    api.flascard.createAndSaveEmbeddings.useMutation();
+    api.flashcard.createAndSaveEmbeddings.useMutation();
 
   const createDeckMutation = api.deck.createDeck.useMutation({
     onSuccess(data) {

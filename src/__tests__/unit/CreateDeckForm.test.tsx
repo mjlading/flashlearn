@@ -26,6 +26,14 @@ vi.mock("@/app/api/trpc/client", () => ({
         useMutation: vi.fn(() => []),
       },
     },
+    flashcard: {
+      createAndSaveEmbeddings: {
+        useMutation: vi.fn(() => ({
+          mutate: vi.fn(),
+          isLoading: false,
+        })),
+      },
+    },
   },
 }));
 

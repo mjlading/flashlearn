@@ -13,6 +13,8 @@ import {
 } from "./ui/dialog";
 import { Form, FormControl, FormField, FormItem, FormMessage } from "./ui/form";
 import { Textarea } from "./ui/textarea";
+import GenerationTypeTabs from "./GenerationTypeTabs";
+import { useState } from "react";
 
 const FormSchema = z.object({
   textInput: z
@@ -24,13 +26,13 @@ const FormSchema = z.object({
 });
 
 export default function GenerateFromText() {
+  const [generationType, setGenerationType] = useState("mixed");
+
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
   });
 
-  function onSubmit(data: z.infer<typeof FormSchema>) {
-    alert("todo");
-  }
+  function onSubmit(data: z.infer<typeof FormSchema>) {}
 
   return (
     <Dialog>
@@ -40,7 +42,7 @@ export default function GenerateFromText() {
           Tekst
         </Button>
       </DialogTrigger>
-      <DialogContent>
+      <DialogContent className="md:min-w-[45rem] min-w-full">
         <DialogHeader>
           <DialogTitle>Generer fra tekst</DialogTitle>
           <DialogDescription>
@@ -59,12 +61,16 @@ export default function GenerateFromText() {
                     <Textarea
                       placeholder="Skriv inn tekst her"
                       {...field}
-                      rows={12}
+                      rows={15}
                     />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
+            />
+            <GenerationTypeTabs
+              value={generationType}
+              onValueChange={(value) => setGenerationType(value)}
             />
             <Button type="submit" size="lg" className="w-full">
               Generer

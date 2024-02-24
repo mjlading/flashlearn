@@ -75,20 +75,24 @@ export default function DeckCardDialogContent({ deck }: DeckCardProps) {
       <Separator className="my-4" />
 
       {/* Rehearsal Mode Selection */}
-      <div className="flex flex-col gap-4 py-4">
+      <div className="flex flex-col">
+        <Label htmlFor="select-mode" className="text-center mb-4">
+          Øvemodus
+        </Label>
         <Tabs
+          id="select-mode"
           value={modeSelected}
           onValueChange={(newValue) => setModeSelected(newValue)}
         >
-          <Label htmlFor="rehearsal-mode">Øvemodus</Label>
-          <TabsList className="grid w-full grid-cols-3 mt-1">
+          <TabsList className="grid w-full grid-cols-3">
             <TabsTrigger value="visual">Visuell</TabsTrigger>
             <TabsTrigger value="write">Skriftlig</TabsTrigger>
             <TabsTrigger value="oral">Muntlig</TabsTrigger>
           </TabsList>
         </Tabs>
       </div>
-      <DialogFooter>
+
+      <DialogFooter className="mt-2">
         <Link
           href={`/decks/${deck.id}/rehearsal?mode=${modeSelected}`}
           className={buttonVariants({

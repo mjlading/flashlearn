@@ -24,10 +24,7 @@ export default function DeckCard({ deck }: DeckCardProps) {
   const session = useSession();
 
   // Fetch the tags
-  const tags = api.deck.getTagsByDeckId.useQuery({
-    deckId: deck.id,
-    n: 5,
-  });
+  const tags = api.deck.getTagsByDeckId.useQuery(deck.id);
 
   return (
     <Dialog>

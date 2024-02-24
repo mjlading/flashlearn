@@ -1,7 +1,9 @@
 "use client";
 
 import { api } from "@/app/api/trpc/client";
-import GenerateFlashcardsInput from "@/components/GenerateFlashcardsInput";
+import GenerateFlashcardsInput, {
+  GeneratedFlashcard,
+} from "@/components/GenerateFlashcardsInput";
 import { LoadingSpinner } from "@/components/LoadingSpinner";
 import { Button } from "@/components/ui/button";
 import {
@@ -22,19 +24,16 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import { academicLevelMap } from "@/lib/academicLevel";
-import { generateEmbeddings } from "@/lib/ai";
 import { subjectNameMap } from "@/lib/subject";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
-import { Flashcard } from "@prisma/client";
 
 const formSchema = z.object({
   name: z
@@ -149,6 +148,15 @@ export default function CreateDeckForm() {
     }
   }, [lastFlashcardFront, append]);
 
+  function handleAddFlashcards(flashcards: GeneratedFlashcard[]) {
+    remove(-1); // Remove last empty flashcard
+
+    // TODO: temporary fix, will generate tags in future
+    const flashcardsWithTags = flashcards.map((f) => ({ ...f, tag: "" }));
+
+    append(flashcardsWithTags);
+  }
+
   async function onSubmit(values: z.infer<typeof formSchema>) {
     const flashcardsWithContent = form
       .getValues("flashcards")
@@ -165,14 +173,10 @@ export default function CreateDeckForm() {
     }
 
     // Generate tags
-    const nTags = Math.min(Math.min(flashcardsWithContent.length, 5));
     const tags = await generateTagsMutation.mutateAsync({
       subject: predictedSubject ? predictedSubject : values.subjectName,
-      text: flashcardsWithContent
-        .slice(0, nTags)
-        .map((f) => f.front)
-        .join("\n\n"),
-      n: nTags,
+      text: flashcardsWithContent.map((f) => f.front).join("\n\n"),
+      n: flashcardsWithContent.length,
     });
     for (let i = 0; i < tags.length; i++) {
       flashcardsWithContent[i].tag = tags[i];
@@ -194,7 +198,7 @@ export default function CreateDeckForm() {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-        <div className="grid md:grid-cols-2 grid-cols-1 gap-4">
+        <div className="grid md:grid-cols-2 grid-cols-1 gap-6">
           {/* Name input */}
           <FormField
             control={form.control}
@@ -207,7 +211,7 @@ export default function CreateDeckForm() {
                     autoFocus
                     placeholder="Gi settet ditt et navn"
                     {...field}
-                    className="max-w-sm"
+                    className="w-full p-4 text-base"
                     maxLength={50}
                   />
                 </FormControl>
@@ -221,14 +225,14 @@ export default function CreateDeckForm() {
             control={form.control}
             name="subjectName"
             render={({ field }) => (
-              <FormItem className="max-w-sm">
+              <FormItem>
                 <FormLabel>Fagområde</FormLabel>
                 <Select
                   onValueChange={field.onChange}
                   defaultValue={field.value}
                 >
                   <FormControl>
-                    <SelectTrigger>
+                    <SelectTrigger className="p-4 text-base">
                       <SelectValue />
                     </SelectTrigger>
                   </FormControl>
@@ -245,76 +249,85 @@ export default function CreateDeckForm() {
           />
 
           {/* Privacy switch */}
-          <FormField
-            control={form.control}
-            name="private"
-            render={({ field }) => (
-              <FormItem className="flex justify-between items-center rounded-lg border p-3 max-w-sm">
-                <div>
-                  <FormLabel>Privat</FormLabel>
-                  <FormDescription>
-                    Private sett er kun synlige for deg.
-                  </FormDescription>
-                </div>
-                <FormControl>
-                  <Switch
-                    checked={field.value}
-                    onCheckedChange={field.onChange}
-                  />
-                </FormControl>
-              </FormItem>
-            )}
-          />
+          <div className="md:col-span-2">
+            <FormField
+              control={form.control}
+              name="private"
+              render={({ field }) => (
+                <FormItem className="flex justify-between items-center rounded-lg border p-4">
+                  <div>
+                    <FormLabel className="text-base text-gray-800 dark:text-gray-200">
+                      Privat
+                    </FormLabel>
+                    <FormDescription className="text-sm text-muted-foreground">
+                      Private sett er kun synlige for deg.
+                    </FormDescription>
+                  </div>
+                  <FormControl>
+                    <Switch
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+          </div>
 
           {/* Academic level select */}
-          <FormField
-            control={form.control}
-            name="academicLevel"
-            render={({ field }) => (
-              <FormItem className="max-w-sm">
-                <FormLabel>Akademisk nivå</FormLabel>
-                <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                >
-                  <FormControl>
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    {Object.keys(academicLevelMap).map(
-                      (academicLevelOption) => (
-                        <SelectItem
-                          value={academicLevelOption}
-                          key={academicLevelOption}
-                        >
-                          {academicLevelMap[academicLevelOption]}
-                        </SelectItem>
-                      )
-                    )}
-                  </SelectContent>
-                </Select>
-              </FormItem>
-            )}
-          />
+          <div className="md:col-span-2">
+            <FormField
+              control={form.control}
+              name="academicLevel"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Akademisk nivå</FormLabel>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <FormControl>
+                      <SelectTrigger className="p-4 text-base">
+                        <SelectValue />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {Object.keys(academicLevelMap).map(
+                        (academicLevelOption) => (
+                          <SelectItem
+                            value={academicLevelOption}
+                            key={academicLevelOption}
+                          >
+                            {academicLevelMap[academicLevelOption]}
+                          </SelectItem>
+                        )
+                      )}
+                    </SelectContent>
+                  </Select>
+                </FormItem>
+              )}
+            />
+          </div>
         </div>
 
         {/* Flashcards input */}
-        <div className="pt-6 pb-10">
-          <h4 className="mb-4 text-2xl font-semibold">Legg til studiekort</h4>
-          <Separator />
-          <p className="mt-4 mb-4 text-muted-foreground">
+        <div className="pt-8 pb-[7rem]">
+          <h4 className="mb-6 text-2xl font-medium">Legg til studiekort</h4>
+
+          <p className="mt-6 mb-8 text-base text-muted-foreground max-w-xl">
             Hvert kort har en fremside og en bakside. Fremsiden kan ha et begrep
             eller spørsmål, og baksiden kan ha et svar eller en forklaring.
           </p>
+
           {/* Generation input */}
-          <GenerateFlashcardsInput />
+          <GenerateFlashcardsInput onAddFlashcards={handleAddFlashcards} />
 
           {fields.map((field, index) => (
-            <div key={field.id}>
-              <Label>{index + 1}.</Label>
-              <div className="flex gap-6">
+            <div key={field.id} className="mt-6">
+              <Label className="block text-lg font-medium text-muted-foreground mb-2">
+                {index + 1}.
+              </Label>
+              <div className="flex gap-8">
                 {/* Front side of flashcard */}
                 <FormField
                   control={form.control}
@@ -324,7 +337,7 @@ export default function CreateDeckForm() {
                       <FormControl>
                         <Textarea
                           placeholder="Fremside"
-                          className="h-[10rem] resize-none"
+                          className="h-[12rem] resize-none p-4 text-md"
                           {...field}
                         />
                       </FormControl>
@@ -341,7 +354,7 @@ export default function CreateDeckForm() {
                       <FormControl>
                         <Textarea
                           placeholder="Bakside"
-                          className="h-[10rem] resize-none"
+                          className="h-[12rem] resize-none p-4 text-md"
                           {...field}
                         />
                       </FormControl>
@@ -358,18 +371,19 @@ export default function CreateDeckForm() {
           </FormMessage>
         </div>
 
-        <div className="py-12"></div>
-
         {/* Footer */}
-        <footer className="sticky bottom-[-1.75rem] py-2 backdrop-blur w-full">
-          <div className="flex justify-end items-center gap-8">
-            <span>{form.watch("name")}</span>
-            <Separator orientation="vertical" className="h-[20px]" />
-            <span>{fields.length - 1} Studiekort</span>
-            <Button size="lg" type="submit" disabled={isLoading}>
+        <footer className="sticky bottom-0 py-4 bg-white dark:bg-gray-900 border">
+          <div className="flex justify-between items-center gap-4 px-6 text-sm font-medium text-gray-700 dark:text-gray-300">
+            <p>{form.watch("name") || "Nytt sett"}</p>
+            <p>{fields.length - 1} Studiekort</p>
+            <Button
+              type="submit"
+              disabled={isLoading}
+              className="bg-blue-600 hover:bg-blue-700 text-white"
+            >
               {isLoading ? (
                 <>
-                  <LoadingSpinner className="mr-2" size={20} />
+                  <LoadingSpinner size={20} />
                   {classifySubjectMutation.isLoading && "Bestemmer fagområde"}
                   {generateTagsMutation.isLoading && "Genererer nøkkelord"}
                   {createDeckMutation.isLoading && "Lagrer"}

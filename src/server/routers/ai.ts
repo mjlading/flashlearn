@@ -1,3 +1,4 @@
+import { GeneratedFlashcard } from "@/components/GenerateFlashcardsInput";
 import openai, { generateEmbedding, getCosineSimilarities } from "@/lib/ai";
 import { z } from "zod";
 import { protectedProcedure, router } from "../trpc";
@@ -69,7 +70,7 @@ export const aiRouter = router({
           type: "function",
           function: {
             name: "generate_tags",
-            description: `Generates ${n} specific keywords for the following text related to ${subject}. Excludes the subject itself from the keywords. Avoids redundancy.`,
+            description: `Generates specific keywords (max ${n}) for the following text related to ${subject}. Excludes the subject itself from the keywords. Avoids redundancy.`,
             parameters: {
               type: "object",
               properties: {
@@ -80,7 +81,7 @@ export const aiRouter = router({
                     description:
                       "A spesific keyword e.g. 'Addition', 'Socratic Method', 'Polymorphism', 'Quadratic Equations'",
                   },
-                  description: `${n} unique and specific keywords that closely align with the provided text's context, excluding the primary subject '${subject}' to ensure diversity and relevance.`,
+                  description: `A fitting number (1-${n}) of unique and specific keywords that closely align with the provided text's context, excluding the primary subject '${subject}' to ensure diversity and relevance.`,
                 },
               },
               required: ["tags"],
@@ -96,7 +97,7 @@ export const aiRouter = router({
         messages: [
           {
             role: "user",
-            content: `Generate ${n} specific, concise and short (~1-2 words) keywords for the following text related to ${subject}. Exclude the subject name from the keywords. Dont answer if text has questions.
+            content: `Generate 1-${n} specific, concise and short (~1-2 words) keywords for the following text related to ${subject}. Exclude the subject name from the keywords. Dont answer if text has questions.
               
               ${text}
               `,
@@ -104,6 +105,7 @@ export const aiRouter = router({
         ],
       });
 
+      // use of ! is safe here since we force the function call
       const tags: string[] = JSON.parse(
         completion.choices[0].message.tool_calls![0].function.arguments
       ).tags;
@@ -111,5 +113,96 @@ export const aiRouter = router({
       console.timeEnd("tagsTime");
 
       return tags;
+    }),
+
+  /**
+   * Generates n flashcards from n keywords
+   */
+  generateFlashcardsFromKeywords: protectedProcedure
+    .input(
+      z.object({
+        keywords: z.array(z.string()),
+        type: z.string(),
+      })
+    )
+    .mutation(async ({ input }) => {
+      const { keywords, type } = input;
+
+      console.time("generateFlashcardsFromKeywords time");
+
+      const n = keywords.length;
+      let flashcardTypeDescription;
+
+      if (type === "practical") {
+        flashcardTypeDescription =
+          "practical examples and problem-solving questions with direct answers";
+      } else if (type === "theoretical") {
+        flashcardTypeDescription =
+          "theoretical flashcards with a front (question or term) and a back (answer or explanation/definition)";
+      } else {
+        // type === "mixed"
+        flashcardTypeDescription =
+          "a mix of theoretical flashcards (terms and definitions) and practical problem-solving questions with direct answers";
+      }
+
+      // Define tools used for function calling
+      const tools: any = [
+        {
+          type: "function",
+          function: {
+            name: "generate_flashcards",
+            description: `Generates ${n} ${type} flashcards.`,
+            parameters: {
+              type: "object",
+              properties: {
+                flashcards: {
+                  type: "array",
+                  items: {
+                    type: "object",
+                    description: flashcardTypeDescription,
+                    properties: {
+                      front: {
+                        type: "string",
+                      },
+                      back: {
+                        type: "string",
+                      },
+                    },
+                  },
+                  description: `${n} concise, ${flashcardTypeDescription} that closely align with the provided keywords and type.`,
+                },
+              },
+              required: ["flashcards"],
+            },
+          },
+        },
+      ];
+
+      const completion = await openai.chat.completions.create({
+        model: "gpt-3.5-turbo",
+        tools: tools,
+        tool_choice: {
+          type: "function",
+          function: { name: "generate_flashcards" },
+        }, // Forces function_call
+        messages: [
+          {
+            role: "user",
+            content: `Generate ${n} specific and concise flashcards for the following ${n} keywords. Flashcards should be highly ${type}, focusing on ${flashcardTypeDescription}.
+              
+              ${keywords.join(",")}
+              `,
+          },
+        ],
+      });
+
+      // use of ! is safe here since we force the function call
+      const flashcards: GeneratedFlashcard[] = JSON.parse(
+        completion.choices[0].message.tool_calls![0].function.arguments
+      ).flashcards;
+
+      console.timeEnd("generateFlashcardsFromKeywords time");
+
+      return flashcards;
     }),
 });

@@ -52,8 +52,8 @@ export default function DeckCard({ deck }: DeckCardProps) {
             {tags.isLoading ? (
               <TagsSkeleton />
             ) : (
-              tags.data?.map((tag) => (
-                <Badge className="mr-1" variant="secondary" key={tag}>
+              tags.data?.slice(0, 4).map((tag, index) => (
+                <Badge className="mr-1" variant="secondary" key={index}>
                   {tag}
                 </Badge>
               ))

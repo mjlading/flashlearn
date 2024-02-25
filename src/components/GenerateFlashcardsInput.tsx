@@ -60,7 +60,12 @@ export default function GenerateFlashcardsInput({
         </p>
         {!isLoading && !generatedFlashcards.length && (
           <div className="space-x-2">
-            <GenerateFromText />
+            <GenerateFromText
+              onGeneratedFlashcards={handleGeneratedFlashcards}
+              onLoadingStateChanged={(newState: boolean) =>
+                setIsLoading(newState)
+              }
+            />
             <GenerateFromFile />
             <GenerateFromCourse
               onGeneratedFlashcards={handleGeneratedFlashcards}

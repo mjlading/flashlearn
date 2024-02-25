@@ -213,7 +213,7 @@ export const aiRouter = router({
         type: z.string(),
       })
     )
-    .mutation(async ({ ctx, input }) => {
+    .mutation(async ({ input }) => {
       const { text, type } = input;
 
       const n = "5-20";
@@ -256,7 +256,7 @@ export const aiRouter = router({
                       },
                     },
                   },
-                  description: `${n} concise, ${flashcardTypeDescription} that closely align with the provided text and type.`,
+                  description: `${n} ${flashcardTypeDescription} that closely align with the provided text and type.`,
                 },
               },
               required: ["flashcards"],
@@ -275,7 +275,7 @@ export const aiRouter = router({
         messages: [
           {
             role: "user",
-            content: `Generate ${n} specific and concise flashcards for the following text. Flashcards should be highly ${type}, focusing on ${flashcardTypeDescription}.
+            content: `Generate ${n} descriptive, detailed flashcards for the following text. Flashcards should be highly ${type}, focusing on ${flashcardTypeDescription}.
                     
                     ${text}
                     `,

@@ -15,6 +15,9 @@ import { Form, FormControl, FormField, FormItem, FormMessage } from "./ui/form";
 import { Textarea } from "./ui/textarea";
 import GenerationTypeTabs from "./GenerationTypeTabs";
 import { useState } from "react";
+import { GeneratedFlashcard } from "./GenerateFlashcardsInput";
+import { api } from "@/app/api/trpc/client";
+import { toast } from "sonner";
 
 const FormSchema = z.object({
   textInput: z
@@ -25,14 +28,41 @@ const FormSchema = z.object({
     }),
 });
 
-export default function GenerateFromText() {
+export default function GenerateFromText({
+  onGeneratedFlashcards,
+  onLoadingStateChanged,
+}: {
+  onGeneratedFlashcards: (flashcards: GeneratedFlashcard[]) => void;
+  onLoadingStateChanged: (newState: boolean) => void;
+}) {
   const [generationType, setGenerationType] = useState("mixed");
+  const generateFlashcardsMutation =
+    api.ai.generateFlashcardsFromText.useMutation({
+      onMutate: () => {
+        onLoadingStateChanged(true);
+      },
+      onSuccess: (data) => {
+        onGeneratedFlashcards(data);
+        onLoadingStateChanged(false);
+      },
+      onError: () => {
+        onLoadingStateChanged(false);
+        toast.error("Kunne ikke generere studiekort", {
+          description: "Vennligst prøv igjen",
+        });
+      },
+    });
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
   });
 
-  function onSubmit(data: z.infer<typeof FormSchema>) {}
+  function onSubmit(data: z.infer<typeof FormSchema>) {
+    generateFlashcardsMutation.mutate({
+      text: data.textInput,
+      type: generationType,
+    });
+  }
 
   return (
     <Dialog>

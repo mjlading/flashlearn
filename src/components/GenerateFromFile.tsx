@@ -1,3 +1,5 @@
+"use client";
+
 import { File } from "lucide-react";
 import { Button } from "./ui/button";
 import {
@@ -11,9 +13,36 @@ import {
 import { Label } from "./ui/label";
 import { Input } from "./ui/input";
 import React, { useState } from "react";
+import { GeneratedFlashcard } from "./GenerateFlashcardsInput";
+import { toast } from "sonner";
+import { api } from "@/app/api/trpc/client";
+import GenerationTypeTabs from "./GenerationTypeTabs";
 
-export default function GenerateFromFile() {
+export default function GenerateFromFile({
+  onGeneratedFlashcards,
+  onLoadingStateChanged,
+}: {
+  onGeneratedFlashcards: (flashcards: GeneratedFlashcard[]) => void;
+  onLoadingStateChanged: (newState: boolean) => void;
+}) {
   const [file, setFile] = useState<File | null>(null);
+  const [generationType, setGenerationType] = useState("mixed");
+  const generateFlashcardsMutation =
+    api.ai.generateFlashcardsFromText.useMutation({
+      onMutate: () => {
+        onLoadingStateChanged(true);
+      },
+      onSuccess: (data) => {
+        onGeneratedFlashcards(data);
+        onLoadingStateChanged(false);
+      },
+      onError: () => {
+        onLoadingStateChanged(false);
+        toast.error("Kunne ikke generere studiekort", {
+          description: "Vennligst prøv igjen",
+        });
+      },
+    });
 
   function handleFileChange(e: any) {
     const file = e.target.files[0];
@@ -30,7 +59,10 @@ export default function GenerateFromFile() {
     reader.onload = (e: any) => {
       const text = e.target.result;
 
-      console.log(text);
+      generateFlashcardsMutation.mutate({
+        text: text,
+        type: generationType,
+      });
     };
 
     reader.readAsText(file);
@@ -64,14 +96,20 @@ export default function GenerateFromFile() {
           </div>
 
           {file && (
-            <Button
-              size="lg"
-              className="w-full"
-              disabled={!file}
-              onClick={handleGenerateClicked}
-            >
-              Generer
-            </Button>
+            <>
+              <GenerationTypeTabs
+                value={generationType}
+                onValueChange={(value) => setGenerationType(value)}
+              />
+              <Button
+                size="lg"
+                className="w-full"
+                disabled={!file}
+                onClick={handleGenerateClicked}
+              >
+                Generer
+              </Button>
+            </>
           )}
         </div>
       </DialogContent>

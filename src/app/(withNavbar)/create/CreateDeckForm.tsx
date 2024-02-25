@@ -87,14 +87,20 @@ export default function CreateDeckForm() {
       router.push("/dashboard/decks?category=created");
       router.refresh(); // Fetch and display the new deck
 
-      toast.success(`Settet '${form.getValues("name")}' er lagret`, {
-        action: {
-          label: "Øv nå",
-          onClick: () => {
-            router.push(`/decks/${data.id}/rehearsal?mode=visual`); // TODO: set mode to preffered mode
+      toast.success(
+        <p>
+          Settet <span className="font-semibold">{form.getValues("name")}</span>{" "}
+          er lagret!
+        </p>,
+        {
+          action: {
+            label: "Øv nå",
+            onClick: () => {
+              router.push(`/decks/${data.id}/rehearsal?mode=visual`); // TODO: set mode to preffered mode
+            },
           },
-        },
-      });
+        }
+      );
 
       // Create embeddings for flashcards in the background
       createAndSaveEmbeddingsMutation.mutate(data.flashcards);
@@ -182,6 +188,10 @@ export default function CreateDeckForm() {
       n: flashcardsWithContent.length,
     });
     for (let i = 0; i < tags.length; i++) {
+      if (!flashcardsWithContent[i].tag) {
+        console.warn("flashcardsWithContent[i] is undefined");
+        break;
+      }
       flashcardsWithContent[i].tag = tags[i];
     }
 

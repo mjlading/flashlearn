@@ -66,7 +66,12 @@ export default function GenerateFlashcardsInput({
                 setIsLoading(newState)
               }
             />
-            <GenerateFromFile />
+            <GenerateFromFile
+              onGeneratedFlashcards={handleGeneratedFlashcards}
+              onLoadingStateChanged={(newState: boolean) =>
+                setIsLoading(newState)
+              }
+            />
             <GenerateFromCourse
               onGeneratedFlashcards={handleGeneratedFlashcards}
               onLoadingStateChanged={(newState: boolean) =>

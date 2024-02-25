@@ -155,6 +155,9 @@ export default function CreateDeckForm() {
     const flashcardsWithTags = flashcards.map((f) => ({ ...f, tag: "" }));
 
     append(flashcardsWithTags);
+    toast.success(`La til ${flashcards.length} studiekort`, {
+      position: "top-center",
+    });
   }
 
   async function onSubmit(values: z.infer<typeof formSchema>) {

@@ -34,7 +34,7 @@ export const authConfig = {
       const isLoggedIn = !!auth?.user;
 
       // Define the paths that require authentication
-      const protectedPaths = ["/dashboard", "/explore/"];
+      const protectedPaths = ["/dashboard", "/explore/", "/create"];
 
       const isProtected = protectedPaths.some((path) =>
         nextUrl.pathname.startsWith(path)

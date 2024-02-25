@@ -5,7 +5,7 @@ import { ButtonProps, buttonVariants } from "./ui/button";
 export default function NewDeckButton({ ...props }: ButtonProps) {
   return (
     <Link
-      href={"/dashboard/decks/create"}
+      href={"/create"}
       className={buttonVariants({
         size: props.size,
         variant: props.variant,

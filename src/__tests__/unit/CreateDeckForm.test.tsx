@@ -25,6 +25,12 @@ vi.mock("@/app/api/trpc/client", () => ({
       generateTags: {
         useMutation: vi.fn(() => []),
       },
+      generateFlashcardsFromText: {
+        useMutation: vi.fn(() => []),
+      },
+      generateFlashcardsFromKeywords: {
+        useMutation: vi.fn(() => []),
+      },
     },
     flashcard: {
       createAndSaveEmbeddings: {

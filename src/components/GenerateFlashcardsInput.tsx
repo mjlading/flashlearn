@@ -62,7 +62,12 @@ export default function GenerateFlashcardsInput({
           <div className="space-x-2">
             <GenerateFromText />
             <GenerateFromFile />
-            <GenerateFromCourse />
+            <GenerateFromCourse
+              onGeneratedFlashcards={handleGeneratedFlashcards}
+              onLoadingStateChanged={(newState: boolean) =>
+                setIsLoading(newState)
+              }
+            />
             <GenerateFromKeywords
               onGeneratedFlashcards={handleGeneratedFlashcards}
               onLoadingStateChanged={(newState: boolean) =>
@@ -75,7 +80,7 @@ export default function GenerateFlashcardsInput({
       {/* The generated flashcards */}
       {isLoading && <Skeleton className="h-[10rem]" />}
       {generatedFlashcards.length > 0 && (
-        <div className="bg-muted dark:bg-gray-700 shadow relative">
+        <div className="bg-muted dark:bg-muted/80 shadow relative">
           <div className="overflow-y-scroll max-h-[22rem] p-4 grid grid-cols-2 gap-12">
             {generatedFlashcards.map((flashcard, index) => (
               <React.Fragment key={index}>

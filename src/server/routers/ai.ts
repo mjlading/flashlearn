@@ -205,4 +205,91 @@ export const aiRouter = router({
 
       return flashcards;
     }),
+
+  generateFlashcardsFromText: protectedProcedure
+    .input(
+      z.object({
+        text: z.string(),
+        type: z.string(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { text, type } = input;
+
+      const n = "5-20";
+
+      let flashcardTypeDescription;
+
+      if (type === "practical") {
+        flashcardTypeDescription =
+          "practical examples and problem-solving questions with direct answers";
+      } else if (type === "theoretical") {
+        flashcardTypeDescription =
+          "theoretical flashcards with a front (question or term) and a back (answer or explanation/definition)";
+      } else {
+        // type === "mixed"
+        flashcardTypeDescription =
+          "a mix of theoretical flashcards (terms and definitions) and practical problem-solving questions with direct answers";
+      }
+
+      // Define tools used for function calling
+      const tools: any = [
+        {
+          type: "function",
+          function: {
+            name: "generate_flashcards",
+            description: `Generates ${n} ${type} flashcards.`,
+            parameters: {
+              type: "object",
+              properties: {
+                flashcards: {
+                  type: "array",
+                  items: {
+                    type: "object",
+                    description: flashcardTypeDescription,
+                    properties: {
+                      front: {
+                        type: "string",
+                      },
+                      back: {
+                        type: "string",
+                      },
+                    },
+                  },
+                  description: `${n} concise, ${flashcardTypeDescription} that closely align with the provided text and type.`,
+                },
+              },
+              required: ["flashcards"],
+            },
+          },
+        },
+      ];
+
+      const completion = await openai.chat.completions.create({
+        model: "gpt-3.5-turbo",
+        tools: tools,
+        tool_choice: {
+          type: "function",
+          function: { name: "generate_flashcards" },
+        }, // Forces function_call
+        messages: [
+          {
+            role: "user",
+            content: `Generate ${n} specific and concise flashcards for the following text. Flashcards should be highly ${type}, focusing on ${flashcardTypeDescription}.
+                    
+                    ${text}
+                    `,
+          },
+        ],
+      });
+
+      // use of ! is safe here since we force the function call
+      const flashcards: GeneratedFlashcard[] = JSON.parse(
+        completion.choices[0].message.tool_calls![0].function.arguments
+      ).flashcards;
+
+      console.timeEnd("generateFlashcardsFromKeywords time");
+
+      return flashcards;
+    }),
 });

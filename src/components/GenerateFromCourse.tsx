@@ -17,11 +17,37 @@ import { ScrollArea } from "./ui/scroll-area";
 import { useState } from "react";
 import { CourseInfo, getCourseInfo } from "@/lib/webScraper";
 import { toast } from "sonner";
+import GenerationTypeTabs from "./GenerationTypeTabs";
+import { GeneratedFlashcard } from "./GenerateFlashcardsInput";
+import { api } from "@/app/api/trpc/client";
 
-export default function GenerateFromCourse() {
+export default function GenerateFromCourse({
+  onGeneratedFlashcards,
+  onLoadingStateChanged,
+}: {
+  onGeneratedFlashcards: (flashcards: GeneratedFlashcard[]) => void;
+  onLoadingStateChanged: (newState: boolean) => void;
+}) {
   const [courseCode, setCourseCode] = useState("");
   const [isLoadingCourseCode, setIsLoadingCourseCode] = useState(false);
   const [courseInfo, setCourseInfo] = useState<CourseInfo | null>(null);
+  const [generationType, setGenerationType] = useState("mixed");
+  const generateFlashcardsMutation =
+    api.ai.generateFlashcardsFromText.useMutation({
+      onMutate: () => {
+        onLoadingStateChanged(true);
+      },
+      onSuccess: (data) => {
+        onGeneratedFlashcards(data);
+        onLoadingStateChanged(false);
+      },
+      onError: () => {
+        onLoadingStateChanged(false);
+        toast.error("Kunne ikke generere studiekort", {
+          description: "Vennligst prøv igjen",
+        });
+      },
+    });
 
   async function handleGetCourseInfo() {
     setIsLoadingCourseCode(true);
@@ -36,8 +62,24 @@ export default function GenerateFromCourse() {
     setIsLoadingCourseCode(false);
   }
 
-  function handleGenerateClicked() {
-    alert("todo");
+  async function handleGenerateClicked() {
+    if (!courseInfo) return;
+
+    const prompt =
+      courseInfo.name +
+      "\nStudy level: " +
+      courseInfo.studyLevel +
+      "\nLanguage:" +
+      courseInfo.language +
+      "\n" +
+      courseInfo.courseContent +
+      "\n" +
+      courseInfo.learningGoal;
+
+    generateFlashcardsMutation.mutate({
+      text: prompt,
+      type: generationType,
+    });
   }
 
   return (
@@ -127,6 +169,10 @@ export default function GenerateFromCourse() {
                 {courseInfo.learningMethod}
               </p>
             </ScrollArea>
+            <GenerationTypeTabs
+              value={generationType}
+              onValueChange={(value) => setGenerationType(value)}
+            />
             <Button
               size="lg"
               className="w-full"

@@ -1,12 +1,10 @@
-"use client";
+import Link from "next/link";
+import { buttonVariants } from "./ui/button";
 
-import { signIn } from "next-auth/react";
-import { Button } from "./ui/button";
-
-export default function SignInButton({ ...props }) {
+export default function SignInButton() {
   return (
-    <Button {...props} onClick={() => signIn()}>
-      <span>Logg inn</span>
-    </Button>
+    <Link href="/api/auth/signin" className={buttonVariants()}>
+      Logg inn
+    </Link>
   );
 }

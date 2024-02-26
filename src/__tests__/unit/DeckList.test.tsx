@@ -36,3 +36,9 @@ vi.mock("@/app/api/trpc/client", () => ({
     },
   },
 }));
+
+describe("deck list test", () => {
+  it("TODO", async () => {
+    return true;
+  });
+});

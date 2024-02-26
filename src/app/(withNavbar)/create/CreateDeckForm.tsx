@@ -223,7 +223,6 @@ export default function CreateDeckForm() {
                     autoFocus
                     placeholder="Gi settet ditt et navn"
                     {...field}
-                    className="w-full p-4 text-base"
                     maxLength={50}
                   />
                 </FormControl>
@@ -244,7 +243,7 @@ export default function CreateDeckForm() {
                   defaultValue={field.value}
                 >
                   <FormControl>
-                    <SelectTrigger className="p-4 text-base">
+                    <SelectTrigger>
                       <SelectValue />
                     </SelectTrigger>
                   </FormControl>
@@ -268,9 +267,7 @@ export default function CreateDeckForm() {
               render={({ field }) => (
                 <FormItem className="flex justify-between items-center rounded-lg border p-4">
                   <div>
-                    <FormLabel className="text-base text-gray-800 dark:text-gray-200">
-                      Privat
-                    </FormLabel>
+                    <FormLabel>Privat</FormLabel>
                     <FormDescription className="text-sm text-muted-foreground">
                       Private sett er kun synlige for deg.
                     </FormDescription>
@@ -299,7 +296,7 @@ export default function CreateDeckForm() {
                     defaultValue={field.value}
                   >
                     <FormControl>
-                      <SelectTrigger className="p-4 text-base">
+                      <SelectTrigger>
                         <SelectValue />
                       </SelectTrigger>
                     </FormControl>
@@ -326,7 +323,7 @@ export default function CreateDeckForm() {
         <div className="pt-8 pb-[7rem]">
           <h4 className="mb-6 text-2xl font-medium">Legg til studiekort</h4>
 
-          <p className="mt-6 mb-8 text-base text-muted-foreground max-w-xl">
+          <p className="mt-6 mb-8 text-muted-foreground max-w-xl">
             Hvert kort har en fremside og en bakside. Fremsiden kan ha et begrep
             eller spørsmål, og baksiden kan ha et svar eller en forklaring.
           </p>
@@ -349,7 +346,7 @@ export default function CreateDeckForm() {
                       <FormControl>
                         <Textarea
                           placeholder="Fremside"
-                          className="h-[12rem] resize-none p-4 text-md"
+                          className="h-[12rem] resize-none p-4"
                           {...field}
                         />
                       </FormControl>
@@ -366,7 +363,7 @@ export default function CreateDeckForm() {
                       <FormControl>
                         <Textarea
                           placeholder="Bakside"
-                          className="h-[12rem] resize-none p-4 text-md"
+                          className="h-[12rem] resize-none p-4"
                           {...field}
                         />
                       </FormControl>
@@ -384,7 +381,7 @@ export default function CreateDeckForm() {
         </div>
 
         {/* Footer */}
-        <footer className="sticky bottom-0 py-4 bg-white dark:bg-gray-900 border">
+        <footer className="sticky bottom-0 py-4 bg-white dark:bg-gray-900 border dark:border-none">
           <div className="flex justify-between items-center gap-4 px-6 text-sm font-medium text-gray-700 dark:text-gray-300">
             <p>{form.watch("name") || "Nytt sett"}</p>
             <p>{fields.length - 1} Studiekort</p>
@@ -395,7 +392,7 @@ export default function CreateDeckForm() {
             >
               {isLoading ? (
                 <>
-                  <LoadingSpinner size={20} />
+                  <LoadingSpinner size={20} className="mr-2" />
                   {classifySubjectMutation.isLoading && "Bestemmer fagområde"}
                   {generateTagsMutation.isLoading && "Genererer nøkkelord"}
                   {createDeckMutation.isLoading && "Lagrer"}

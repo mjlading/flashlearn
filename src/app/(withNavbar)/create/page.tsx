@@ -7,9 +7,9 @@ export default function CreateDeckPage() {
       <div className="flex flex-col space-y-8">
         <div className="flex gap-4 items-center">
           <Layers3 size={32} />
-          <h1 className="font-semibold text-4xl leading-tight">Nytt sett</h1>
+          <h1 className="font-bold text-4xl">Nytt sett</h1>
         </div>
-        <p className="text-lg text-muted-foreground">
+        <p className="text-muted-foreground">
           Opprett et nytt sett med studiekort
         </p>
         <CreateDeckForm />

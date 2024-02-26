@@ -57,7 +57,9 @@ export default function GenerateFromText({
     resolver: zodResolver(FormSchema),
   });
 
-  function onSubmit(data: z.infer<typeof FormSchema>) {
+  function onSubmit(event: any, data: z.infer<typeof FormSchema>) {
+    event.preventDefault();
+    event.stopPropagation(); // Prevent triggering the outer form
     generateFlashcardsMutation.mutate({
       text: data.textInput,
       type: generationType,
@@ -81,7 +83,12 @@ export default function GenerateFromText({
         </DialogHeader>
 
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+          <form
+            onSubmit={(event) =>
+              form.handleSubmit((data) => onSubmit(event, data))(event)
+            }
+            className="space-y-6"
+          >
             <FormField
               control={form.control}
               name="textInput"

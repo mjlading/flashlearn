@@ -55,9 +55,7 @@ export default function GenerateFlashcardsInput({
   return (
     <div className="my-8 p-4 border rounded-lg space-y-4">
       <div className="flex items-center justify-between gap-4">
-        <p className="text-lg font-semibold text-gray-800 dark:text-gray-200">
-          {statusText()}
-        </p>
+        <p className="text-lg font-semibold">{statusText()}</p>
         {!isLoading && !generatedFlashcards.length && (
           <div className="space-x-2">
             <GenerateFromText

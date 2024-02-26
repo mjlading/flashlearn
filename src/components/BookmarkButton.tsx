@@ -2,6 +2,7 @@
 
 import { api } from "@/app/api/trpc/client";
 import { Bookmark, BookmarkCheck, BookmarkPlus } from "lucide-react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { Button } from "./ui/button";
 import {
@@ -10,12 +11,9 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "./ui/tooltip";
-import { useEffect, useState } from "react";
-import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
 
 export default function BookmarkButton({ deckId }: { deckId: string }) {
-  const router = useRouter();
+  const utils = api.useUtils();
 
   const isBookmarkedQuery = api.bookmark.isBookmarked.useQuery({
     deckId: deckId,
@@ -37,7 +35,8 @@ export default function BookmarkButton({ deckId }: { deckId: string }) {
       setIsBookmarked(true);
     },
     onSuccess() {
-      router.refresh();
+      utils.deck.infiniteDecks.invalidate({ category: "bookmarked" });
+      utils.bookmark.invalidate();
     },
     onError() {
       // Undo optimistic rendering
@@ -54,7 +53,8 @@ export default function BookmarkButton({ deckId }: { deckId: string }) {
       setIsBookmarked(false);
     },
     onSuccess() {
-      router.refresh();
+      utils.deck.infiniteDecks.invalidate({ category: "bookmarked" });
+      utils.bookmark.invalidate();
     },
     onError() {
       // Undo optimistic rendering

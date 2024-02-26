@@ -1,99 +1,72 @@
 "use client";
 
-import {
-  FetchDecksParams,
-  fetchDecks,
-} from "@/app/(withNavbar)/dashboard/decks/actions";
-import { SerializedStateDates } from "@/lib/utils";
-import Prisma from "@prisma/client";
-import { Layers3 } from "lucide-react";
-import { useSearchParams } from "next/navigation";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { api } from "@/app/api/trpc/client";
+import { useEffect } from "react";
 import { useInView } from "react-intersection-observer";
 import DeckCard from "./DeckCard";
-import NewDeckButton from "./NewDeckButton";
-import { Skeleton } from "./ui/skeleton";
+import DeckListSkeleton from "./DeckListSkeleton";
 import NoDecks from "./NoDecks";
-
-interface DeckListProps {
-  // Convert types dateCreated and dateChanged from Date to string
-  initialDecks: SerializedStateDates<
-    Prisma.Deck,
-    "dateCreated" | "dateChanged"
-  >[];
-  fetchParams: FetchDecksParams;
-}
+import { Skeleton } from "./ui/skeleton";
 
 /**
- * DeckList component displays a list of "Deck" items.
+ * DeckList component displays a list of Decks.
  * It uses infinite scrolling to load and display more decks as the user scrolls down.
  *
- * Props:
- * - initialDecks: An array of Deck objects that should be displayed initially.
- *
- * State:
- * - decks: An array of Deck objects that are currently displayed.
- * - page: The current page number for fetching more decks.
- * - moreDecksToFetch: A reference indicating whether there are more decks to fetch.
+ * Props (mutually exclusive):
+ * - subject (optional): A string to filter decks by their subject.
+ * - category (optional): A category to filter decks, can be "recent", "created", or "bookmarked".
  */
-export default function DeckList({ initialDecks, fetchParams }: DeckListProps) {
-  const searchParams = useSearchParams();
-  const [decks, setDecks] = useState(initialDecks);
-  const page = useRef(1);
+
+export interface DeckListProps {
+  subject?: string;
+  category?: "recent" | "created" | "bookmarked";
+}
+
+export default function DeckList(props: DeckListProps) {
+  const infiniteQuery = api.deck.infiniteDecks.useInfiniteQuery(
+    {
+      limit: 10, // Page size
+      ...props,
+    },
+    {
+      getNextPageParam: (lastPage) => lastPage.nextCursor,
+      //TODO: initialData
+    }
+  );
+
   const [inViewRef, inView] = useInView({
     threshold: 0,
   });
-  const [moreDecksToFetch, setMoreDecksToFetch] = useState(
-    initialDecks.length >= (fetchParams.pageSize ? fetchParams.pageSize : 10) // if initialDecks length is < pageSize, there are no more decks to fetch
-  );
-
-  // updates the list on deck deletion
-  useEffect(() => {
-    setDecks(initialDecks);
-    page.current = 1;
-  }, [initialDecks]);
-
-  /**
-   * loadMoreDecks function fetches the next page of decks and adds them to the current list of decks.
-   * If no more decks are returned, it sets moreDecksToFetch.current to false.
-   */
-  const loadMoreDecks = useCallback(async () => {
-    const nextPage = page.current + 1;
-    const newDecks = await fetchDecks({
-      ...fetchParams,
-      page: nextPage,
-    });
-
-    if (newDecks.length !== 0) {
-      setDecks((prevDecks) => [...prevDecks, ...newDecks]);
-      page.current = nextPage;
-    }
-    if (newDecks.length < 10) {
-      setMoreDecksToFetch(false);
-    }
-  }, [page, fetchParams]);
 
   useEffect(() => {
+    // When the bottom skeleton is in view, fetch more decks
     if (inView) {
-      loadMoreDecks();
+      infiniteQuery.fetchNextPage();
     }
-  }, [inView, loadMoreDecks]);
+  }, [inView, infiniteQuery]);
 
-  if (decks.length === 0) {
-    return <NoDecks fetchParams={fetchParams} />;
+  if (infiniteQuery.isLoading) {
+    return <DeckListSkeleton />;
+  }
+
+  if (infiniteQuery.data?.pages[0].decks.length === 0) {
+    // 0 decks found
+    return <NoDecks {...props} />;
   }
 
   return (
     <>
-      <div className="flex flex-col space-y-3 pb-12">
-        {decks.map((deck) => {
-          return <DeckCard key={deck.id} deck={deck} />;
-        })}
+      <div className="flex flex-col space-y-3">
+        {infiniteQuery.data?.pages
+          .flatMap((page) => page.decks)
+          .map((deck) => (
+            <DeckCard key={deck.id} deck={deck} />
+          ))}
 
         {/* Loading more decks skeleton */}
-        {moreDecksToFetch && (
+        {infiniteQuery.hasNextPage && (
           <div ref={inViewRef}>
-            <Skeleton className="h-[10rem]" />
+            <Skeleton className="h-[6rem]" />
           </div>
         )}
       </div>

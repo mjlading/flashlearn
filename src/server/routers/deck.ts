@@ -40,7 +40,60 @@ export const deckRouter = router({
       });
       return newDeck;
     }),
-  getDeckById: protectedProcedure
+  infiniteDecks: publicProcedure
+    .input(
+      z.object({
+        limit: z.number().min(1).max(50).nullish(), // The page size
+        cursor: z.string().nullish(),
+        subject: z.string().optional(),
+        category: z.enum(["recent", "created", "bookmarked"]).optional(),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      const limit = input.limit ?? 10;
+      const { cursor, subject, category } = input;
+
+      const userId = ctx.session?.user.id;
+      if (category && !userId) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "User must be logged in to access decks using 'category'",
+        });
+      }
+
+      const decks = await ctx.prisma.deck.findMany({
+        take: limit + 1,
+        where: {
+          ...(subject && { subjectName: subject, isPublic: true }),
+          ...(category === "bookmarked" && {
+            bookmarkedDecks: {
+              some: {
+                userId: userId,
+              },
+            },
+          }),
+          ...(category === "created" && {
+            userId: userId,
+          }),
+        },
+        cursor: cursor ? { id: cursor } : undefined,
+        orderBy:
+          category === "recent"
+            ? [{ dateChanged: "desc" }, { id: "desc" }]
+            : [{ id: "desc" }],
+      });
+      let nextCursor: typeof cursor | undefined = undefined;
+      if (decks.length > limit) {
+        const nextItem = decks.pop();
+        nextCursor = nextItem!.id;
+      }
+
+      return {
+        decks,
+        nextCursor,
+      };
+    }),
+  getDeckById: publicProcedure
     .input(
       z.object({
         id: z.string(),
@@ -62,7 +115,7 @@ export const deckRouter = router({
       }
 
       // if deck is private and current user is not the owner
-      if (!deck.isPublic && deck.userId !== ctx.session.user.id) {
+      if (!deck.isPublic && deck.userId !== ctx.session?.user.id) {
         throw new TRPCError({
           code: "FORBIDDEN",
           message: "You don't have permission to access this resource",
@@ -75,8 +128,8 @@ export const deckRouter = router({
   getDecksBySubjectName: publicProcedure
     .input(
       z.object({
-        page: z.number().min(1),
-        pageSize: z.number().min(1),
+        page: z.number().default(1),
+        pageSize: z.number().default(10),
         sortBy: z.string().default("dateCreated"),
         sortOrder: z.enum(["asc", "desc"]).default("desc"),
         subjectName: z.string(),
@@ -148,7 +201,7 @@ export const deckRouter = router({
       countRecent: 0, // TODO
     };
   }),
-  getTagsByDeckId: protectedProcedure
+  getTagsByDeckId: publicProcedure
     .input(z.string())
     .query(async ({ ctx, input }) => {
       const tags = await ctx.prisma.flashcard.findMany({

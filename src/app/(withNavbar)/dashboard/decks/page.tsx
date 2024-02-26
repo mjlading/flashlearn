@@ -1,21 +1,14 @@
 import DeckList from "@/components/DeckList";
 import NewDeckButton from "@/components/NewDeckButton";
 import CategoryTabs from "./CategoryTabs";
-import { fetchDecks } from "./actions";
 
 export default async function DecksPage({
   searchParams,
 }: {
   searchParams: {
-    category: string;
+    category: "recent" | "created" | "bookmarked";
   };
 }) {
-  const fetchParams = {
-    category: searchParams.category as "recent" | "created" | "bookmarked",
-  };
-
-  const initialDecks = await fetchDecks(fetchParams);
-
   return (
     <div className="flex flex-col space-y-7 h-full">
       <div className="flex justify-between">
@@ -23,7 +16,7 @@ export default async function DecksPage({
         <NewDeckButton />
       </div>
       <CategoryTabs initialCategory={searchParams.category} />
-      <DeckList initialDecks={initialDecks} fetchParams={fetchParams} />
+      <DeckList category={searchParams.category} />
     </div>
   );
 }

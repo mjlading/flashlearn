@@ -2,7 +2,6 @@
 
 import { api } from "@/app/api/trpc/client";
 import { AlertCircle, Trash } from "lucide-react";
-import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { DeckCardProps } from "./DeckCard";
 import { LoadingSpinner } from "./LoadingSpinner";
@@ -19,11 +18,11 @@ import {
 } from "./ui/dialog";
 
 export default function DeleteDeckButton({ deck }: DeckCardProps) {
-  const router = useRouter();
+  const utils = api.useUtils();
 
   const deleteDeckMutation = api.deck.deleteDeckById.useMutation({
     onSuccess() {
-      router.refresh();
+      utils.deck.infiniteDecks.refetch();
 
       toast(
         <span>

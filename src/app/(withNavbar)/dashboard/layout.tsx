@@ -3,7 +3,7 @@ import { PropsWithChildren } from "react";
 
 export default function DashboardLayout({ children }: PropsWithChildren) {
   return (
-    <div className="flex height-minus-navbar">
+    <div className="flex height-minus-navbar pb-7">
       <Sidebar />
       <div className="overflow-auto py-7 w-full">
         <main className="flex-grow mx-12 h-full">{children}</main>

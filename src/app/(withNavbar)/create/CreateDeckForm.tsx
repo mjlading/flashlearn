@@ -85,7 +85,6 @@ export default function CreateDeckForm() {
   const createDeckMutation = api.deck.createDeck.useMutation({
     onSuccess(data) {
       router.push("/dashboard/decks?category=created");
-      router.refresh(); // Fetch and display the new deck
 
       toast.success(
         <p>

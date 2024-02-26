@@ -1,10 +1,14 @@
+import { api } from "@/app/api/trpc/server";
 import { subjectNameMap, subjectStyles } from "@/lib/subject";
-import { Subject } from "@prisma/client";
 import { GraduationCap } from "lucide-react";
+import { unstable_noStore } from "next/cache";
 import Link from "next/link";
 import React from "react";
 
-export default function SubjectList({ subjects }: { subjects: Subject[] }) {
+export default async function SubjectList() {
+  unstable_noStore();
+  const subjects = await api.subject.getSubjects.query();
+
   return (
     <>
       {subjects.map((subject) => {
@@ -18,7 +22,7 @@ export default function SubjectList({ subjects }: { subjects: Subject[] }) {
         return (
           <div
             key={subject.name}
-            className={`${style.color} border rounded-2xl`}
+            className={`${style.color} border rounded-2xl bg-opacity-80`}
           >
             <Link
               href={`/explore/${subject.name}`}

@@ -188,7 +188,7 @@ export default function CreateDeckForm() {
       n: flashcardsWithContent.length,
     });
     for (let i = 0; i < tags.length; i++) {
-      if (!flashcardsWithContent[i].tag) {
+      if (!flashcardsWithContent[i]) {
         console.warn("flashcardsWithContent[i] is undefined");
         break;
       }

@@ -7,6 +7,8 @@ import DeckCard from "./DeckCard";
 import DeckListSkeleton from "./DeckListSkeleton";
 import NoDecks from "./NoDecks";
 import { Skeleton } from "./ui/skeleton";
+import { Deck } from "@prisma/client";
+import { SerializedStateDates } from "@/lib/utils";
 
 /**
  * DeckList component displays a list of Decks.
@@ -15,11 +17,15 @@ import { Skeleton } from "./ui/skeleton";
  * Props (mutually exclusive):
  * - subject (optional): A string to filter decks by their subject.
  * - category (optional): A category to filter decks, can be "recent", "created", or "bookmarked".
+ * - query (optional): A search query that searches for deck names
+ * - initialDecks (optional): Initial decks can be fetched on the server and be displayed on initial page load.
  */
 
 export interface DeckListProps {
+  initialDecks?: SerializedStateDates<Deck, "dateCreated" | "dateChanged">[];
   subject?: string;
   category?: "recent" | "created" | "bookmarked";
+  query?: string;
 }
 
 export default function DeckList(props: DeckListProps) {
@@ -30,7 +36,15 @@ export default function DeckList(props: DeckListProps) {
     },
     {
       getNextPageParam: (lastPage) => lastPage.nextCursor,
-      //TODO: initialData
+      initialData: props.initialDecks && {
+        pages: [
+          {
+            decks: props.initialDecks,
+            nextCursor: undefined,
+          },
+        ],
+        pageParams: [undefined],
+      },
     }
   );
 

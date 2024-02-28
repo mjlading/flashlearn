@@ -47,11 +47,12 @@ export const deckRouter = router({
         cursor: z.string().nullish(),
         subject: z.string().optional(),
         category: z.enum(["recent", "created", "bookmarked"]).optional(),
+        query: z.string().optional(),
       })
     )
     .query(async ({ ctx, input }) => {
       const limit = input.limit ?? 10;
-      const { cursor, subject, category } = input;
+      const { cursor, subject, category, query } = input;
 
       const userId = ctx.session?.user.id;
       if (category && !userId) {
@@ -74,6 +75,12 @@ export const deckRouter = router({
           }),
           ...(category === "created" && {
             userId: userId,
+          }),
+          ...(query && {
+            name: {
+              contains: query,
+              mode: "insensitive",
+            },
           }),
         },
         cursor: cursor ? { id: cursor } : undefined,

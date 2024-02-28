@@ -81,6 +81,7 @@ export const deckRouter = router({
               contains: query,
               mode: "insensitive",
             },
+            isPublic: true,
           }),
         },
         cursor: cursor ? { id: cursor } : undefined,
@@ -206,6 +207,7 @@ export const deckRouter = router({
               contains: query,
               mode: "insensitive",
             },
+            isPublic: true,
           }),
         },
       });

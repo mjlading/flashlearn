@@ -25,7 +25,10 @@ export default async function SearchPage({
   return (
     <div className="sm:px-8 px-4 my-12">
       <main className="w-[50rem] max-w-full mx-auto">
-        <SearchInput defaultValue={q} className="h-14 text-md" />
+        <SearchInput
+          defaultValue={q}
+          className="h-14 text-lg pl-9 rounded-lg"
+        />
         <div className="my-6 space-y-1">
           <p>
             Viser resultater for &quot;

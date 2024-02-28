@@ -11,13 +11,16 @@ export default async function SearchPage({
 }) {
   const { q } = searchParams; // The search query
 
-  // Fetch initial results on the server
-  const initialDecks = (
-    await api.deck.infiniteDecks.query({
+  // Fetch initial results and count on the server in paralell
+  const [{ decks }, hits] = await Promise.all([
+    api.deck.infiniteDecks.query({
       limit: 10,
       query: q,
-    })
-  ).decks;
+    }),
+    api.deck.countDecks.query({
+      query: q,
+    }),
+  ]);
 
   return (
     <div className="sm:px-8 px-4 my-12">
@@ -29,11 +32,11 @@ export default async function SearchPage({
             <span className="font-semibold">{q}</span>&quot;
           </p>
           <p>
-            Treff: <span className="font-semibold">123</span>
+            Treff: <span className="font-semibold">{hits}</span>
           </p>
         </div>
 
-        <DeckList initialDecks={initialDecks} query={q} />
+        <DeckList initialDecks={decks} query={q} />
       </main>
     </div>
   );

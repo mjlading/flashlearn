@@ -187,6 +187,31 @@ export const deckRouter = router({
         },
       });
     }),
+  //TODO: consider using a single, general countDecks procedure for all types of decks
+  countDecks: publicProcedure
+    .input(
+      z.object({
+        // subject: z.string().optional(),
+        // category: z.enum(["recent", "created", "bookmarked"]).optional(),
+        query: z.string().optional(),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      const { query } = input;
+
+      const count = await ctx.prisma.deck.count({
+        where: {
+          ...(query && {
+            name: {
+              contains: query,
+              mode: "insensitive",
+            },
+          }),
+        },
+      });
+
+      return count;
+    }),
   countDecksByCategories: protectedProcedure.query(async ({ ctx }) => {
     const countCreated = ctx.prisma.deck.count({
       where: {

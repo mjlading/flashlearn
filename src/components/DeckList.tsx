@@ -14,7 +14,7 @@ import { SerializedStateDates } from "@/lib/utils";
  * DeckList component displays a list of Decks.
  * It uses infinite scrolling to load and display more decks as the user scrolls down.
  *
- * Props (mutually exclusive):
+ * Props:
  * - subject (optional): A string to filter decks by their subject.
  * - category (optional): A category to filter decks, can be "recent", "created", or "bookmarked".
  * - query (optional): A search query that searches for deck names

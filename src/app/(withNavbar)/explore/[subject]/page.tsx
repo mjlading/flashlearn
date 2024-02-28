@@ -1,6 +1,7 @@
+import { api } from "@/app/api/trpc/server";
 import DeckList from "@/components/DeckList";
 import { subjectNameMap, subjectStyles } from "@/lib/subject";
-import React from "react";
+import React, { Suspense } from "react";
 
 export default async function SubjectPage({
   params,
@@ -14,6 +15,13 @@ export default async function SubjectPage({
   const norwegianSubjectName = subjectNameMap[subject];
   const style = subjectStyles[subject];
 
+  const initialDecks = (
+    await api.deck.infiniteDecks.query({
+      limit: 10,
+      subject: subject,
+    })
+  ).decks;
+
   return (
     <>
       <div className={`flex items-center mb-4 gap-2`}>
@@ -25,7 +33,7 @@ export default async function SubjectPage({
       <h3 className="text-muted-foreground mb-12">
         Trykk på et stikkord for å se mere spesifikke sett
       </h3>
-      <DeckList subject={subject} />
+      <DeckList initialDecks={initialDecks} subject={subject} />
     </>
   );
 }

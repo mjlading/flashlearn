@@ -17,6 +17,7 @@ import {
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 import { DropDownMenuItemThemeToggle } from "./DropDownMenuItemThemeToggle";
+import SearchInput from "./SearchInput";
 
 function ProfileDropdownMenu({ user }: { user: User }) {
   const userInitials = user?.name
@@ -85,13 +86,14 @@ export default function Navbar() {
   return (
     <header className="sticky top-0 z-50 py-2 px-8 border-b bg-background">
       <nav className="flex items-center justify-between flex-wrap gap-2">
-        <div>
+        <div className="flex items-center">
           <Link className={LINK_STYLE} href="/">
             Flashlearn
           </Link>
           <Link className={LINK_STYLE} href="/explore">
             Utforsk
           </Link>
+          <SearchInput />
         </div>
         <ProfileButton />
       </nav>

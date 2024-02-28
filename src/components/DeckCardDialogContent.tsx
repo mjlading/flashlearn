@@ -46,7 +46,7 @@ export default function DeckCardDialogContent({ deck }: DeckCardProps) {
         </DialogDescription>
       </DialogHeader>
 
-      <div className="flex justify-between">
+      <div className="flex justify-between items-end">
         {/* Deck Information */}
         <div className="space-y-2">
           {/* Average star rating */}
@@ -69,7 +69,9 @@ export default function DeckCardDialogContent({ deck }: DeckCardProps) {
           </div>
         </div>
         {/* Bookmark button */}
-        {!isUsersDeck && <BookmarkButton deckId={deck.id} />}
+        {session.data?.user && !isUsersDeck && (
+          <BookmarkButton deckId={deck.id} />
+        )}
       </div>
 
       <Separator className="my-4" />

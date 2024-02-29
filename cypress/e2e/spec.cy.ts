@@ -18,6 +18,6 @@ describe("middleware test", () => {
   });
 
   it("should redirect to login page when accessing page within dashboard", () => {
-    cy.visit("/create").url().should("include", "auth/signIn");
+    cy.visit("/decks/create").url().should("include", "auth/signIn");
   });
 });

@@ -4,6 +4,7 @@ import { subjectNameMap } from "../src/lib/subject";
 
 // Populates the database with data that is required for the application to start, such as subjects
 async function main() {
+  createEmbeddingIndexes();
   populateSubjects();
 }
 
@@ -43,4 +44,14 @@ async function populateSubjects() {
 
     console.log("Upserted subject: ", subject);
   }
+}
+
+/**
+ * Creates indexes for the vector embedding columns for using approximate nearest neighbors search.
+ * approximate NNS is faster than perfect recall, but trades off some accuracy.
+ * @see https://github.com/pgvector/pgvector
+ */
+async function createEmbeddingIndexes() {
+  await prisma.$executeRaw`CREATE INDEX ON "Flashcard" USING hnsw (embedding vector_cosine_ops);`;
+  await prisma.$executeRaw`CREATE INDEX ON "Subject" USING hnsw (embedding vector_cosine_ops);`;
 }

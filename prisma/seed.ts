@@ -52,6 +52,9 @@ async function populateSubjects() {
  * @see https://github.com/pgvector/pgvector
  */
 async function createEmbeddingIndexes() {
+  console.log("Creating embedding index on 'Flashcard' table");
   await prisma.$executeRaw`CREATE INDEX ON "Flashcard" USING hnsw (embedding vector_cosine_ops);`;
+
+  console.log("Creating embedding index on 'Subject' table");
   await prisma.$executeRaw`CREATE INDEX ON "Subject" USING hnsw (embedding vector_cosine_ops);`;
 }

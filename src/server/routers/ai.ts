@@ -1,9 +1,52 @@
 import { GeneratedFlashcard } from "@/components/GenerateFlashcardsInput";
-import openai, { generateEmbedding, getCosineSimilarities } from "@/lib/ai";
+import openai, {
+  generateEmbedding,
+  generateEmbeddings,
+  getCosineSimilarities,
+} from "@/lib/ai";
+import pgvector from "pgvector";
 import { z } from "zod";
-import { protectedProcedure, router } from "../trpc";
+import { protectedProcedure, publicProcedure, router } from "../trpc";
+import { Flashcard } from "@prisma/client";
 
 export const aiRouter = router({
+  generateEmbedding: publicProcedure
+    .input(z.string())
+    .mutation(async ({ input }) => {
+      return await generateEmbedding(input);
+    }),
+  generateEmbeddings: publicProcedure
+    .input(z.array(z.string()))
+    .mutation(async ({ input }) => {
+      return await generateEmbeddings(input);
+    }),
+  // Finds the n nearest neighbors to a given target vector embedding
+  // Will search in given table
+  getNearestNeighbors: publicProcedure
+    .input(
+      z.object({
+        targetEmbedding: z.array(z.number()),
+        table: z.enum(["Flashcard", "Deck", "Subject"]), // The tables which have embeddings
+        n: z.number(),
+      })
+    )
+    .mutation(async ({ input, ctx }) => {
+      const { targetEmbedding, table, n } = input;
+
+      const targetEmbeddingSql = pgvector.toSql(targetEmbedding);
+
+      // Prisma automatically converts this to prepared statement, protecting against SQL injections
+      // TODO: replace Flashcard with table after renaming tables
+      const items = await ctx.prisma.$queryRaw<
+        Pick<Flashcard, "front" | "back" | "tag">[]
+      >`
+        SELECT front, back, tag
+        FROM "Flashcard"
+        ORDER BY embedding <-> ${targetEmbeddingSql}::vector 
+        LIMIT ${n}`;
+
+      return items;
+    }),
   /**
    * Returns the most fitting subject given some input text.
    * Uses embeddings, calculates similarity by cosine similarity

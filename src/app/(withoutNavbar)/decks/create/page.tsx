@@ -6,6 +6,7 @@ import CreateDeckTopbar from "./CreateDeckTopbar";
 import { FormProvider, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import SuggestedFlashcards from "./SuggestedFlashcards";
 
 export default function CreateDeckPage() {
   const form = useForm<z.infer<typeof formSchema>>({
@@ -32,6 +33,7 @@ export default function CreateDeckPage() {
             Opprett et nytt sett med studiekort
           </p>
           <CreateDeckForm />
+          <SuggestedFlashcards />
         </div>
       </main>
     </FormProvider>

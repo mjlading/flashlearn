@@ -85,6 +85,15 @@ export default function SuggestedFlashcards() {
     });
   }
 
+  function handleThumbsDown(flashcard: SimilarFlashcard) {
+    // TODO: can potentially modify the embedding here to improve future suggestions. Low priority
+
+    // Remove from the suggestions
+    setSimilarFlashcards((currentFlashcards) =>
+      currentFlashcards.filter((f) => f !== flashcard)
+    );
+  }
+
   return (
     <section>
       <div className="flex flex-col p-4 gap-12 rounded border">
@@ -106,7 +115,12 @@ export default function SuggestedFlashcards() {
                 {(flashcard.cosineSimilarity * 100).toFixed(0)}
               </span>
               <div className="border space-x-2 rounded bg-white h-8 shadow-sm">
-                <Button size="icon" variant="ghost" className="h-8 w-8">
+                <Button
+                  onClick={() => handleThumbsDown(flashcard)}
+                  size="icon"
+                  variant="ghost"
+                  className="h-8 w-8"
+                >
                   <ThumbsDown size={16} />
                 </Button>
                 <Button

@@ -90,7 +90,12 @@ export default function CreateDeckForm() {
 
   return (
     <Form {...form}>
-      <form className="space-y-6">
+      <form
+        className="space-y-6"
+        onKeyDown={(e) => {
+          e.key === "Enter" && e.preventDefault();
+        }}
+      >
         <div className="grid md:grid-cols-2 grid-cols-1 gap-6">
           {/* Name input */}
           <FormField

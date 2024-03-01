@@ -114,7 +114,7 @@ export default function SuggestedFlashcards() {
               >
                 {(flashcard.cosineSimilarity * 100).toFixed(0)}
               </span>
-              <div className="border space-x-2 rounded bg-white h-8 shadow-sm">
+              <div className="border space-x-2 rounded bg-white dark:bg-black h-8 shadow-sm">
                 <Button
                   onClick={() => handleThumbsDown(flashcard)}
                   size="icon"

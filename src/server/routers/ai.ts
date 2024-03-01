@@ -20,29 +20,37 @@ export const aiRouter = router({
     .mutation(async ({ input }) => {
       return await generateEmbeddings(input);
     }),
-  // Finds the n nearest neighbors to a given target vector embedding
-  // Will search in given table
+  /**
+   * Finds the n nearest neighbors to a given target vector embedding
+   * Will search in given table
+   * excludedBacks: a list of strings representing the back of flashcards which will be excluded
+   */
   getNearestNeighbors: publicProcedure
     .input(
       z.object({
         targetEmbedding: z.array(z.number()),
         table: z.enum(["Flashcard", "Deck", "Subject"]), // The tables which have embeddings
         n: z.number(),
+        excludedBacks: z.array(z.string()),
       })
     )
     .mutation(async ({ input, ctx }) => {
-      const { targetEmbedding, table, n } = input;
+      const { targetEmbedding, table, n, excludedBacks } = input;
 
       const targetEmbeddingSql = pgvector.toSql(targetEmbedding);
 
       // Prisma automatically converts this to prepared statement, protecting against SQL injections
-      // TODO: replace Flashcard with table after renaming tables
+      // <=> calculates the cosine distance between two embeddings
       const items = await ctx.prisma.$queryRaw<
-        Pick<Flashcard, "front" | "back" | "tag">[]
+        (Pick<Flashcard, "front" | "back" | "tag"> & {
+          cosineSimilarity: number;
+        })[]
       >`
-        SELECT front, back, tag
+        SELECT front, back, tag,
+        1 - (embedding <=> ${targetEmbeddingSql}::vector) AS "cosineSimilarity"
         FROM "Flashcard"
-        ORDER BY embedding <-> ${targetEmbeddingSql}::vector 
+        WHERE back NOT IN (SELECT unnest(${excludedBacks}::text[]))
+        ORDER BY "cosineSimilarity" DESC
         LIMIT ${n}`;
 
       return items;

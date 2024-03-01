@@ -42,3 +42,20 @@ moment.locale("nb"); // Set the locale to norwegian
 export function dateDifferenceFromNow(date: string) {
   return moment(date).fromNow();
 }
+
+/**
+ * Returns a color on a spectrum
+ * @param percentage a number between 0 and 1
+ * @param hue0 start color of spectrum, when percentage is 0
+ * @param hue1 end color of spectrum, when percentage is 1
+ * @param lightness the hsl lightness
+ */
+export function percentageToHsl(
+  percentage: number,
+  hue0: number,
+  hue1: number,
+  lightness = 50
+) {
+  var hue = percentage * (hue1 - hue0) + hue0;
+  return "hsl(" + hue + `, 100%, ${lightness}%)`;
+}

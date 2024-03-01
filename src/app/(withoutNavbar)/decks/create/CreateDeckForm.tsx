@@ -201,7 +201,7 @@ export default function CreateDeckForm() {
         </div>
 
         {/* Flashcards input */}
-        <div className="pt-8 pb-[7rem]">
+        <div className="py-8">
           <h4 className="mb-6 text-2xl font-medium">Legg til studiekort</h4>
 
           <p className="mt-6 mb-8 text-muted-foreground max-w-xl">

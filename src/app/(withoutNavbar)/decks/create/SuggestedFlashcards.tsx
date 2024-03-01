@@ -1,23 +1,35 @@
 "use client";
 
 import { api } from "@/app/api/trpc/client";
-import { useEffect, useState } from "react";
+import { Button } from "@/components/ui/button";
+import { percentageToHsl } from "@/lib/utils";
+import { Flashcard } from "@prisma/client";
+import { BetweenHorizonalStart, ThumbsDown } from "lucide-react";
+import { useTheme } from "next-themes";
+import { useEffect, useRef, useState } from "react";
 import { useFormContext } from "react-hook-form";
+import { toast } from "sonner";
 import { z } from "zod";
 import { formSchema } from "./CreateDeckForm";
-import { Flashcard } from "@prisma/client";
+
+type SimilarFlashcard = Pick<Flashcard, "front" | "back" | "tag"> & {
+  cosineSimilarity: number;
+};
 
 export default function SuggestedFlashcards() {
-  const { getValues } = useFormContext<z.infer<typeof formSchema>>();
+  const { getValues, setValue } = useFormContext<z.infer<typeof formSchema>>();
 
   const [similarFlashcards, setSimilarFlashcards] = useState<
-    Pick<Flashcard, "front" | "back" | "tag">[]
+    SimilarFlashcard[]
   >([]);
+  const excludedBacks = useRef<string[]>([]);
 
   const numFlashcards = getValues("flashcards").length - 1;
 
   const generateEmbeddingMutation = api.ai.generateEmbedding.useMutation();
   const getNearestNeighborsMutation = api.ai.getNearestNeighbors.useMutation();
+
+  const { theme } = useTheme();
 
   useEffect(() => {
     // When at least two flashcards are filled, find and suggest similar flashcards based on embeddings
@@ -38,6 +50,7 @@ export default function SuggestedFlashcards() {
           targetEmbedding: targetEmbedding,
           table: "Flashcard",
           n: 2,
+          excludedBacks: excludedBacks.current,
         });
 
         setSimilarFlashcards(nearestNeighbors);
@@ -45,10 +58,74 @@ export default function SuggestedFlashcards() {
     }
   }, [numFlashcards]);
 
+  function handleInsertFlashcard(flashcard: SimilarFlashcard) {
+    const currentFlashcards = getValues("flashcards");
+
+    const updatedFlashcards = [
+      ...currentFlashcards.slice(0, -1),
+      {
+        front: flashcard.front,
+        back: flashcard.back,
+        tag: flashcard.tag || "",
+      },
+    ];
+
+    setValue("flashcards", updatedFlashcards, { shouldValidate: false });
+
+    // Prevent future suggestions from including the added flashcard
+    excludedBacks.current.push(flashcard.back);
+
+    // Remove added flashcard from the suggestions
+    setSimilarFlashcards((currentFlashcards) =>
+      currentFlashcards.filter((f) => f !== flashcard)
+    );
+
+    toast.success(`La til 1 studiekort`, {
+      position: "top-center",
+    });
+  }
+
   return (
-    <pre>
-      Suggested flashcards: <br />
-      {JSON.stringify(similarFlashcards, null, 2)}
-    </pre>
+    <section>
+      <div className="flex flex-col p-4 gap-12 rounded border">
+        <h2 className="font-semibold">Lignende studiekort</h2>
+        {similarFlashcards.map((flashcard, index) => (
+          <div key={index} className="bg-accent rounded-lg p-4 relative">
+            <div className="absolute top-0 mt-[-16px] flex justify-between items-center w-full pr-8">
+              <span
+                style={{
+                  backgroundColor: percentageToHsl(
+                    flashcard.cosineSimilarity,
+                    0,
+                    120,
+                    theme === "dark" ? 20 : 60
+                  ),
+                }}
+                className="p-1 rounded-full h-8 w-8 text-center shadow-sm"
+              >
+                {(flashcard.cosineSimilarity * 100).toFixed(0)}
+              </span>
+              <div className="border space-x-2 rounded bg-white h-8 shadow-sm">
+                <Button size="icon" variant="ghost" className="h-8 w-8">
+                  <ThumbsDown size={16} />
+                </Button>
+                <Button
+                  onClick={() => handleInsertFlashcard(flashcard)}
+                  size="icon"
+                  variant="ghost"
+                  className="h-8 w-8"
+                >
+                  <BetweenHorizonalStart size={16} />
+                </Button>
+              </div>
+            </div>
+            <div className="flex gap-12 text-sm">
+              <p className="flex-1">{flashcard.front}</p>
+              <p className="flex-1">{flashcard.back}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
   );
 }

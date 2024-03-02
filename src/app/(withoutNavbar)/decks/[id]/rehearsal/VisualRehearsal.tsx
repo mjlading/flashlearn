@@ -65,7 +65,7 @@ export default function VisualRehearsal({
           <ChevronRight />
         </Button>
       </div>
-      <Flashcard flashcard={currentFlashcard} />
+      <Flashcard flashcard={currentFlashcard} mode="visual" />
     </main>
   );
 }

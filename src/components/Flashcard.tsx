@@ -1,13 +1,23 @@
 "use client";
 
 import { type Flashcard } from "@prisma/client";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ScrollArea } from "./ui/scroll-area";
+import { cn } from "@/lib/utils";
 
-export default function Flashcard({ flashcard }: { flashcard: Flashcard }) {
+export default function Flashcard({
+  flashcard,
+  className,
+  mode,
+}: {
+  flashcard: Flashcard;
+  className?: string;
+  mode: string;
+}) {
   const [showBack, setShowBack] = useState(false);
 
   useEffect(() => {
+    if (mode === "write") return;
     window.addEventListener("keydown", handleKeydown);
     return () => window.removeEventListener("keydown", handleKeydown);
   });
@@ -25,15 +35,18 @@ export default function Flashcard({ flashcard }: { flashcard: Flashcard }) {
   }
 
   function dynamicTextSize(textLength: number): string {
-    if (textLength < 100) {
-      return "text-xl";
-    } else if (textLength < 500) {
+    if (textLength < 500) {
       return "text-lg";
     } else if (textLength < 1000) {
       return "text-md";
     } else {
       return "text-sm";
     }
+  }
+
+  function flipCard() {
+    if (mode === "write") return;
+    setShowBack(!showBack);
   }
 
   // Flip animation
@@ -60,19 +73,22 @@ export default function Flashcard({ flashcard }: { flashcard: Flashcard }) {
 
   return (
     <div
-      onClick={() => setShowBack(!showBack)}
-      className="h-[20rem] rounded-xl bg-muted dark:bg-muted/40 leading-relaxed break-words"
+      onClick={() => flipCard()}
+      className={cn(
+        "h-[20rem] rounded-xl bg-muted dark:bg-muted/40 leading-relaxed break-words",
+        className
+      )}
       style={flipStyle}
     >
       {/* The front of the flashcard */}
-      <ScrollArea style={frontStyle} className="h-full w-full p-7">
+      <ScrollArea style={frontStyle} className="h-full w-full p-5">
         <p className={dynamicTextSize(flashcard.front.length)}>
           {flashcard.front}
         </p>
       </ScrollArea>
 
       {/* The back of the flashcard */}
-      <ScrollArea style={backStyle} className="h-full w-full p-7">
+      <ScrollArea style={backStyle} className="h-full w-full p-5">
         <p className={dynamicTextSize(flashcard.back.length)}>
           {flashcard.back}
         </p>

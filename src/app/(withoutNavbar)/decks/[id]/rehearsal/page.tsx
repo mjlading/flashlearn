@@ -1,5 +1,6 @@
 import { api } from "@/app/api/trpc/server";
 import VisualRehearsal from "./VisualRehearsal";
+import WriteRehearsal from "./WriteRehearsal";
 
 export default async function RehearsalPage({
   params,
@@ -23,7 +24,7 @@ export default async function RehearsalPage({
   }
 
   if (mode === "write") {
-    return <h1>Write</h1>;
+    return <WriteRehearsal flashcards={deck.flashcards} />;
   }
 
   if (mode === "oral") {

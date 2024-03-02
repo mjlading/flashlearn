@@ -4,6 +4,8 @@ import Flashcard from "@/components/Flashcard";
 import { Progress } from "@/components/ui/progress";
 import { useEffect, useState } from "react";
 import { type Flashcard as FlashcardType } from "@prisma/client";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 export default function VisualRehearsal({
   flashcards,
@@ -24,28 +26,46 @@ export default function VisualRehearsal({
     return () => window.removeEventListener("keydown", handleKeydown);
   });
 
+  function nextFlashcard() {
+    const nextIndex = Math.min(currentIndex + 1, flashcards.length - 1);
+    setCurrentIndex(nextIndex);
+  }
+
+  function previousFlashcard() {
+    const previousIndex = Math.max(currentIndex - 1, 0);
+    setCurrentIndex(previousIndex);
+  }
+
   function handleKeydown(event: KeyboardEvent) {
     if (event.code === "ArrowRight") {
-      // Go to next card
-      const nextIndex = currentIndex + 1;
-
-      if (nextIndex >= flashcards.length) return;
-
-      setCurrentIndex(nextIndex);
+      nextFlashcard();
     } else if (event.code === "ArrowLeft") {
-      // Go to previous card
-      const nextIndex = currentIndex - 1;
-
-      if (nextIndex < 0) return;
-
-      setCurrentIndex(nextIndex);
+      previousFlashcard();
     }
   }
 
   return (
-    <div className="flex flex-col gap-8">
-      <Progress value={progress} className="h-2" />
+    <main className="space-y-8 w-full max-w-[40rem]">
+      <div className="flex items-center gap-2">
+        <Button
+          onClick={() => previousFlashcard()}
+          disabled={currentIndex === 0}
+          size="icon"
+          variant="ghost"
+        >
+          <ChevronLeft />
+        </Button>
+        <Progress value={progress} className="h-2" />
+        <Button
+          onClick={() => nextFlashcard()}
+          disabled={currentIndex === flashcards.length - 1}
+          size="icon"
+          variant="ghost"
+        >
+          <ChevronRight />
+        </Button>
+      </div>
       <Flashcard flashcard={currentFlashcard} />
-    </div>
+    </main>
   );
 }

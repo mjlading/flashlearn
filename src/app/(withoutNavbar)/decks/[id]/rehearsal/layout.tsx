@@ -1,7 +1,7 @@
 import { api } from "@/app/api/trpc/server";
 import BackButton from "@/components/BackButton";
 import React from "react";
-import HelpButton from "./HelpButton";
+import HelpButton from "@/components/HelpButton";
 
 export default async function RehearsalLayout({
   children,
@@ -24,7 +24,7 @@ export default async function RehearsalLayout({
         <HelpButton />
       </header>
       <div className="flex items-center justify-center height-minus-navbar">
-        <main>{children}</main>
+        {children}
       </div>
     </div>
   );

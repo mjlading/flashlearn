@@ -8,7 +8,9 @@ export default async function RehearsalPage({
   params: {
     id: string;
   };
-  searchParams: any;
+  searchParams: {
+    mode: string;
+  };
 }) {
   const mode = searchParams.mode;
   const deck = await api.deck.getDeckById.query({

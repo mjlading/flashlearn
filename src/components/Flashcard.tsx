@@ -1,7 +1,7 @@
 "use client";
 
 import { type Flashcard } from "@prisma/client";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { ScrollArea } from "./ui/scroll-area";
 
 export default function Flashcard({ flashcard }: { flashcard: Flashcard }) {
@@ -12,6 +12,11 @@ export default function Flashcard({ flashcard }: { flashcard: Flashcard }) {
     return () => window.removeEventListener("keydown", handleKeydown);
   });
 
+  // When switching flashcards, show the front of new card
+  useEffect(() => {
+    setShowBack(false);
+  }, [flashcard]);
+
   function handleKeydown(event: KeyboardEvent) {
     if (event.code === "Space") {
       // Flip card
@@ -20,26 +25,16 @@ export default function Flashcard({ flashcard }: { flashcard: Flashcard }) {
   }
 
   function dynamicTextSize(textLength: number): string {
-    if (textLength < 50) {
+    if (textLength < 100) {
       return "text-xl";
-    } else if (textLength < 100) {
-      return "text-lg";
     } else if (textLength < 500) {
+      return "text-lg";
+    } else if (textLength < 1000) {
       return "text-md";
     } else {
       return "text-sm";
     }
   }
-
-  // useMemo to prevent recalculating these on every render
-  const textSizeFront = useMemo(
-    () => dynamicTextSize(flashcard.front.length),
-    [flashcard.front]
-  );
-  const textSizeBack = useMemo(
-    () => dynamicTextSize(flashcard.back.length),
-    [flashcard.back]
-  );
 
   // Flip animation
   const flipStyle: React.CSSProperties = {
@@ -66,17 +61,21 @@ export default function Flashcard({ flashcard }: { flashcard: Flashcard }) {
   return (
     <div
       onClick={() => setShowBack(!showBack)}
-      className="h-[20rem] w-[30rem] rounded-xl bg-muted/40 leading-relaxed break-words"
+      className="h-[20rem] rounded-xl bg-muted dark:bg-muted/40 leading-relaxed break-words"
       style={flipStyle}
     >
       {/* The front of the flashcard */}
       <ScrollArea style={frontStyle} className="h-full w-full p-7">
-        <p className={textSizeFront}>{flashcard.front}</p>
+        <p className={dynamicTextSize(flashcard.front.length)}>
+          {flashcard.front}
+        </p>
       </ScrollArea>
 
       {/* The back of the flashcard */}
       <ScrollArea style={backStyle} className="h-full w-full p-7">
-        <p className={textSizeBack}>{flashcard.back}</p>
+        <p className={dynamicTextSize(flashcard.back.length)}>
+          {flashcard.back}
+        </p>
       </ScrollArea>
     </div>
   );

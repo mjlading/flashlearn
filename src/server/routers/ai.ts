@@ -8,6 +8,8 @@ import pgvector from "pgvector";
 import { z } from "zod";
 import { protectedProcedure, publicProcedure, router } from "../trpc";
 import { Flashcard } from "@prisma/client";
+import { Feedback } from "@/app/(withoutNavbar)/decks/[id]/rehearsal/WriteRehearsal";
+import { isValidJSON } from "@/lib/utils";
 
 export const aiRouter = router({
   generateEmbedding: publicProcedure
@@ -342,5 +344,72 @@ export const aiRouter = router({
       console.timeEnd("generateFlashcardsFromKeywords time");
 
       return flashcards;
+    }),
+  generateFeedback: protectedProcedure
+    .input(
+      z.object({
+        front: z.string(),
+        back: z.string(),
+        answer: z.string(),
+      })
+    )
+    .mutation(async ({ input }) => {
+      const { front, back, answer } = input;
+
+      // Define tools used for function calling
+      const tools: any = [
+        {
+          type: "function",
+          function: {
+            name: "generate_feedback",
+            description:
+              "Generates descriptive, helpful feedback on a flashcard submission",
+            parameters: {
+              type: "object",
+              properties: {
+                score: {
+                  type: "number",
+                  description: "a score ranging from 0-100",
+                },
+                tips: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                  },
+                  description:
+                    "Helpful constructive tips to help the student learn",
+                },
+              },
+              required: ["score"],
+            },
+          },
+        },
+      ];
+
+      const completion = await openai.chat.completions.create({
+        model: "gpt-3.5-turbo",
+        tools: tools,
+        tool_choice: {
+          type: "function",
+          function: { name: "generate_feedback" },
+        }, // Forces function_call
+        messages: [
+          {
+            role: "user",
+            content: `Given a students answer to a flashcard quiz, give a score (0-100) and optional useful tips for improvement. If score=100 dont give tips.
+                    flashcard front: ${front}
+                    flashcard back: ${back}
+                    The students answer: ${answer}
+                    `,
+          },
+        ],
+      });
+
+      // use of ! is safe here since we force the function call
+      const feedback: Feedback = JSON.parse(
+        completion.choices[0].message.tool_calls![0].function.arguments
+      );
+
+      return feedback;
     }),
 });

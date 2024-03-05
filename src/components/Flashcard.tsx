@@ -9,10 +9,12 @@ export default function Flashcard({
   flashcard,
   className,
   mode,
+  isFlipEnabled,
 }: {
   flashcard: Flashcard;
   className?: string;
   mode: string;
+  isFlipEnabled: boolean;
 }) {
   const [showBack, setShowBack] = useState(false);
 
@@ -45,8 +47,7 @@ export default function Flashcard({
   }
 
   function flipCard() {
-    if (mode === "write") return;
-    setShowBack(!showBack);
+    if (isFlipEnabled) setShowBack(!showBack);
   }
 
   // Flip animation

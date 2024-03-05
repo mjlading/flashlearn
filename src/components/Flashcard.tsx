@@ -9,12 +9,12 @@ export default function Flashcard({
   flashcard,
   className,
   mode,
-  isFlipEnabled,
+  isFlipEnabled = true,
 }: {
   flashcard: Flashcard;
   className?: string;
   mode: string;
-  isFlipEnabled: boolean;
+  isFlipEnabled?: boolean;
 }) {
   const [showBack, setShowBack] = useState(false);
 

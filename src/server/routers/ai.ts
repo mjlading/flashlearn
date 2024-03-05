@@ -1,15 +1,14 @@
+import { Feedback } from "@/app/(withoutNavbar)/decks/[id]/rehearsal/AnswerForm";
 import { GeneratedFlashcard } from "@/components/GenerateFlashcardsInput";
 import openai, {
   generateEmbedding,
   generateEmbeddings,
   getCosineSimilarities,
 } from "@/lib/ai";
+import { Flashcard } from "@prisma/client";
 import pgvector from "pgvector";
 import { z } from "zod";
 import { protectedProcedure, publicProcedure, router } from "../trpc";
-import { Flashcard } from "@prisma/client";
-import { Feedback } from "@/app/(withoutNavbar)/decks/[id]/rehearsal/WriteRehearsal";
-import { isValidJSON } from "@/lib/utils";
 
 export const aiRouter = router({
   generateEmbedding: publicProcedure

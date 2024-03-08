@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/dialog";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function RehearsalFinishedDialog({
   open,
@@ -30,10 +30,19 @@ export default function RehearsalFinishedDialog({
   creatorUserId: string;
   deckId: string;
 }) {
-  const [stars, setStars] = useState(0);
   const session = useSession();
   const { push } = useRouter();
-  const createDeckRatingMutation = api.deck.createDeckRating.useMutation();
+  const setDeckRatingMutation = api.deck.setDeckRating.useMutation();
+  const { data: deckRating } = api.deck.getDeckRating.useQuery({
+    deckId: deckId,
+  });
+  const [stars, setStars] = useState(0);
+
+  useEffect(() => {
+    if (deckRating?.stars) {
+      setStars(deckRating.stars);
+    }
+  }, [deckRating]);
 
   function msToTimeString(ms: number): string {
     const totalSeconds = Math.floor(ms / 1000);
@@ -49,9 +58,9 @@ export default function RehearsalFinishedDialog({
   function handleContinueClicked() {
     push("/dashboard");
 
-    // Save star rating if it exists
-    if (stars === 0) return;
-    createDeckRatingMutation.mutate({
+    // Save or update star rating
+    if (stars === 0 || deckRating?.stars === stars) return;
+    setDeckRatingMutation.mutate({
       deckId: deckId,
       stars: stars,
     });

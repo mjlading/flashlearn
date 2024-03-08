@@ -275,7 +275,7 @@ export const deckRouter = router({
 
       return tags.map((tag) => tag.tag).filter((tag) => tag !== "");
     }),
-  createDeckRating: protectedProcedure
+  setDeckRating: protectedProcedure
     .input(
       z.object({
         stars: z.number().min(1).max(5),
@@ -284,12 +284,39 @@ export const deckRouter = router({
     )
     .mutation(async ({ ctx, input }) => {
       const { deckId, stars } = input;
-      await ctx.prisma.deckRating.create({
-        data: {
+      await ctx.prisma.deckRating.upsert({
+        create: {
           deckId: deckId,
           userId: ctx.session.user.id,
           stars: stars,
         },
+        update: {
+          stars: stars,
+        },
+        where: {
+          userId_deckId: {
+            deckId: deckId,
+            userId: ctx.session.user.id,
+          },
+        },
       });
+    }),
+  getDeckRating: protectedProcedure
+    .input(
+      z.object({
+        deckId: z.string(),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      const { deckId } = input;
+
+      const deckRating = await ctx.prisma.deckRating.findFirst({
+        where: {
+          deckId: deckId,
+          userId: ctx.session.user.id,
+        },
+      });
+
+      return deckRating;
     }),
 });

@@ -161,6 +161,8 @@ export default function WriteRehearsal({
     saveRehearsalFinishedMutation.mutate({
       rehearsalId: rehearsalData.id,
       timeSpent: timeSpent.current,
+      score: averageScore.current,
+      deckId: deckId,
     });
   }
 

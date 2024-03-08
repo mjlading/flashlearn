@@ -1,5 +1,8 @@
+"use client";
+
+import { api } from "@/app/api/trpc/client";
 import StarRatingInput from "@/components/StarRatingInput";
-import { buttonVariants } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -8,9 +11,8 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { cn } from "@/lib/utils";
 import { useSession } from "next-auth/react";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 export default function RehearsalFinishedDialog({
@@ -19,15 +21,19 @@ export default function RehearsalFinishedDialog({
   averageScore,
   timeSpent,
   creatorUserId,
+  deckId,
 }: {
   open: boolean;
   onOpenChange: (val: boolean) => void;
   averageScore: number;
   timeSpent: number;
   creatorUserId: string;
+  deckId: string;
 }) {
   const [stars, setStars] = useState(0);
   const session = useSession();
+  const { push } = useRouter();
+  const createDeckRatingMutation = api.deck.createDeckRating.useMutation();
 
   function msToTimeString(ms: number): string {
     const totalSeconds = Math.floor(ms / 1000);
@@ -38,6 +44,17 @@ export default function RehearsalFinishedDialog({
     const formattedSeconds = seconds < 10 ? `0${seconds}` : seconds.toString();
 
     return `${minutes}:${formattedSeconds}`; // 1 minute 15 seconds -> "1:15"
+  }
+
+  function handleContinueClicked() {
+    push("/dashboard");
+
+    // Save star rating if it exists
+    if (stars === 0) return;
+    createDeckRatingMutation.mutate({
+      deckId: deckId,
+      stars: stars,
+    });
   }
 
   return (
@@ -70,9 +87,9 @@ export default function RehearsalFinishedDialog({
         )}
 
         <DialogFooter>
-          <Link href="/dashboard" className={cn(buttonVariants(), "w-full")}>
+          <Button onClick={handleContinueClicked} className="w-full">
             Videre
-          </Link>
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

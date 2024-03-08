@@ -274,4 +274,21 @@ export const deckRouter = router({
 
       return tags.map((tag) => tag.tag).filter((tag) => tag !== "");
     }),
+  createDeckRating: protectedProcedure
+    .input(
+      z.object({
+        stars: z.number().min(1).max(5),
+        deckId: z.string(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { deckId, stars } = input;
+      await ctx.prisma.deckRating.create({
+        data: {
+          deckId: deckId,
+          userId: ctx.session.user.id,
+          stars: stars,
+        },
+      });
+    }),
 });

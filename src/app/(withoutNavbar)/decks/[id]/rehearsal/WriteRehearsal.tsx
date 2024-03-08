@@ -250,6 +250,7 @@ export default function WriteRehearsal({
         averageScore={averageScore.current}
         timeSpent={timeSpent.current}
         creatorUserId={creatorUserId}
+        deckId={deckId}
       />
     </main>
   );

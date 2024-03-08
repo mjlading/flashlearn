@@ -3,6 +3,7 @@ import { AcademicLevel } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 import z from "zod";
 import { protectedProcedure, publicProcedure, router } from "../trpc";
+import { count } from "console";
 
 const createDeck = z.object({
   name: z.string(),
@@ -62,6 +63,7 @@ export const deckRouter = router({
         });
       }
 
+      // spread operator is used to conditinally apply "where" filters given input params
       const decks = await ctx.prisma.deck.findMany({
         take: limit + 1,
         where: {
@@ -75,6 +77,15 @@ export const deckRouter = router({
           }),
           ...(category === "created" && {
             userId: userId,
+          }),
+          ...(category === "recent" && {
+            deckRehearsals: {
+              some: {
+                rehearsal: {
+                  userId: userId,
+                },
+              },
+            },
           }),
           ...(query && {
             name: {
@@ -215,24 +226,37 @@ export const deckRouter = router({
       return count;
     }),
   countDecksByCategories: protectedProcedure.query(async ({ ctx }) => {
+    const userId = ctx.session.user.id;
+
     const countCreated = ctx.prisma.deck.count({
       where: {
-        userId: ctx.session.user.id,
+        userId: userId,
       },
     });
     const countBookmarked = ctx.prisma.bookmarkedDeck.count({
       where: {
-        userId: ctx.session.user.id,
+        userId: userId,
+      },
+    });
+    const countRecent = ctx.prisma.deckRehearsal.count({
+      where: {
+        rehearsal: {
+          userId: userId,
+        },
       },
     });
 
     // Fetch in parallell
-    const counts = await Promise.all([countCreated, countBookmarked]);
+    const counts = await Promise.all([
+      countCreated,
+      countBookmarked,
+      countRecent,
+    ]);
 
     return {
       countCreated: counts[0],
       countBookmarked: counts[1],
-      countRecent: 0, // TODO
+      countRecent: counts[2],
     };
   }),
   getTagsByDeckId: publicProcedure

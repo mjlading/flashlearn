@@ -238,7 +238,8 @@ export const deckRouter = router({
         userId: userId,
       },
     });
-    const countRecent = ctx.prisma.deckRehearsal.count({
+    const countRecent = await ctx.prisma.deckRehearsal.groupBy({
+      by: ["deckId"],
       where: {
         rehearsal: {
           userId: userId,
@@ -256,7 +257,7 @@ export const deckRouter = router({
     return {
       countCreated: counts[0],
       countBookmarked: counts[1],
-      countRecent: counts[2],
+      countRecent: counts[2].length,
     };
   }),
   getTagsByDeckId: publicProcedure

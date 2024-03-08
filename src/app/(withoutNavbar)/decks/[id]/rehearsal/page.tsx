@@ -24,7 +24,13 @@ export default async function RehearsalPage({
   }
 
   if (mode === "write") {
-    return <WriteRehearsal flashcards={deck.flashcards} />;
+    return (
+      <WriteRehearsal
+        flashcards={deck.flashcards}
+        creatorUserId={deck.userId}
+        deckId={deck.id}
+      />
+    );
   }
 
   if (mode === "oral") {

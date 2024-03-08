@@ -166,10 +166,11 @@ enum Mode {
 }
 
 model Rehearsal {
-  id        String    @id @default(cuid())
-  mode      Mode
-  dateStart DateTime  @default(now())
-  dateEnd   DateTime?
+  id         String   @id @default(cuid())
+  mode       Mode
+  dateStart  DateTime @default(now())
+  timeSpent  Int      @default(0)
+  isFinished Boolean  @default(false)
 
   user   User   @relation(fields: [userId], references: [id])
   userId String

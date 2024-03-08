@@ -70,27 +70,38 @@ export default function RehearsalFinishedDialog({
     <Dialog open={open} onOpenChange={(val) => onOpenChange(val)}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Gratulerer! Du har fullført økten.</DialogTitle>
-          <DialogDescription>
+          <DialogTitle className="text-center text-2xl font-semibold">
+            Øving fullført! 👏
+          </DialogTitle>
+          <DialogDescription className="text-center">
             Fantastisk jobb! Du har svart på alle spørsmålene i denne økten.
           </DialogDescription>
         </DialogHeader>
 
-        <div className="my-8 flex gap-4 justify-center">
-          <div>
-            <p>Tid brukt</p>
-            <span>{timeSpent && msToTimeString(timeSpent)}</span>
+        {/* Stats */}
+        <div className="my-8 flex gap-10 justify-center w-full sm:w-[80%] mx-auto">
+          <div className="flex flex-1 flex-col items-center p-4 rounded-lg shadow-md">
+            <p className="font-medium text-gray-700 dark:text-white">
+              Tid brukt
+            </p>
+            <span className="mt-1 text-lg font-semibold text-blue-600">
+              {timeSpent && msToTimeString(timeSpent)}
+            </span>
           </div>
-          <div>
-            <p>Score</p>
-            <span>{averageScore.toFixed(0)}%</span>
+          <div className="flex flex-1 flex-col items-center p-4 bg-white rounded-lg shadow-md">
+            <p className="font-medium text-gray-700 dark:text-white">Score</p>
+            <span className="mt-1 text-lg font-semibold text-green-500">
+              {averageScore.toFixed(0)}%
+            </span>
           </div>
         </div>
 
         {/* Star rating input */}
         {session.data?.user.id !== creatorUserId && (
-          <div>
-            <p className="text-center">Vurder settet</p>
+          <div className="my-4">
+            <p className="text-center font-medium text-gray-800">
+              Vurder settet
+            </p>
             <StarRatingInput value={stars} onChange={(val) => setStars(val)} />
           </div>
         )}

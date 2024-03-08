@@ -18,14 +18,11 @@ export default function StarRatingInput({
           size="icon"
           variant="ghost"
           onClick={() => onChange(index + 1)}
-          className="hover:bg-transparent"
+          className={`hover:bg-transparent hover:scale-110 transition-transform ${
+            value >= index + 1 ? "text-yellow-500" : "text-gray-300"
+          } hover:text-yellow-600`}
         >
-          <Star
-            fill={
-              value >= index + 1 ? "rgb(234, 179, 8)" : "rgba(229, 231, 235)"
-            }
-            strokeWidth={0}
-          />
+          <Star fill="currentColor" strokeWidth={0} />
         </Button>
       ))}
     </div>

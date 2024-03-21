@@ -1,4 +1,4 @@
-import { router } from "../trpc";
+import { createCallerFactory, router } from "../trpc";
 import { aiRouter } from "./ai";
 import { bookmarkRouter } from "./bookmark";
 import { deckRouter } from "./deck";
@@ -20,3 +20,5 @@ export const appRouter = router({
 });
 
 export type AppRouter = typeof appRouter;
+
+export const createCaller = createCallerFactory(appRouter);

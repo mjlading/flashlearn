@@ -1,3 +1,4 @@
+import { z } from "zod";
 import { protectedProcedure, router } from "../trpc";
 
 export const collectionRouter = router({
@@ -16,4 +17,19 @@ export const collectionRouter = router({
     });
     return collections;
   }),
+  deleteCollection: protectedProcedure
+    .input(
+      z.object({
+        id: z.string(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { id } = input;
+      return await ctx.prisma.collection.delete({
+        where: {
+          userId: ctx.session.user.id,
+          id: id,
+        },
+      });
+    }),
 });

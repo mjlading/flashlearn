@@ -219,9 +219,9 @@ model Collection {
 
 // Many-to-many between Collection and Deck
 model CollectionDeck {
-  deck         Deck       @relation(fields: [deckId], references: [id])
+  deck         Deck       @relation(fields: [deckId], references: [id], onDelete: Cascade)
   deckId       String
-  collection   Collection @relation(fields: [collectionId], references: [id])
+  collection   Collection @relation(fields: [collectionId], references: [id], onDelete: Cascade)
   collectionId String
 
   @@id([deckId, collectionId])

@@ -5,6 +5,7 @@ import {
   GraduationCap,
   Layers3,
   LayoutDashboard,
+  SquareStack,
   TrendingUp,
 } from "lucide-react";
 import Link from "next/link";
@@ -21,9 +22,13 @@ export default function Sidebar() {
     },
     {
       text: "Studiekort",
-      href: "/dashboard/decks",
+      href: "/dashboard/decks?category=recent",
       icon: <Layers3 size={20} />,
-      query: "?category=recent",
+    },
+    {
+      text: "Samlinger",
+      href: "/dashboard/collections",
+      icon: <SquareStack size={20} />,
     },
     {
       text: "Emner",
@@ -43,7 +48,7 @@ export default function Sidebar() {
         {links.map((link) => (
           <Link
             key={link.href}
-            href={link.href + (link.query ? link.query : "")}
+            href={link.href}
             className={cn(
               pathname == link.href ? "bg-accent" : "opacity-80",
               "rounded-lg px-3 py-1.5 flex font-medium gap-4 items-center text-lg hover:bg-accent transition"

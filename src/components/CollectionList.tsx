@@ -49,7 +49,7 @@ export default function CollectionList() {
     return <CollectionListSkeleton />;
   }
 
-  if (collections.data.length === 0) {
+  if (collections.data?.length === 0) {
     return <NoCollections />;
   }
 

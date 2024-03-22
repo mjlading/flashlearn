@@ -1,3 +1,4 @@
+import CollectionList from "@/components/CollectionList";
 import { buttonVariants } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import Link from "next/link";
@@ -18,6 +19,7 @@ export default function CollectionsPage() {
         <h1 className="text-3xl font-bold">Samlinger</h1>
         <NewCollectionButton />
       </div>
+      <CollectionList />
     </div>
   );
 }

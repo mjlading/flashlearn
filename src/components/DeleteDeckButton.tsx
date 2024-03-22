@@ -58,10 +58,10 @@ export default function DeleteDeckButton({ deck }: DeckCardProps) {
       <DialogContent>
         <DialogHeader>
           <DialogTitle>
-            Slett <span className="font-bold">{deck.name}</span>
+            Slett <span className="font-bold">{deck.name}</span>?
           </DialogTitle>
           <DialogDescription>
-            <div className="flex items-center gap-2 text-destructive">
+            <div className="flex items-center gap-2 text-orange-500">
               <AlertCircle size={18} />
               Denne handlingen kan ikke angres.
             </div>

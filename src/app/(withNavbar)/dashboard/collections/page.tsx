@@ -5,7 +5,7 @@ import Link from "next/link";
 
 function NewCollectionButton() {
   return (
-    <Link href="/dashboard" className={buttonVariants()}>
+    <Link href="/collections/create" className={buttonVariants()}>
       <Plus size={20} className="mr-1" />
       Ny samling
     </Link>

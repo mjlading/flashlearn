@@ -206,8 +206,9 @@ model DeckRehearsal {
 }
 
 model Collection {
-  id   String @id @default(cuid())
-  name String @unique
+  id          String  @id @default(cuid())
+  name        String  @unique
+  description String?
 
   user   User   @relation(fields: [userId], references: [id])
   userId String

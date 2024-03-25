@@ -1,7 +1,7 @@
 "use client";
 
 import { subjectNameMap, subjectStyles } from "@/lib/subject";
-import { cn, dateDifferenceFromNow } from "@/lib/utils";
+import { cn, dateDifferenceFromNow, SerializedStateDates } from "@/lib/utils";
 import { GraduationCap, History } from "lucide-react";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
@@ -22,8 +22,14 @@ import { Label } from "./ui/label";
 import { Separator } from "./ui/separator";
 import { Tabs, TabsList, TabsTrigger } from "./ui/tabs";
 import { academicLevelMap } from "@/lib/academicLevel";
+import type { Deck } from "@prisma/client";
 
-export default function DeckCardDialogContent({ deck }: DeckCardProps) {
+interface Props {
+  // Convert types dateCreated and dateChanged from Date to string
+  deck: SerializedStateDates<Deck, "dateCreated" | "dateChanged">;
+}
+
+export default function DeckCardDialogContent({ deck }: Props) {
   const [modeSelected, setModeSelected] = useState("write");
   const session = useSession();
   const isUsersDeck = deck.userId === session?.data?.user.id;

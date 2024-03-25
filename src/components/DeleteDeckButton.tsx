@@ -16,8 +16,15 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "./ui/dialog";
+import { SerializedStateDates } from "@/lib/utils";
+import type { Deck } from "@prisma/client";
 
-export default function DeleteDeckButton({ deck }: DeckCardProps) {
+interface Props {
+  // Convert types dateCreated and dateChanged from Date to string
+  deck: SerializedStateDates<Deck, "dateCreated" | "dateChanged">;
+}
+
+export default function DeleteDeckButton({ deck }: Props) {
   const utils = api.useUtils();
 
   const deleteDeckMutation = api.deck.deleteDeckById.useMutation({

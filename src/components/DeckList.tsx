@@ -26,6 +26,10 @@ export interface DeckListProps {
   subject?: string;
   category?: "recent" | "created" | "bookmarked";
   query?: string;
+  addable: boolean;
+  onAddClicked?: (
+    deck: SerializedStateDates<Deck, "dateCreated" | "dateChanged">
+  ) => void;
 }
 
 export default function DeckList(props: DeckListProps) {
@@ -74,7 +78,14 @@ export default function DeckList(props: DeckListProps) {
         {infiniteQuery.data?.pages
           .flatMap((page) => page.decks)
           .map((deck) => (
-            <DeckCard key={deck.id} deck={deck} />
+            <DeckCard
+              key={deck.id}
+              deck={deck}
+              addable={props.addable}
+              onAddClicked={() =>
+                props.onAddClicked && props.onAddClicked(deck)
+              }
+            />
           ))}
 
         {/* Loading more decks skeleton */}

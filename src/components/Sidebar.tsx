@@ -22,8 +22,9 @@ export default function Sidebar() {
     },
     {
       text: "Studiekort",
-      href: "/dashboard/decks?category=recent",
+      href: "/dashboard/decks",
       icon: <Layers3 size={20} />,
+      query: "?category=recent",
     },
     {
       text: "Samlinger",
@@ -48,7 +49,7 @@ export default function Sidebar() {
         {links.map((link) => (
           <Link
             key={link.href}
-            href={link.href}
+            href={link.href + (link.query ? link.query : "")}
             className={cn(
               pathname == link.href ? "bg-accent" : "opacity-80",
               "rounded-lg px-3 py-1.5 flex font-medium gap-4 items-center text-lg hover:bg-accent transition"

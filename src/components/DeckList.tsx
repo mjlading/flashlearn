@@ -70,7 +70,7 @@ export default function DeckList(props: DeckListProps) {
 
   return (
     <>
-      <div className="flex flex-col space-y-3">
+      <div className="flex flex-col space-y-3 pb-7">
         {infiniteQuery.data?.pages
           .flatMap((page) => page.decks)
           .map((deck) => (

@@ -1,11 +1,11 @@
 "use client";
 
 import { api } from "@/app/api/trpc/client";
-import CollectionCard from "./CollectionCard";
-import { Skeleton } from "./ui/skeleton";
-import Link from "next/link";
 import { Plus, SquareStack } from "lucide-react";
+import Link from "next/link";
+import CollectionCard from "./CollectionCard";
 import { buttonVariants } from "./ui/button";
+import { Skeleton } from "./ui/skeleton";
 
 function CollectionListSkeleton() {
   return (
@@ -25,7 +25,7 @@ function NoCollections() {
         Lag en samling for å organisere og øve flere sett sammen
       </p>
       <Link
-        href="/dashboard"
+        href="/collections/create"
         className={buttonVariants({
           size: "lg",
           className: "mt-8",

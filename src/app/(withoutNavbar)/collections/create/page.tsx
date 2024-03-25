@@ -1,20 +1,19 @@
 "use client";
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Layers3, SquareStack } from "lucide-react";
-import { FormProvider, useForm } from "react-hook-form";
-import { z } from "zod";
-import CreateCollectionTopbar from "./CreateCollectionTopbar";
-import CreateCollectionForm, { formSchema } from "./CreateCollectionForm";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Separator } from "@/components/ui/separator";
+import DeckCard from "@/components/DeckCard";
 import DeckList from "@/components/DeckList";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Separator } from "@/components/ui/separator";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { SerializedStateDates } from "@/lib/utils";
+import { zodResolver } from "@hookform/resolvers/zod";
 import type { Deck } from "@prisma/client";
 import { useState } from "react";
-import DeckCard from "@/components/DeckCard";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { FormProvider, useForm } from "react-hook-form";
 import { toast } from "sonner";
+import { z } from "zod";
+import CreateCollectionForm, { formSchema } from "./CreateCollectionForm";
+import CreateCollectionTopbar from "./CreateCollectionTopbar";
 
 export default function CreateCollectionPage() {
   const form = useForm<z.infer<typeof formSchema>>({
@@ -22,6 +21,7 @@ export default function CreateCollectionPage() {
     defaultValues: {
       name: "",
       description: "",
+      deckIds: [],
     },
   });
 
@@ -38,12 +38,17 @@ export default function CreateCollectionPage() {
     }
 
     setAddedDecks((prev) => [...prev, deck]);
+    form.setValue("deckIds", addedDecks.map((d) => d.id).concat(deck.id));
   }
 
   function handleRemoveClicked(
     deck: SerializedStateDates<Deck, "dateCreated" | "dateChanged">
   ) {
     setAddedDecks((prev) => prev.filter((d) => d !== deck));
+    form.setValue(
+      "deckIds",
+      addedDecks.filter((d) => d.id !== deck.id).map((d) => d.id)
+    );
   }
 
   return (
@@ -64,7 +69,7 @@ export default function CreateCollectionPage() {
             <CreateCollectionForm />
           </TabsContent>
           <TabsContent value="addDecks" className="mt-12">
-            <ScrollArea className="h-[calc(100vh-155px)] pr-3 flex-1">
+            <ScrollArea className="h-[calc(100vh-155px)] pr-3">
               <DeckList
                 category="created"
                 addable={true}
@@ -82,16 +87,18 @@ export default function CreateCollectionPage() {
           <h2 className="text-center text-lg font-semibold mt-3 mb-12">
             Lagt til sett
           </h2>
-          <div className="space-y-3">
-            {addedDecks.map((deck) => (
-              <DeckCard
-                key={deck.id}
-                deck={deck}
-                removable={true}
-                onRemoveClicked={() => handleRemoveClicked(deck)}
-              />
-            ))}
-          </div>
+          <ScrollArea className="h-[calc(100vh-155px)] pr-3">
+            <div className="space-y-3 pb-7">
+              {addedDecks.map((deck) => (
+                <DeckCard
+                  key={deck.id}
+                  deck={deck}
+                  removable={true}
+                  onRemoveClicked={() => handleRemoveClicked(deck)}
+                />
+              ))}
+            </div>
+          </ScrollArea>
         </div>
       </div>
     </FormProvider>

@@ -32,4 +32,34 @@ export const collectionRouter = router({
         },
       });
     }),
+  createCollection: protectedProcedure
+    .input(
+      z.object({
+        name: z.string(),
+        description: z.string().optional(),
+        deckIds: z.array(z.string()),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { name, description, deckIds } = input;
+
+      return await ctx.prisma.collection.create({
+        data: {
+          name: name,
+          description: description,
+          user: {
+            connect: {
+              id: ctx.session.user.id,
+            },
+          },
+          collectionDecks: {
+            createMany: {
+              data: deckIds.map((deckId) => ({
+                deckId: deckId,
+              })),
+            },
+          },
+        },
+      });
+    }),
 });

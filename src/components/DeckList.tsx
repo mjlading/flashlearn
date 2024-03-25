@@ -1,14 +1,14 @@
 "use client";
 
 import { api } from "@/app/api/trpc/client";
+import { SerializedStateDates } from "@/lib/utils";
+import { Deck } from "@prisma/client";
 import { useEffect } from "react";
 import { useInView } from "react-intersection-observer";
 import DeckCard from "./DeckCard";
 import DeckListSkeleton from "./DeckListSkeleton";
 import NoDecks from "./NoDecks";
 import { Skeleton } from "./ui/skeleton";
-import { Deck } from "@prisma/client";
-import { SerializedStateDates } from "@/lib/utils";
 
 /**
  * DeckList component displays a list of Decks.

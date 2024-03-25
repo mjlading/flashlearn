@@ -19,9 +19,9 @@ export const formSchema = z.object({
     .max(50, "Navnet kan ikke være mer enn 50 tegn"),
   description: z
     .string()
-    .min(2, "Beskrivelsen må være minst 2 tegn")
     .max(500, "Beskrivelsen kan ikke være mer enn 500 tegn")
     .optional(),
+  deckIds: z.array(z.string()),
 });
 
 export default function CreateCollectionForm() {

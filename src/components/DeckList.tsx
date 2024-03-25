@@ -26,7 +26,7 @@ export interface DeckListProps {
   subject?: string;
   category?: "recent" | "created" | "bookmarked";
   query?: string;
-  addable: boolean;
+  addable?: boolean;
   onAddClicked?: (
     deck: SerializedStateDates<Deck, "dateCreated" | "dateChanged">
   ) => void;

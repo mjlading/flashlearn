@@ -3,9 +3,11 @@
 import { SerializedStateDates } from "@/lib/utils";
 import type { Deck } from "@prisma/client";
 import { ChevronDown, ChevronUp, Pencil } from "lucide-react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import DeleteCollectionButton from "./DeleteCollectionButton";
-import { Button } from "./ui/button";
+import { Button, buttonVariants } from "./ui/button";
 import {
   Card,
   CardContent,
@@ -14,6 +16,15 @@ import {
   CardTitle,
 } from "./ui/card";
 import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTrigger,
+} from "./ui/dialog";
+import { Label } from "./ui/label";
+import {
   Table,
   TableBody,
   TableCell,
@@ -21,6 +32,7 @@ import {
   TableHeader,
   TableRow,
 } from "./ui/table";
+import { Tabs, TabsList, TabsTrigger } from "./ui/tabs";
 import {
   Tooltip,
   TooltipContent,
@@ -32,6 +44,7 @@ export interface CollectionCardProps {
   collection: {
     id: string;
     name: string;
+    description: string;
     userId: string;
     collectionDecks: {
       deckId: string;
@@ -43,6 +56,12 @@ export interface CollectionCardProps {
 
 export default function CollectionCard({ collection }: CollectionCardProps) {
   const [showDecks, setShowDecks] = useState(false);
+  const [modeSelected, setModeSelected] = useState("write");
+  const router = useRouter();
+
+  function handleRehearseClicked() {
+    router.push(`/collections/${collection.id}/rehearsal`);
+  }
 
   return (
     <Card>
@@ -92,8 +111,45 @@ export default function CollectionCard({ collection }: CollectionCardProps) {
         )}
       </CardContent>
       <CardFooter className="flex justify-between">
-        {/* Rehearse button */}
-        <Button>Start øving</Button>
+        <Dialog>
+          <DialogTrigger asChild>
+            {/* Rehearse button */}
+            <Button>Øving</Button>
+          </DialogTrigger>
+          <DialogContent>
+            <DialogHeader>{collection.name}</DialogHeader>
+            <DialogDescription>{collection.description}</DialogDescription>
+            {/* Rehearsal Mode Selection */}
+            <div className="flex flex-col">
+              <Label htmlFor="select-mode" className="text-center mb-4">
+                Øvemodus
+              </Label>
+              <Tabs
+                id="select-mode"
+                value={modeSelected}
+                onValueChange={(newValue) => setModeSelected(newValue)}
+              >
+                <TabsList className="grid w-full grid-cols-3">
+                  <TabsTrigger value="visual">Visuell</TabsTrigger>
+                  <TabsTrigger value="write">Skriftlig</TabsTrigger>
+                  <TabsTrigger value="oral">Muntlig</TabsTrigger>
+                </TabsList>
+              </Tabs>
+            </div>
+
+            <DialogFooter className="mt-2">
+              <Link
+                href={`/collections/${collection.id}/rehearsal?mode=${modeSelected}`}
+                className={buttonVariants({
+                  size: "lg",
+                  className: "w-full",
+                })}
+              >
+                Start
+              </Link>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
         <div className="space-x-2">
           {/* Edit button */}
           <TooltipProvider>

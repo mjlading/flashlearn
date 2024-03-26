@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { protectedProcedure, router } from "../trpc";
+import { TRPCError } from "@trpc/server";
 
 export const collectionRouter = router({
   getUserCollections: protectedProcedure.query(async ({ ctx }) => {
@@ -61,5 +62,49 @@ export const collectionRouter = router({
           },
         },
       });
+    }),
+  getCollectionById: protectedProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        includeDecks: z.boolean().default(false),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      const { includeDecks, id } = input;
+
+      const collection = await ctx.prisma.collection.findUnique({
+        where: {
+          id: id,
+        },
+        include: {
+          collectionDecks: {
+            include: {
+              deck: {
+                include: {
+                  flashcards: includeDecks,
+                },
+              },
+            },
+          },
+        },
+      });
+
+      if (!collection) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Collection not found",
+        });
+      }
+
+      // if current user is not the owner
+      if (collection.userId !== ctx.session.user.id) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "You don't have permission to access this resource",
+        });
+      }
+
+      return collection;
     }),
 });

@@ -45,7 +45,7 @@ export default function WriteRehearsal({
   const updateTimeSpentMutation = api.rehearsal.updateTimeSpent.useMutation();
   const isFinished = useRef(false);
 
-  let recentRehearsal = undefined;
+  let recentRehearsal: any = undefined;
   if (deckId) {
     recentRehearsal = api.rehearsal.getRecentRehearsal.useQuery({
       deckId: deckId,

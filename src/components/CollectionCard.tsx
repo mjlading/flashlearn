@@ -44,7 +44,7 @@ export interface CollectionCardProps {
   collection: {
     id: string;
     name: string;
-    description: string;
+    description: string | null;
     userId: string;
     collectionDecks: {
       deckId: string;

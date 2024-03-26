@@ -5,7 +5,7 @@ import openai, {
   generateEmbeddings,
   getCosineSimilarities,
 } from "@/lib/ai";
-import { Flashcard } from "@prisma/client";
+import { Flashcard, Deck } from "@prisma/client";
 import pgvector from "pgvector";
 import { z } from "zod";
 import { protectedProcedure, publicProcedure, router } from "../trpc";
@@ -23,20 +23,18 @@ export const aiRouter = router({
     }),
   /**
    * Finds the n nearest neighbors to a given target vector embedding
-   * Will search in given table
    * excludedBacks: a list of strings representing the back of flashcards which will be excluded
    */
-  getNearestNeighbors: publicProcedure
+  getNearestFlashcardNeighbors: publicProcedure
     .input(
       z.object({
-        targetEmbedding: z.array(z.number()),
-        table: z.enum(["Flashcard", "Deck", "Subject"]), // The tables which have embeddings
+        targetEmbedding: z.array(z.number()).optional(),
         n: z.number(),
         excludedBacks: z.array(z.string()),
       })
     )
     .mutation(async ({ input, ctx }) => {
-      const { targetEmbedding, table, n, excludedBacks } = input;
+      const { targetEmbedding, n, excludedBacks } = input;
 
       const targetEmbeddingSql = pgvector.toSql(targetEmbedding);
 
@@ -51,6 +49,52 @@ export const aiRouter = router({
         1 - (embedding <=> ${targetEmbeddingSql}::vector) AS "cosineSimilarity"
         FROM "Flashcard"
         WHERE back NOT IN (SELECT unnest(${excludedBacks}::text[]))
+        ORDER BY "cosineSimilarity" DESC
+        LIMIT ${n}`;
+
+      return items;
+    }),
+  getNearestDeckNeighbors: publicProcedure
+    .input(
+      z.object({
+        targetDeckIds: z.array(z.string()),
+        n: z.number(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { targetDeckIds, n } = input;
+
+      type AvgEmbeddingResult = [
+        {
+          avg: string;
+        }
+      ];
+
+      const avgEmbedding = await ctx.prisma.$queryRaw<AvgEmbeddingResult>`
+      SELECT AVG(embedding)::text FROM "Deck"
+      WHERE id = ANY(${targetDeckIds})
+    `;
+
+      const avgEmbeddingString = avgEmbedding[0].avg;
+
+      const items = await ctx.prisma.$queryRaw<
+        (Deck & {
+          cosineSimilarity: number;
+        })[]
+      >`
+        SELECT id,
+        name,
+        "isPublic",
+        "averageRating",
+        "academicLevel",
+        "dateCreated",
+        "dateChanged",
+        "numFlashcards",
+        "userId",
+        "subjectName",
+        1 - (embedding <=> ${avgEmbeddingString}::vector) AS "cosineSimilarity"
+        FROM "Deck"
+        WHERE id != ANY(${targetDeckIds}::text[])
         ORDER BY "cosineSimilarity" DESC
         LIMIT ${n}`;
 

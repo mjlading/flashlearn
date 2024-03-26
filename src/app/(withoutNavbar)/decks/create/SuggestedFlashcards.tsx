@@ -27,7 +27,8 @@ export default function SuggestedFlashcards() {
   const numFlashcards = getValues("flashcards").length - 1;
 
   const generateEmbeddingMutation = api.ai.generateEmbedding.useMutation();
-  const getNearestNeighborsMutation = api.ai.getNearestNeighbors.useMutation();
+  const getNearestNeighborsMutation =
+    api.ai.getNearestFlashcardNeighbors.useMutation();
 
   const { theme } = useTheme();
 
@@ -48,7 +49,6 @@ export default function SuggestedFlashcards() {
         // Find nearest e.g. most similar neighbors to the target embedding
         const nearestNeighbors = await getNearestNeighborsMutation.mutateAsync({
           targetEmbedding: targetEmbedding,
-          table: "Flashcard",
           n: 2,
           excludedBacks: excludedBacks.current,
         });

@@ -5,7 +5,7 @@ import { expect, test } from "vitest";
 test("protected example router", async () => {
   const ctx = createInnerTRPCContext({
     session: {
-      user: { id: "123", name: "John Doe" },
+      user: { id: "testId", name: "test" },
       expires: "1",
     },
   });

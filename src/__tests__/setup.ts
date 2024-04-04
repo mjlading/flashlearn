@@ -2,7 +2,7 @@
 
 import { resolve } from 'path';
 import { vi } from "vitest";
-
+import prisma from '@/lib/prisma';
 // Mock useRouter()
 vi.mock("next/navigation", () => ({
   useRouter: () => ({
@@ -38,3 +38,8 @@ vi.mock("next-auth/react", () => ({
     },
   }),
 }));
+
+export async function cleanDB() {
+    await prisma.$transaction([prisma.deck.deleteMany()])
+
+}

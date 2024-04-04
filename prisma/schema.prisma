@@ -100,6 +100,8 @@ model Deck {
   deckRehearsals     DeckRehearsal[]
   collectionDecks    CollectionDeck[]
   roadmapSteps       RoadmapStep[]
+
+  embedding Unsupported("vector(1536)")?
 }
 
 // Many-to-many between User and Deck
@@ -174,7 +176,7 @@ model Rehearsal {
 
   user   User   @relation(fields: [userId], references: [id])
   userId String
-  Deck   Deck   @relation(fields: [deckId], references: [id])
+  Deck   Deck   @relation(fields: [deckId], references: [id], onDelete: Cascade)
   deckId String
 
   flashcardRehearsals FlashcardRehearsal[]
@@ -185,9 +187,9 @@ model Rehearsal {
 model FlashcardRehearsal {
   score Int
 
-  flashcard   Flashcard @relation(fields: [flashcardId], references: [id])
+  flashcard   Flashcard @relation(fields: [flashcardId], references: [id], onDelete: Cascade)
   flashcardId String
-  rehearsal   Rehearsal @relation(fields: [rehearsalId], references: [id])
+  rehearsal   Rehearsal @relation(fields: [rehearsalId], references: [id], onDelete: Cascade)
   rehearsalId String
 
   @@id([flashcardId, rehearsalId])
@@ -197,17 +199,18 @@ model FlashcardRehearsal {
 model DeckRehearsal {
   score Int
 
-  deck        Deck      @relation(fields: [deckId], references: [id])
+  deck        Deck      @relation(fields: [deckId], references: [id], onDelete: Cascade)
   deckId      String
-  rehearsal   Rehearsal @relation(fields: [rehearsalId], references: [id])
+  rehearsal   Rehearsal @relation(fields: [rehearsalId], references: [id], onDelete: Cascade)
   rehearsalId String
 
   @@id([deckId, rehearsalId])
 }
 
 model Collection {
-  id   String @id @default(cuid())
-  name String @unique
+  id          String  @id @default(cuid())
+  name        String  @unique
+  description String?
 
   user   User   @relation(fields: [userId], references: [id])
   userId String
@@ -219,9 +222,9 @@ model Collection {
 
 // Many-to-many between Collection and Deck
 model CollectionDeck {
-  deck         Deck       @relation(fields: [deckId], references: [id])
+  deck         Deck       @relation(fields: [deckId], references: [id], onDelete: Cascade)
   deckId       String
-  collection   Collection @relation(fields: [collectionId], references: [id])
+  collection   Collection @relation(fields: [collectionId], references: [id], onDelete: Cascade)
   collectionId String
 
   @@id([deckId, collectionId])

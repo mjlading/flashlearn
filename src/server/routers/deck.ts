@@ -4,6 +4,7 @@ import { TRPCError } from "@trpc/server";
 import z from "zod";
 import { protectedProcedure, publicProcedure, router } from "../trpc";
 import { count } from "console";
+import { generateEmbedding } from "@/lib/ai";
 
 const createDeck = z.object({
   name: z.string(),
@@ -318,5 +319,25 @@ export const deckRouter = router({
       });
 
       return deckRating;
+    }),
+  createAndSaveEmbedding: protectedProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        name: z.string(),
+        subjectName: z.string(),
+        flashcardFronts: z.array(z.string()),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { id, name, subjectName, flashcardFronts } = input;
+
+      const embeddingInput = `${name} ${subjectName} ${flashcardFronts.join()}`;
+      const embedding = await generateEmbedding(embeddingInput);
+
+      await ctx.prisma.$executeRaw`
+        UPDATE "Deck"
+        SET embedding = ${embedding}::vector
+        WHERE id = ${id}`;
     }),
 });

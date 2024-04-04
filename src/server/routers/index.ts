@@ -1,6 +1,7 @@
 import { createCallerFactory, router } from "../trpc";
 import { aiRouter } from "./ai";
 import { bookmarkRouter } from "./bookmark";
+import { collectionRouter } from "./collection";
 import { deckRouter } from "./deck";
 import { flashcardRouter } from "./flashcard";
 import { rehearsalRouter } from "./rehearsal";
@@ -16,6 +17,7 @@ export const appRouter = router({
   bookmark: bookmarkRouter,
   rehearsal: rehearsalRouter,
   flashcard: flashcardRouter,
+  collection: collectionRouter,
   ai: aiRouter,
 });
 

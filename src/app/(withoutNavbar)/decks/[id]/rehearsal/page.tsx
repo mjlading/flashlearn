@@ -2,7 +2,7 @@ import { api } from "@/app/api/trpc/server";
 import VisualRehearsal from "./VisualRehearsal";
 import WriteRehearsal from "./WriteRehearsal";
 
-export default async function RehearsalPage({
+export default async function DeckRehearsalPage({
   params,
   searchParams,
 }: {

@@ -19,6 +19,8 @@ export default function CreateDeckTopbar() {
 
   const createAndSaveEmbeddingsMutation =
     api.flashcard.createAndSaveEmbeddings.useMutation();
+  const createAndSaveDeckEmbeddingMutation =
+    api.deck.createAndSaveEmbedding.useMutation();
 
   const createDeckMutation = api.deck.createDeck.useMutation({
     onSuccess(data) {
@@ -39,8 +41,14 @@ export default function CreateDeckTopbar() {
         }
       );
 
-      // Create embeddings for flashcards in the background
+      // Create embeddings for flashcards and deck in the background
       createAndSaveEmbeddingsMutation.mutate(data.flashcards);
+      createAndSaveDeckEmbeddingMutation.mutate({
+        id: data.id,
+        name: data.name,
+        subjectName: data.subjectName,
+        flashcardFronts: data.flashcards.map((f) => f.front),
+      });
     },
     onError() {
       toast.error("Noe gikk galt", {

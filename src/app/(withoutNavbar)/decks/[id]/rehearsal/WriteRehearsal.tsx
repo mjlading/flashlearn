@@ -23,8 +23,8 @@ export default function WriteRehearsal({
   creatorUserId,
 }: {
   flashcards: FlashcardType[];
-  deckId: string;
-  creatorUserId: string;
+  deckId?: string;
+  creatorUserId?: string;
 }) {
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -45,9 +45,12 @@ export default function WriteRehearsal({
   const updateTimeSpentMutation = api.rehearsal.updateTimeSpent.useMutation();
   const isFinished = useRef(false);
 
-  const recentRehearsal = api.rehearsal.getRecentRehearsal.useQuery({
-    deckId: deckId,
-  });
+  let recentRehearsal: any = undefined;
+  if (deckId) {
+    recentRehearsal = api.rehearsal.getRecentRehearsal.useQuery({
+      deckId: deckId,
+    });
+  }
 
   const { theme } = useTheme();
 
@@ -62,6 +65,8 @@ export default function WriteRehearsal({
   });
 
   useEffect(() => {
+    if (!deckId || !recentRehearsal) return; //TODO: temporary workaround for collections
+
     const rehearsal = recentRehearsal.data;
     if (!rehearsal || rehearsal.isFinished) {
       // Create a new rehearsal
@@ -80,6 +85,8 @@ export default function WriteRehearsal({
 
   // Update "timeSpent" in db every 30 seconds
   useEffect(() => {
+    if (!deckId) return; //TODO: temporary workaround for collections
+
     // If the rehearsal is finished, dont update timeSpent
     if (isFinished.current) return;
 
@@ -135,6 +142,8 @@ export default function WriteRehearsal({
   }
 
   function handleRehearsalFinished() {
+    if (!deckId) return; //TODO: temporary workaround for collections
+
     isFinished.current = true;
 
     // Display finished rehearsal modal
@@ -162,7 +171,7 @@ export default function WriteRehearsal({
       rehearsalId: rehearsalData.id,
       timeSpent: timeSpent.current,
       score: averageScore.current,
-      deckId: deckId,
+      deckId: deckId as string,
     });
   }
 
@@ -244,14 +253,16 @@ export default function WriteRehearsal({
       </FormProvider>
 
       {/* Dialog that displays when the rehearsal is finished */}
-      <RehearsalFinishedDialog
-        open={dialogOpen}
-        onOpenChange={(val) => setDialogOpen(val)}
-        averageScore={averageScore.current}
-        timeSpent={timeSpent.current}
-        creatorUserId={creatorUserId}
-        deckId={deckId}
-      />
+      {deckId && creatorUserId && (
+        <RehearsalFinishedDialog
+          open={dialogOpen}
+          onOpenChange={(val) => setDialogOpen(val)}
+          averageScore={averageScore.current}
+          timeSpent={timeSpent.current}
+          creatorUserId={creatorUserId}
+          deckId={deckId}
+        />
+      )}
     </main>
   );
 }

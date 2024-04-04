@@ -1,14 +1,14 @@
 "use client";
 
 import { api } from "@/app/api/trpc/client";
+import { SerializedStateDates } from "@/lib/utils";
+import { Deck } from "@prisma/client";
 import { useEffect } from "react";
 import { useInView } from "react-intersection-observer";
 import DeckCard from "./DeckCard";
 import DeckListSkeleton from "./DeckListSkeleton";
 import NoDecks from "./NoDecks";
 import { Skeleton } from "./ui/skeleton";
-import { Deck } from "@prisma/client";
-import { SerializedStateDates } from "@/lib/utils";
 
 /**
  * DeckList component displays a list of Decks.
@@ -26,6 +26,10 @@ export interface DeckListProps {
   subject?: string;
   category?: "recent" | "created" | "bookmarked";
   query?: string;
+  addable?: boolean;
+  onAddClicked?: (
+    deck: SerializedStateDates<Deck, "dateCreated" | "dateChanged">
+  ) => void;
 }
 
 export default function DeckList(props: DeckListProps) {
@@ -70,11 +74,18 @@ export default function DeckList(props: DeckListProps) {
 
   return (
     <>
-      <div className="flex flex-col space-y-3">
+      <div className="flex flex-col space-y-3 pb-7">
         {infiniteQuery.data?.pages
           .flatMap((page) => page.decks)
           .map((deck) => (
-            <DeckCard key={deck.id} deck={deck} />
+            <DeckCard
+              key={deck.id}
+              deck={deck}
+              addable={props.addable}
+              onAddClicked={() =>
+                props.onAddClicked && props.onAddClicked(deck)
+              }
+            />
           ))}
 
         {/* Loading more decks skeleton */}

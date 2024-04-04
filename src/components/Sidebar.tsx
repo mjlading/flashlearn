@@ -5,6 +5,7 @@ import {
   GraduationCap,
   Layers3,
   LayoutDashboard,
+  SquareStack,
   TrendingUp,
 } from "lucide-react";
 import Link from "next/link";
@@ -24,6 +25,11 @@ export default function Sidebar() {
       href: "/dashboard/decks",
       icon: <Layers3 size={20} />,
       query: "?category=recent",
+    },
+    {
+      text: "Samlinger",
+      href: "/dashboard/collections",
+      icon: <SquareStack size={20} />,
     },
     {
       text: "Emner",

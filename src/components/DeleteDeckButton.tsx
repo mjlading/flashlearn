@@ -16,8 +16,15 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "./ui/dialog";
+import { SerializedStateDates } from "@/lib/utils";
+import type { Deck } from "@prisma/client";
 
-export default function DeleteDeckButton({ deck }: DeckCardProps) {
+interface Props {
+  // Convert types dateCreated and dateChanged from Date to string
+  deck: SerializedStateDates<Deck, "dateCreated" | "dateChanged">;
+}
+
+export default function DeleteDeckButton({ deck }: Props) {
   const utils = api.useUtils();
 
   const deleteDeckMutation = api.deck.deleteDeckById.useMutation({
@@ -58,10 +65,10 @@ export default function DeleteDeckButton({ deck }: DeckCardProps) {
       <DialogContent>
         <DialogHeader>
           <DialogTitle>
-            Slett <span className="font-bold">{deck.name}</span>
+            Slett <span className="font-bold">{deck.name}</span>?
           </DialogTitle>
           <DialogDescription>
-            <div className="flex items-center gap-2 text-destructive">
+            <div className="flex items-center gap-2 text-orange-500">
               <AlertCircle size={18} />
               Denne handlingen kan ikke angres.
             </div>

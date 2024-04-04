@@ -3,20 +3,20 @@ import { GeneratedFlashcard } from "@/components/GenerateFlashcardsInput";
 import openai, {
   generateEmbedding,
   generateEmbeddings,
-  getCosineSimilarities,
 } from "@/lib/ai";
+import{ getCosineSimilarities } from "@/lib/cosine";
 import { Flashcard } from "@prisma/client";
 import pgvector from "pgvector";
 import { z } from "zod";
 import { protectedProcedure, publicProcedure, router } from "../trpc";
 
 export const aiRouter = router({
-  generateEmbedding: publicProcedure
+  generateEmbedding: publicProcedure //test me
     .input(z.string())
     .mutation(async ({ input }) => {
       return await generateEmbedding(input);
     }),
-  generateEmbeddings: publicProcedure
+  generateEmbeddings: publicProcedure //test me
     .input(z.array(z.string()))
     .mutation(async ({ input }) => {
       return await generateEmbeddings(input);
@@ -26,7 +26,7 @@ export const aiRouter = router({
    * Will search in given table
    * excludedBacks: a list of strings representing the back of flashcards which will be excluded
    */
-  getNearestNeighbors: publicProcedure
+  getNearestNeighbors: publicProcedure //test me
     .input(
       z.object({
         targetEmbedding: z.array(z.number()),
@@ -61,7 +61,7 @@ export const aiRouter = router({
    * Uses embeddings, calculates similarity by cosine similarity
    * @param text the text to assign a subject to
    */
-  classifySubject: protectedProcedure
+  classifySubject: protectedProcedure //test me
     .input(z.string())
     .mutation(async ({ input, ctx }) => {
       console.time("classifySubject time");
@@ -104,7 +104,7 @@ export const aiRouter = router({
       };
     }),
 
-  generateTags: protectedProcedure
+  generateTags: protectedProcedure //test me
     .input(
       z.object({
         text: z.string(),
@@ -170,7 +170,7 @@ export const aiRouter = router({
   /**
    * Generates n flashcards from n keywords
    */
-  generateFlashcardsFromKeywords: protectedProcedure
+  generateFlashcardsFromKeywords: protectedProcedure //test me
     .input(
       z.object({
         keywords: z.array(z.string()),
@@ -258,7 +258,7 @@ export const aiRouter = router({
       return flashcards;
     }),
 
-  generateFlashcardsFromText: protectedProcedure
+  generateFlashcardsFromText: protectedProcedure //test me
     .input(
       z.object({
         text: z.string(),
@@ -344,7 +344,7 @@ export const aiRouter = router({
 
       return flashcards;
     }),
-  generateFeedback: protectedProcedure
+  generateFeedback: protectedProcedure //test me
     .input(
       z.object({
         front: z.string(),

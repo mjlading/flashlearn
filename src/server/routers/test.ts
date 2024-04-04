@@ -17,5 +17,5 @@ export const testRouter = router({
     return { mirror: input };
   }),
 
-  protectedTest: protectedProcedure.query(({ ctx }) => "Protected message"),
+  protectedTest: protectedProcedure.query(({ ctx }) => "Protected message"), //test me (verify that any protected procedure will work)
 });

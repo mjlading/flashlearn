@@ -3,7 +3,7 @@ import { protectedProcedure, router } from "../trpc";
 
 export const bookmarkRouter = router({
   // Checks if a given deck is bookmarked by the current user
-  isBookmarked: protectedProcedure
+  isBookmarked: protectedProcedure //test me
     .input(
       z.object({
         deckId: z.string(),
@@ -20,7 +20,7 @@ export const bookmarkRouter = router({
       });
       return !!bookmarkedDeck;
     }),
-  addBookmark: protectedProcedure
+  addBookmark: protectedProcedure //test me
     .input(
       z.object({
         deckId: z.string(),
@@ -34,7 +34,7 @@ export const bookmarkRouter = router({
         },
       });
     }),
-  removeBookmark: protectedProcedure
+  removeBookmark: protectedProcedure //test me
     .input(
       z.object({
         deckId: z.string(),

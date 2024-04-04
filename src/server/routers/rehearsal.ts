@@ -4,7 +4,7 @@ import { Mode } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 
 export const rehearsalRouter = router({
-  saveRehearsalStarted: protectedProcedure
+  saveRehearsalStarted: protectedProcedure //test me
     .input(
       z.object({
         mode: z.enum(["visual", "write", "oral"]),
@@ -25,7 +25,7 @@ export const rehearsalRouter = router({
 
       return rehearsal;
     }),
-  getRecentRehearsal: protectedProcedure
+  getRecentRehearsal: protectedProcedure //test me
     .input(
       z.object({
         deckId: z.string(),
@@ -48,7 +48,7 @@ export const rehearsalRouter = router({
 
       return rehearsal;
     }),
-  saveRehearsalFinished: protectedProcedure
+  saveRehearsalFinished: protectedProcedure //test me
     .input(
       z.object({
         rehearsalId: z.string(),
@@ -83,7 +83,7 @@ export const rehearsalRouter = router({
         },
       });
     }),
-  updateTimeSpent: protectedProcedure
+  updateTimeSpent: protectedProcedure //test me
     .input(
       z.object({
         rehearsalId: z.string(),

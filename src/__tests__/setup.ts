@@ -1,5 +1,6 @@
 // Runs before each unit test
 
+import { resolve } from 'path';
 import { vi } from "vitest";
 
 // Mock useRouter()

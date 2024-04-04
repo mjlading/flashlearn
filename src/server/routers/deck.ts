@@ -23,7 +23,7 @@ const createDeck = z.object({
 });
 
 export const deckRouter = router({
-  createDeck: protectedProcedure
+  createDeck: protectedProcedure //test me
     .input(createDeck)
     .mutation(async ({ ctx, input }) => {
       const newDeck = await ctx.prisma.deck.create({
@@ -55,8 +55,8 @@ export const deckRouter = router({
       const limit = input.limit ?? 10;
       const { cursor, subject, category, query } = input;
 
-      const userId = ctx.session?.user.id;
-      if (category && !userId) {
+      const userId = ctx.session?.user.id; 
+      if (category && !userId) { // does this let requests with category and a false userId through?
         throw new TRPCError({
           code: "BAD_REQUEST",
           message: "User must be logged in to access decks using 'category'",
@@ -171,7 +171,7 @@ export const deckRouter = router({
         },
       });
     }),
-  deleteDeckById: protectedProcedure
+  deleteDeckById: protectedProcedure //test me
     .input(z.string())
     .mutation(async ({ ctx, input }) => {
       const deckToDelete = await ctx.prisma.deck.findUnique({
@@ -225,7 +225,7 @@ export const deckRouter = router({
 
       return count;
     }),
-  countDecksByCategories: protectedProcedure.query(async ({ ctx }) => {
+  countDecksByCategories: protectedProcedure.query(async ({ ctx }) => {  //test me
     const userId = ctx.session.user.id;
 
     const countCreated = ctx.prisma.deck.count({
@@ -275,7 +275,7 @@ export const deckRouter = router({
 
       return tags.map((tag) => tag.tag).filter((tag) => tag !== "");
     }),
-  setDeckRating: protectedProcedure
+  setDeckRating: protectedProcedure //test me
     .input(
       z.object({
         stars: z.number().min(1).max(5),
@@ -301,7 +301,7 @@ export const deckRouter = router({
         },
       });
     }),
-  getDeckRating: protectedProcedure
+  getDeckRating: protectedProcedure //test me
     .input(
       z.object({
         deckId: z.string(),

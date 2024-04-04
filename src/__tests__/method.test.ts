@@ -1,6 +1,5 @@
 import { expect, test, vi } from "vitest";
 import prisma from "@/lib/__mocks__/prisma";
-import testProxy from "./tRPCProxyClient";
 
 vi.mock("../lib/prisma");
 

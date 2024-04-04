@@ -3,7 +3,7 @@ import { protectedProcedure, router } from "../trpc";
 import { generateEmbeddings } from "@/lib/ai";
 
 export const flashcardRouter = router({
-  createAndSaveEmbeddings: protectedProcedure
+  createAndSaveEmbeddings: protectedProcedure //test me
     .input(
       z.array(
         z.object({

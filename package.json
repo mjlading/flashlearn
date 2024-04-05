@@ -12,11 +12,7 @@
     "start": "next start",
     "dev": "next dev",
     "lint": "next lint",
-    "test-dev-quick": "start-server-and-test dev 3000 vitest-passthrough",
-    "test-dev": "start-server-and-test start-test 3000 vitest-passthrough",
-    "test": "npm run start-server-and-vitest",
-    "start-server-and-vitest": "start-server-and-test start 3000 vitest-passthrough",
-    "vitest-passthrough": "vitest"
+    "test": "vitest"
   },
   "dependencies": {
     "@auth/prisma-adapter": "^1.1.0",

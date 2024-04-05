@@ -24,7 +24,7 @@ const createDeck = z.object({
 });
 
 export const deckRouter = router({
-  createDeck: protectedProcedure //test me
+  createDeck: protectedProcedure 
     .input(createDeck)
     .mutation(async ({ ctx, input }) => {
       const newDeck = await ctx.prisma.deck.create({

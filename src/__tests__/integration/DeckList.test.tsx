@@ -341,19 +341,43 @@ describe("deck", async()=> {
         new TRPCError({
         code: "FORBIDDEN",
       }))
-
+    });
+  });
+  describe("countDecks", async () => {
+    it("counts decks", async () => {
+      const ctx = createInnerTRPCContext({
+        session: {
+          user: { id:"testId", name:"test", }, // will fail if user is not in db
+          expires: "1",
+        },
+      });
       
+      const caller = createCaller(ctx);
+
+      const deck = {
+        name: "test",
+        isPublic: true, 
+        academicLevel: "MIDDLE_SCHOOL",
+        subjectName: "Mathematics",
+        numFlashcards: 1,
+        flashcards: 
+          [
+            {
+              front:"test_front",
+              back: "test_back",
+              tag: "test_tag",
+            },
+          ]
+      }
+      const id = (await caller.deck.createDeck(deck)).id;
+      expect(await caller.deck.countDecks({})).toBe(1)
     });
   });
     /*
     
  
    
-    it("countDecks", async () => {
-      const goal;
-      const res;
-      expect(res).toBe(goal);
-    });
+
     it("countDecksByCategories", async () => {
       const goal;
       const res;

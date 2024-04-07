@@ -27,6 +27,15 @@ export const deckRouter = router({
   createDeck: protectedProcedure 
     .input(createDeck)
     .mutation(async ({ ctx, input }) => {
+      const userId = ctx.session?.user.id; 
+
+      if (!(await ctx.prisma.user.findFirst({ where: { id: userId, } }))?.id)
+        {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "User must exist to create decks",
+        });
+      }
       const newDeck = await ctx.prisma.deck.create({
         data: {
           ...input,

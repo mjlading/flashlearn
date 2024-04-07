@@ -94,7 +94,11 @@ describe("deck", async()=> {
             ]
         }
       
-        await expect(caller.deck.createDeck(deck)).rejects.toThrowError(TRPCError);
+        await expect(caller.deck.createDeck(deck)).rejects.toThrowError(
+          new TRPCError({
+          code: "BAD_REQUEST",
+          message: "User must exist to create decks",
+        }));
     
     });
   });

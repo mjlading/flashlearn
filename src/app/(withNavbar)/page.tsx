@@ -1,29 +1,20 @@
 import { auth } from "@/auth";
 import AuthButton from "@/components/AuthButton";
-import Test from "@/components/ClientSessionTest";
-import TRPCProtectedTest from "@/components/TRPCProtectedTest";
-import TRPCTest from "@/components/TRPCTest";
 
 export default async function Home() {
   const session = await auth();
 
   return (
     <>
-      <h1>Hello world</h1>
-      <h1>Session in server component</h1>
-      <pre>{JSON.stringify(session, null, 2)}</pre>
-      <br />
-      <br />
-      <h1>Session in client component</h1>
-      <Test />
-      <br />
-      <br />
-      <h1>tRPC Test:</h1>
-      <TRPCTest />
-      <br />
-      <h1>tRPC Protected test:</h1>
-      <TRPCProtectedTest />
-      <AuthButton />
+      <div className="inset-y-30 mx-auto max-w-full lg:w-[50rem]">
+        <h1 className="text-4xl font-bold mb-4">Flashlearn</h1>
+        <h3 className="text-muted-foreground mb-12">
+          Oppdag noe nytt å lære - la nysgjerrigheten lede veien!
+        </h3>
+        <div className="mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+          <AuthButton />
+        </div>
+      </div>
     </>
   );
 }

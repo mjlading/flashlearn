@@ -36,5 +36,5 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# tmp dir
-/tmp
+# uploaded audio files
+/uploads/audio/*

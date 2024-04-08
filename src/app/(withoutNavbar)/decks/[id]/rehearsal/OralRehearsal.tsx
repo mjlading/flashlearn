@@ -25,13 +25,16 @@ export default function OralRehearsal({
   flashcards: FlashcardType[];
 }) {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [currentFlashcard, setCurrentFlashcard] = useState(flashcards[0]);
   const [userAnswers, setUserAnswers] = useState<String[]>([]);
   const [isRecording, setIsRecording] = useState(false);
   const [feedbacks, setFeedbacks] = useState<Feedback[]>([]);
 
   const isSpeaking = useRef(false);
   const questionAudio = useRef(new Audio());
+  const feedbackAudio = useRef(new Audio());
+  const recentlyPlayedAudio = useRef<"questionAudio" | "feedbackAudio">(
+    "questionAudio"
+  );
   const mediaRecorder = useRef<MediaRecorder | undefined>(undefined);
 
   const ttsMutation = api.ai.textToSpeech.useMutation();
@@ -41,11 +44,19 @@ export default function OralRehearsal({
   const { theme } = useTheme();
 
   useEffect(() => {
-    setCurrentFlashcard(flashcards[currentIndex]);
-    ttsMutation.mutateAsync(flashcards[currentIndex].front).then(async () => {
-      questionAudio.current = new Audio("/uploads/audio/question.webm");
-      playAudio(questionAudio.current);
-    });
+    ttsMutation
+      .mutateAsync({
+        text: flashcards[currentIndex].front,
+        filePath: "./uploads/audio/question.webm",
+      })
+      .then(async () => {
+        // The key param is used to prevent the browser caching the audio file
+        questionAudio.current = new Audio(
+          `/api/audio/uploads?fileName=question.webm&key=${currentIndex}`
+        );
+        playAudio(questionAudio.current);
+        recentlyPlayedAudio.current = "questionAudio";
+      });
   }, [currentIndex]);
 
   async function fetchTranscription(blob: Blob) {
@@ -56,48 +67,73 @@ export default function OralRehearsal({
     const formData = new FormData();
     formData.append("file", file);
 
-    fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/ai`, {
-      method: "POST",
-      body: formData,
-    })
-      .then(async (res) => {
-        const data = await res.json();
+    // Upload the user-answer audio file
+    //TODO: error handling
+    await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/audio/uploads?key=${currentIndex}`,
+      {
+        method: "POST",
+        body: formData,
+      }
+    );
 
-        // Set the transcribed user answer in state
-        setUserAnswers((prev) => {
-          const newAnswers = [...prev];
-          newAnswers[currentIndex] = data.text;
-          return newAnswers;
-        });
+    // Fetch the transcription of the audio file
+    //TODO error handling
+    const transcriptionResponse = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/audio/transcriptions`,
+      {
+        method: "POST",
+      }
+    );
+    const transcription = (await transcriptionResponse.json()).transcription;
 
-        // Fetch feedback for the user answer
-        generateFeedbackMututation
-          .mutateAsync({
-            front: currentFlashcard.front,
-            back: currentFlashcard.back,
-            answer: data.text,
-          })
-          .then((feedback) => {
-            setFeedbacks((prev) => {
-              const newFeedbacks = [...prev];
-              newFeedbacks[currentIndex] = feedback;
-              return newFeedbacks;
-            });
-          })
-          .catch((error) => {
-            toast.error("Kunne ikke hente tilbakemelding og score.");
-          });
+    console.log("THE TRANSCRIPTION: ", transcription);
+
+    setUserAnswers((prev) => {
+      const newAnswers = [...prev];
+      newAnswers[currentIndex] = transcription;
+      return newAnswers;
+    });
+
+    // Generate feedback on user answer
+    generateFeedbackMututation
+      .mutateAsync({
+        front: flashcards[currentIndex].front,
+        back: flashcards[currentIndex].back,
+        answer: transcription,
       })
-      .catch((err) => {
-        toast.error(
-          "Kunne ikke transkribere svaret ditt. Vennligst prøv igjen."
-        );
+      .then((feedback) => {
+        // Play the feedback audio back to the user
+        feedback.tips &&
+          ttsMutation
+            .mutateAsync({
+              text: feedback.tips.join("\n"),
+              filePath: "./uploads/audio/feedback.webm",
+            })
+            .then(() => {
+              feedbackAudio.current = new Audio(
+                `/api/audio/uploads?fileName=feedback.webm&key=${currentIndex}`
+              );
+              playAudio(feedbackAudio.current);
+              recentlyPlayedAudio.current = "feedbackAudio";
+            });
+
+        setFeedbacks((prev) => {
+          const newFeedbacks = [...prev];
+          newFeedbacks[currentIndex] = feedback;
+          return newFeedbacks;
+        });
+      })
+      .catch((error) => {
+        console.error("Could not fetch transcription: ", error);
+        toast.error("Kunne ikke hente tilbakemelding og score.");
       });
   }
 
   function handleEarClicked() {
     mediaRecorder.current?.stop();
     playAudio(questionAudio.current);
+    recentlyPlayedAudio.current = "questionAudio";
   }
 
   function playAudio(audio: HTMLAudioElement) {
@@ -106,6 +142,10 @@ export default function OralRehearsal({
 
     async function onAudioEnded() {
       audio.removeEventListener("ended", onAudioEnded);
+
+      // When feedback audio is finished playing, skip recording mic
+      if (recentlyPlayedAudio.current === "feedbackAudio") return;
+
       setIsRecording(true);
       if (!mediaRecorder.current) return;
       if (mediaRecorder.current.state === "recording") {

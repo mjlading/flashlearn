@@ -455,15 +455,20 @@ export const aiRouter = router({
       return feedback;
     }),
   textToSpeech: protectedProcedure
-    .input(z.string())
+    .input(
+      z.object({
+        text: z.string(),
+        filePath: z.string(),
+      })
+    )
     .mutation(async ({ input }) => {
       const audioFile = await openai.audio.speech.create({
         model: "tts-1",
         voice: "alloy",
-        input: input,
+        input: input.text,
       });
       const timestamp = new Date().getTime();
-      const speechFile = path.resolve("./uploads/audio/question.webm");
+      const speechFile = path.resolve(input.filePath);
       const buffer = Buffer.from(await audioFile.arrayBuffer());
       await fs.promises.writeFile(speechFile, buffer);
       return timestamp;

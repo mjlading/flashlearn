@@ -40,9 +40,11 @@ vi.mock("next-auth/react", () => ({
 }));
 
 export async function cleanDBDecks() {
+  if (process.env.NODE_ENV !== "production")
     await prisma.$transaction([prisma.deck.deleteMany()])
 
 }
 export async function cleanDBUsers() {
+  if (process.env.NODE_ENV !== "production")
   await prisma.$transaction([prisma.user.deleteMany() , prisma.user.create({data:{id:"testId", name:"test"}})])
 }

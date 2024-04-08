@@ -1,14 +1,13 @@
 import { Feedback } from "@/app/(withoutNavbar)/decks/[id]/rehearsal/AnswerForm";
 import { GeneratedFlashcard } from "@/components/GenerateFlashcardsInput";
-import openai, {
-  generateEmbedding,
-  generateEmbeddings,
-} from "@/lib/ai";
-import{ getCosineSimilarities } from "@/lib/cosine";
+import openai, { generateEmbedding, generateEmbeddings } from "@/lib/ai";
+import { getCosineSimilarities } from "@/lib/cosine";
 import { Flashcard, Deck } from "@prisma/client";
 import pgvector from "pgvector";
 import { z } from "zod";
 import { protectedProcedure, publicProcedure, router } from "../trpc";
+import fs from "fs";
+import path from "path";
 
 export const aiRouter = router({
   generateEmbedding: publicProcedure //test me
@@ -454,5 +453,29 @@ export const aiRouter = router({
       );
 
       return feedback;
+    }),
+  textToSpeech: protectedProcedure
+    .input(z.string())
+    .mutation(async ({ input }) => {
+      const audioFile = await openai.audio.speech.create({
+        model: "tts-1",
+        voice: "alloy",
+        input: input,
+      });
+      const timestamp = new Date().getTime();
+      const speechFile = path.resolve("./uploads/audio/question.webm");
+      const buffer = Buffer.from(await audioFile.arrayBuffer());
+      await fs.promises.writeFile(speechFile, buffer);
+      return timestamp;
+    }),
+  speechToText: protectedProcedure
+    .input(
+      z.object({
+        audioData: z.custom<Blob>(),
+      })
+    )
+    .mutation(async ({ input }) => {
+      const { audioData } = input;
+      console.log(audioData.size, audioData.type);
     }),
 });

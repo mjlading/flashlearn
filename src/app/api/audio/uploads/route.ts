@@ -2,12 +2,6 @@ import fs from "fs";
 import { NextResponse } from "next/server";
 import path from "path";
 
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-};
-
 /**
  * Returns uploaded audio file
  */

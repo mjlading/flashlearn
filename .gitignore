@@ -37,4 +37,4 @@ yarn-error.log*
 next-env.d.ts
 
 # uploaded audio files
-/uploads/audio/*
+*.webm

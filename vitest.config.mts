@@ -13,6 +13,11 @@ export default defineConfig({
     poolOptions: {
       threads: { singleThread: true },
     },
+    server: {
+      deps: {
+        inline: ["next-auth"],
+      },
+    },
   },
   resolve: {
     alias: {

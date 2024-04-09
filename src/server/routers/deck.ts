@@ -23,6 +23,11 @@ const createDeck = z.object({
     .optional(),
 });
 
+const editDeck = z.object({
+  createDeck:createDeck,
+  deckId:z.string()
+})
+
 export const deckRouter = router({
   createDeck: protectedProcedure 
     .input(createDeck)
@@ -51,6 +56,7 @@ export const deckRouter = router({
       });
       return newDeck;
     }),
+    //########################## GETTERS ##########################
   infiniteDecks: publicProcedure
     .input(
       z.object({
@@ -181,6 +187,8 @@ export const deckRouter = router({
         },
       });
     }),
+    
+  //########################## MODIFIERS ##########################
   deleteDeckById: protectedProcedure //test me
     .input(z.string())
     .mutation(async ({ ctx, input }) => {
@@ -348,5 +356,66 @@ export const deckRouter = router({
         UPDATE "Deck"
         SET embedding = ${embedding}::vector
         WHERE id = ${id}`;
+    }),
+  editDeck: protectedProcedure
+    .input(editDeck)
+    .mutation(async ({ ctx, input }) => {
+      const userId = ctx.session?.user.id; 
+      const deckId = input.deckId
+      const createDeck = input.createDeck
+      
+      if (!(await ctx.prisma.user.findFirst({ where: { id: userId, } }))?.id)
+        {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "User must exist to edit decks",
+        });
+      }
+      
+      const deckToEdit = await ctx.prisma.deck.findFirst({ where: { id: deckId, } });
+      if (!(deckToEdit?.id))
+        {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Deck must exist to edit",
+        });
+      }
+
+      if ((deckToEdit?.userId !== userId))
+        {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "User not allowed to edit this deck",
+        });
+      }
+
+      let newDeck;
+      try { // Try creating copy with changes before removing old deck 
+        newDeck = await ctx.prisma.deck.create({
+          data: {
+            ...createDeck,
+            userId: ctx.session.user.id,
+            flashcards: {
+              create: createDeck.flashcards,
+            },
+            academicLevel: createDeck.academicLevel as AcademicLevel,
+          },
+          include: {
+            flashcards: true,
+          },
+        });
+      } catch {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "something went wrong while saving edit",
+        });
+      } 
+      await ctx.prisma.deck.delete({
+        where: {
+          id: deckId,
+        },
+      });
+
+      return newDeck;
     }),
 });

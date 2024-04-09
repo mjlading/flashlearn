@@ -4,6 +4,9 @@
 export async function POST(request: Request) {
   const blob = await request.blob();
 
+  console.log("Transcription blob: ", blob);
+  console.log(blob.size);
+
   const file = new File([blob], "user-answer", { type: blob.type });
 
   const formData = new FormData();
@@ -23,6 +26,7 @@ export async function POST(request: Request) {
       }
     );
     const data = await response.json();
+    console.log("The transcription: ", data.text);
     return new Response(JSON.stringify({ text: data.text }), { status: 200 });
   } catch (err) {
     console.error(err);

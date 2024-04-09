@@ -1,37 +1,33 @@
-import openai from "@/lib/ai";
-import { NextResponse } from "next/server";
-import fs from "fs";
-import path from "path";
-
 /**
- * Takes an audio file (.webm) path, fetches text transcription from openai API and returns it
+ * Takes in an audio blob (format .webm), fetches text transcription from openai API and returns it
  */
-export async function POST() {
-  console.log("FETCHING TRANSCRIPTION");
+export async function POST(request: Request) {
+  const blob = await request.blob();
 
-  const filePath = path.join(
-    process.cwd(),
-    "uploads",
-    "audio",
-    "user-answer.webm"
-  );
+  const file = new File([blob], "user-answer", { type: blob.type });
+
+  const formData = new FormData();
+  formData.append("file", file, "user-anwer.webm");
+  formData.append("model", "whisper-1");
 
   try {
-    const transcription = await openai.audio.transcriptions.create({
-      model: "whisper-1",
-      file: fs.createReadStream(filePath),
-    });
-
-    console.log("THE TRANSCRIPTION: ", transcription.text);
-
-    return NextResponse.json(
-      { transcription: transcription.text },
-      { status: 200 }
+    // Cannot use openai client here since we need the file to be inside a FormData for openai to recognize it
+    const response = await fetch(
+      "https://api.openai.com/v1/audio/transcriptions",
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
+        },
+        body: formData,
+      }
     );
-  } catch (error) {
-    console.error("Error fetching transcription:", error);
-    return NextResponse.json(
-      { error: "Failed to fetch transcription" },
+    const data = await response.json();
+    return new Response(JSON.stringify({ text: data.text }), { status: 200 });
+  } catch (err) {
+    console.error(err);
+    return new Response(
+      JSON.stringify({ error: `Failed to fetch transcription: ${err}` }),
       { status: 500 }
     );
   }

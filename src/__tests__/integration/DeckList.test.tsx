@@ -1,7 +1,7 @@
 import { createCaller } from "@/server/routers";
 import { createInnerTRPCContext } from "@/server/trpc";
 import { describe, beforeEach, expect, it, vi } from "vitest";
-import { cleanDBDecks, cleanDBUsers } from "@/__tests__/setup"
+import { cleanDBDecks, cleanDBUsers, cleanDBCollections } from "@/__tests__/setup"
 import prisma from "C:/Users/gunna/Desktop/Bacheloroppgave 2024/learning-app/src/__mocks__/prisma";
 import { TRPCError } from "@trpc/server";
 

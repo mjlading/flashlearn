@@ -24,18 +24,17 @@ const createDeck = z.object({
 });
 
 const editDeck = z.object({
-  createDeck:createDeck,
-  deckId:z.string()
-})
+  createDeck: createDeck,
+  deckId: z.string(),
+});
 
 export const deckRouter = router({
-  createDeck: protectedProcedure 
+  createDeck: protectedProcedure
     .input(createDeck)
     .mutation(async ({ ctx, input }) => {
-      const userId = ctx.session?.user.id; 
+      const userId = ctx.session?.user.id;
 
-      if (!(await ctx.prisma.user.findFirst({ where: { id: userId, } }))?.id)
-        {
+      if (!(await ctx.prisma.user.findFirst({ where: { id: userId } }))?.id) {
         throw new TRPCError({
           code: "BAD_REQUEST",
           message: "User must exist to create decks",
@@ -56,7 +55,7 @@ export const deckRouter = router({
       });
       return newDeck;
     }),
-    //########################## GETTERS ##########################
+  //########################## GETTERS ##########################
   infiniteDecks: publicProcedure
     .input(
       z.object({
@@ -71,8 +70,9 @@ export const deckRouter = router({
       const limit = input.limit ?? 10;
       const { cursor, subject, category, query } = input;
 
-      const userId = ctx.session?.user.id; 
-      if (category && !userId) { // does this let requests with category and a false userId through?
+      const userId = ctx.session?.user.id;
+      if (category && !userId) {
+        // does this let requests with category and a false userId through?
         throw new TRPCError({
           code: "BAD_REQUEST",
           message: "User must be logged in to access decks using 'category'",
@@ -187,7 +187,7 @@ export const deckRouter = router({
         },
       });
     }),
-    
+
   //########################## MODIFIERS ##########################
   deleteDeckById: protectedProcedure //test me
     .input(z.string())
@@ -243,7 +243,8 @@ export const deckRouter = router({
 
       return count;
     }),
-  countDecksByCategories: protectedProcedure.query(async ({ ctx }) => {  //test me
+  countDecksByCategories: protectedProcedure.query(async ({ ctx }) => {
+    //test me
     const userId = ctx.session.user.id;
 
     const countCreated = ctx.prisma.deck.count({
@@ -360,29 +361,21 @@ export const deckRouter = router({
   editDeck: protectedProcedure
     .input(editDeck)
     .mutation(async ({ ctx, input }) => {
-      const userId = ctx.session?.user.id; 
-      const deckId = input.deckId
-      const createDeck = input.createDeck
-      
-      if (!(await ctx.prisma.user.findFirst({ where: { id: userId, } }))?.id)
-        {
-        throw new TRPCError({
-          code: "BAD_REQUEST",
-          message: "User must exist to edit decks",
-        });
-      }
-      
-      const deckToEdit = await ctx.prisma.deck.findFirst({ where: { id: deckId, } });
-      if (!(deckToEdit?.id))
-        {
+      const userId = ctx.session.user.id;
+      const deckId = input.deckId;
+      const createDeck = input.createDeck;
+
+      const deckToEdit = await ctx.prisma.deck.findFirst({
+        where: { id: deckId },
+      });
+      if (!deckToEdit?.id) {
         throw new TRPCError({
           code: "BAD_REQUEST",
           message: "Deck must exist to edit",
         });
       }
 
-      if ((deckToEdit?.userId !== userId))
-        {
+      if (deckToEdit?.userId !== userId) {
         throw new TRPCError({
           code: "BAD_REQUEST",
           message: "User not allowed to edit this deck",
@@ -390,17 +383,18 @@ export const deckRouter = router({
       }
 
       let newDeck;
-      try { // Try creating copy with changes before removing old deck 
+      try {
+        // Try creating copy with changes before removing old deck
         newDeck = await ctx.prisma.deck.update({
           where: {
-            id:deckId
+            id: deckId,
           },
           data: {
             ...createDeck,
             userId: ctx.session.user.id,
             flashcards: {
               deleteMany: {},
-              create: createDeck.flashcards
+              create: createDeck.flashcards,
             },
             academicLevel: createDeck.academicLevel as AcademicLevel,
           },
@@ -414,7 +408,6 @@ export const deckRouter = router({
           message: "something went wrong while saving edit",
         });
       }
-
 
       return newDeck;
     }),

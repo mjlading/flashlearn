@@ -41,21 +41,19 @@ export const formSchema = z.object({
   flashcards: z
     .array(
       z.object({
-        front: z
-          .string()
-          // .min(2, "Fremsiden må være minst 2 tegn")
-          .max(500, "Fremsiden kan være maks 500 tegn"),
-        back: z
-          .string()
-          // .min(2, "Baksiden må være minst 2 tegn")
-          .max(1500, "Baksiden kan være maks 1500 tegn"),
+        front: z.string().max(500, "Fremsiden kan være maks 500 tegn"),
+        back: z.string().max(1500, "Baksiden kan være maks 1500 tegn"),
         tag: z.string(),
       })
     )
     .min(3, "Settet må ha minst 2 studiekort"), // min 3 because last card is always empty
 });
 
-export default function CreateDeckForm() {
+export default function CreateDeckForm({
+  showGenerateFlashcardsInput = true,
+}: {
+  showGenerateFlashcardsInput?: boolean;
+}) {
   const form = useFormContext<z.infer<typeof formSchema>>();
 
   const { fields, append, remove } = useFieldArray({
@@ -215,7 +213,9 @@ export default function CreateDeckForm() {
           </p>
 
           {/* Generation input */}
-          <GenerateFlashcardsInput onAddFlashcards={handleAddFlashcards} />
+          {showGenerateFlashcardsInput && (
+            <GenerateFlashcardsInput onAddFlashcards={handleAddFlashcards} />
+          )}
 
           {fields.map((field, index) => (
             <div key={field.id} className="mt-6">

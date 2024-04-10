@@ -1,6 +1,7 @@
 "use client";
 
 import { api } from "@/app/api/trpc/client";
+import BackButton from "@/components/BackButton";
 import { LoadingSpinner } from "@/components/LoadingSpinner";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
@@ -8,12 +9,17 @@ import { useFormContext } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 import { formSchema } from "./CreateDeckForm";
-import BackButton from "@/components/BackButton";
 
 // This component handles the form submission logic
 // such as calling createDeckMutation, generateTagsMutation, classifySubjectMutation
-
-export default function CreateDeckTopbar() {
+// If edit is true, will use edit mutation procedure on submit
+export default function CreateDeckTopbar({
+  edit = false,
+  deckId,
+}: {
+  edit?: boolean;
+  deckId?: string;
+}) {
   const form = useFormContext<z.infer<typeof formSchema>>();
   const router = useRouter();
 
@@ -56,6 +62,23 @@ export default function CreateDeckTopbar() {
       });
     },
   });
+  const editDeckMutation = api.deck.editDeck.useMutation({
+    onSuccess(data) {
+      router.push("/dashboard/decks?category=created");
+
+      toast.success(
+        <p>
+          Settet <span className="font-semibold">{form.getValues("name")}</span>{" "}
+          er lagret!
+        </p>
+      );
+    },
+    onError() {
+      toast.error("Noe gikk galt", {
+        description: "Settet ble ikke lagret. Vennligst prøv igjen.",
+      });
+    },
+  });
 
   const classifySubjectMutation = api.ai.classifySubject.useMutation({
     onError() {
@@ -74,7 +97,11 @@ export default function CreateDeckTopbar() {
     },
   });
 
-  async function onSubmit(values: z.infer<typeof formSchema>) {
+  function onSubmit(values: z.infer<typeof formSchema>) {
+    edit ? editDeck(values) : createDeck(values);
+  }
+
+  async function createDeck(values: z.infer<typeof formSchema>) {
     const flashcardsWithContent = form
       .getValues("flashcards")
       .slice(0, -1) // Remove last flashcard which is always empty
@@ -114,6 +141,25 @@ export default function CreateDeckTopbar() {
     createDeckMutation.mutate(processedValues);
   }
 
+  async function editDeck(values: z.infer<typeof formSchema>) {
+    const flashcardsWithContent = form
+      .getValues("flashcards")
+      .slice(0, -1) // Remove last flashcard which is always empty
+      .filter((f) => f.front !== "" && f.back !== "");
+
+    const processedValues = {
+      ...values,
+      flashcards: flashcardsWithContent,
+      isPublic: !values.private,
+      numFlashcards: flashcardsWithContent.length,
+    };
+
+    editDeckMutation.mutate({
+      createDeck: processedValues,
+      deckId: deckId as string, // This will not be undefined if edit is true
+    });
+  }
+
   return (
     <header className="sticky top-0 z-50 py-4 px-8 border-b bg-background">
       <div className="flex justify-between items-center gap-4 px-6 text-sm font-medium text-gray-700 dark:text-gray-300">
@@ -134,7 +180,8 @@ export default function CreateDeckTopbar() {
               <LoadingSpinner size={20} className="mr-2" />
               {classifySubjectMutation.isLoading && "Bestemmer fagområde"}
               {generateTagsMutation.isLoading && "Genererer nøkkelord"}
-              {createDeckMutation.isLoading && "Lagrer"}
+              {(createDeckMutation.isLoading || editDeckMutation.isLoading) &&
+                "Lagrer"}
             </>
           ) : (
             "Lagre sett"

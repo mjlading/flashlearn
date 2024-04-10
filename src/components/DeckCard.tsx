@@ -4,7 +4,7 @@ import { api } from "@/app/api/trpc/client";
 import type { SerializedStateDates } from "@/lib/utils";
 import Prisma from "@prisma/client";
 import { Dialog } from "@radix-ui/react-dialog";
-import { ArrowRight, X } from "lucide-react";
+import { ArrowRight, Pen, X } from "lucide-react";
 import { useSession } from "next-auth/react";
 import DeckCardDialogContent from "./DeckCardDialogContent";
 import DeleteDeckButton from "./DeleteDeckButton";
@@ -12,7 +12,7 @@ import NumFlashcards from "./NumFlashcards";
 import StarRating from "./StarRating";
 import TagsSkeleton from "./TagsSkeleton";
 import { Badge } from "./ui/badge";
-import { Button } from "./ui/button";
+import { Button, buttonVariants } from "./ui/button";
 import { Card, CardFooter, CardHeader, CardTitle } from "./ui/card";
 import { DialogTrigger } from "./ui/dialog";
 import { Separator } from "./ui/separator";
@@ -22,6 +22,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "./ui/tooltip";
+import Link from "next/link";
 
 export interface DeckCardProps {
   // Convert types dateCreated and dateChanged from Date to string
@@ -79,9 +80,21 @@ export default function DeckCard({
                   ))
                 )}
               </div>
-              {/* Delete button */}
+              {/* Delete and edit button */}
               {deck.userId === session?.data?.user.id && (
-                <DeleteDeckButton deck={deck} />
+                <div className="flex items-center gap-2">
+                  <Link
+                    href={`/decks/${deck.id}/edit`}
+                    className={buttonVariants({
+                      variant: "ghost",
+                      size: "icon",
+                      className: "h-7",
+                    })}
+                  >
+                    <Pen size={16} />
+                  </Link>
+                  <DeleteDeckButton deck={deck} />
+                </div>
               )}
             </CardFooter>
           </div>

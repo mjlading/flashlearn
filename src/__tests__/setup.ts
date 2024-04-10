@@ -40,16 +40,17 @@ vi.mock("next-auth/react", () => ({
 }));
 
 export async function cleanDBDecks() {
-  if (process.env.NODE_ENV !== "production")
-    await prisma.$transaction([prisma.deck.deleteMany()])
-
+  if (process.env.NODE_ENV !== "production") {
+      await prisma.$transaction([prisma.deck.deleteMany()]);
+  }
 }
 export async function cleanDBCollections() {
-  if (process.env.NODE_ENV !== "production")
-  await prisma.$transaction([prisma.collection.deleteMany()])
+  if (process.env.NODE_ENV !== "production") {
+    await prisma.$transaction([prisma.collection.deleteMany()]);
+  }
 }
 export async function cleanDBUsers() {
-  if (process.env.NODE_ENV !== "production")
-  await prisma.$transaction([prisma.user.deleteMany() , prisma.user.create({data:{id:"testId", name:"test"}})])
+  if (process.env.NODE_ENV !== "production"){
+      await prisma.$transaction([prisma.user.deleteMany(), prisma.user.create({data:{id:"testId", name:"test"}})]);
+  }
 }
-

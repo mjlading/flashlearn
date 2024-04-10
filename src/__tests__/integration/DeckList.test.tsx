@@ -17,7 +17,11 @@ vi.mock("next/navigation", () => ({
 
 beforeEach( async () => {
   console.log("cleaning db")
+  
+  await cleanDBCollections()
+
   await cleanDBDecks()
+  
   await cleanDBUsers()
   console.log("db cleaned")
 });

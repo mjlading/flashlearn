@@ -56,8 +56,8 @@ export async function cleanDBUsers() {
   if (process.env.NODE_ENV !== "production"){
     if (await prisma.user.count() != 1){ 
       await prisma.user.deleteMany({});
-      await prisma.user.create({data:{id:"testId", name:"test"}});
-    
+      await prisma.user.create({data:{id:"testId", name:"test"}}); 
+    }
   }
 }
 

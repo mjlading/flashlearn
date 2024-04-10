@@ -107,4 +107,75 @@ export const collectionRouter = router({
 
       return collection;
     }),
+    editCollection: protectedProcedure
+    .input(
+      z.object({
+        collection: z.object({
+          name: z.string(),
+          description: z.string().optional(),
+          deckIds: z.array(z.string()),
+        }),
+        id:z.string()
+      })
+    ).mutation(async ({ ctx, input }) => {
+      const userId = ctx.session?.user.id; 
+      const collectionId = input.id;
+      if (!(await ctx.prisma.user.findFirst({ where: { id: userId, } }))?.id)
+        {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "User must exist to edit collection",
+        });
+      }
+      
+      const collectionToEdit = await ctx.prisma.collection.findFirst({ where: { id: collectionId, } });
+      if (!(collectionToEdit?.id))
+        {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Collection must exist to edit",
+        });
+      }
+
+      if ((collectionToEdit?.userId !== userId))
+        {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "User not allowed to edit this collection",
+        });
+      }
+
+      let newCollection;
+      //try {
+        newCollection = await ctx.prisma.collection.update({
+          where:{
+            id:collectionId
+          },
+          data: {
+            name: input.collection.name,
+            description: input.collection.description,
+            user: {
+              connect: {
+                id: ctx.session.user.id,
+              },
+            },
+            collectionDecks: {
+              deleteMany: {},
+              createMany: {
+                data: input.collection.deckIds.map((deckId) => ({
+                  deckId: deckId,
+                })),
+              },
+            },
+          },
+        });
+      //} catch {
+        //throw new TRPCError({
+        //  code: "BAD_REQUEST",
+        //  message: "failed to edit collection",
+        //});
+     // }
+
+      return newCollection
+    })
 });

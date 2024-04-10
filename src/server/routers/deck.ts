@@ -391,12 +391,16 @@ export const deckRouter = router({
 
       let newDeck;
       try { // Try creating copy with changes before removing old deck 
-        newDeck = await ctx.prisma.deck.create({
+        newDeck = await ctx.prisma.deck.update({
+          where: {
+            id:deckId
+          },
           data: {
             ...createDeck,
             userId: ctx.session.user.id,
             flashcards: {
-              create: createDeck.flashcards,
+              deleteMany: {},
+              create: createDeck.flashcards
             },
             academicLevel: createDeck.academicLevel as AcademicLevel,
           },
@@ -409,12 +413,8 @@ export const deckRouter = router({
           code: "BAD_REQUEST",
           message: "something went wrong while saving edit",
         });
-      } 
-      await ctx.prisma.deck.delete({
-        where: {
-          id: deckId,
-        },
-      });
+      }
+
 
       return newDeck;
     }),

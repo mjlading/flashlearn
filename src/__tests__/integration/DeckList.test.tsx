@@ -160,7 +160,7 @@ describe("deck", async()=> {
         expect(res.academicLevel)       .toBe("MIDDLE_SCHOOL");
         expect(res.subjectName)         .toBe("Mathematics");
         expect(res.numFlashcards)       .toBe(1);
-        
+        console.log(res.flashcards)
         expect(res.flashcards[1].front) .toBe("edited_front");
         expect(res.flashcards[1].back)  .toBe("edited_back");
         expect(res.flashcards[1].tag)   .toBe("edited_tag");

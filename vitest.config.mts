@@ -1,8 +1,8 @@
 import { defineConfig } from "vitest/config";
 import react from "@vitejs/plugin-react";
-import dotenv from 'dotenv';
+import dotenv from "dotenv";
 
-dotenv.config({ path: '.env.test' }); // this prevents local running from wiping database
+dotenv.config({ path: ".env.test" }); // this prevents local running from wiping database
 
 export default defineConfig({
   plugins: [react()],
@@ -10,8 +10,8 @@ export default defineConfig({
     environment: "node",
     setupFiles: ["/src/__tests__/setup.ts"],
     globals: true,
-    poolOptions:{
-      threads:{singleThread: true}
+    poolOptions: {
+      threads: { singleThread: true },
     },
     server: {
       deps: {

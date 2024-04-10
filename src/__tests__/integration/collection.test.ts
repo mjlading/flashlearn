@@ -1,6 +1,6 @@
 import { createCaller } from "@/server/routers";
 import { createInnerTRPCContext } from "@/server/trpc";
-import { describe, beforeEach, expect, it, vi } from "vitest";
+import { describe, beforeEach, afterAll, expect, it, vi } from "vitest";
 import { cleanDBDecks, cleanDBUsers, cleanDBCollections } from "@/__tests__/setup"
 
 vi.mock("../lib/prisma");
@@ -14,6 +14,17 @@ vi.mock("next/navigation", () => ({
 }));
 
 beforeEach( async () => {
+  console.log("cleaning db")
+  
+  await cleanDBCollections()
+
+  await cleanDBDecks()
+  
+  await cleanDBUsers()
+  console.log("db cleaned")
+});
+
+afterAll(async () => {
   console.log("cleaning db")
   
   await cleanDBCollections()

@@ -41,19 +41,21 @@ vi.mock("next-auth/react", () => ({
 
 export async function cleanDBDecks() {
   if (process.env.NODE_ENV !== "production") {
-    if (await prisma.deck.count() >=1)
+    if (await prisma.deck.count() > 0)
       await prisma.$transaction([prisma.deck.deleteMany()]);
   }
 
 }
 export async function cleanDBCollections() {
   if (process.env.NODE_ENV !== "production") {
-    if (await prisma.collection.count() >=1)
+    if (await prisma.collection.count() > 0)
     await prisma.$transaction([prisma.collection.deleteMany()]);
   }
 }
 export async function cleanDBUsers() {
-  if (process.env.NODE_ENV !== "production" && await prisma.deck.count() >= 1)
+  if (process.env.NODE_ENV !== "production"){
+    if (await prisma.user.count() >= 1) 
     await prisma.$transaction([prisma.user.deleteMany() , prisma.user.create({data:{id:"testId", name:"test"}})]);
+  }
 }
 

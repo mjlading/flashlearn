@@ -38,6 +38,8 @@ afterAll(async () => {
 describe("collection",async () => {
     describe("editCollection", async () => {
         it("edits collection", async () => {
+          
+          const timeinit = performance.now();
             const ctx = createInnerTRPCContext({
                 session: {
                   user: { id:"testId", name:"test", },
@@ -62,14 +64,23 @@ describe("collection",async () => {
                 },
                 ]
             }
-            
+            let timecurr = performance.now();
             const full_deck_1 = await caller.deck.createDeck(deck);
-            const full_deck_2 = await caller.deck.createDeck(deck);
+            console.log("deck 1 created in ", performance.now() - timecurr, "ms")
 
+            
+            timecurr = performance.now();
+            const full_deck_2 = await caller.deck.createDeck(deck);
+            console.log("deck 2 created in ", performance.now() - timecurr, "ms")
+
+            timecurr = performance.now();
             const collection = await caller.collection.createCollection({
                 name:"testcollection",
                 deckIds: [full_deck_1.id],
             })
+            console.log("collection created in ", performance.now() - timecurr, "ms")
+
+            timecurr = performance.now();
             await caller.collection.editCollection({
                 id:collection.id, 
                 collection: {
@@ -78,14 +89,20 @@ describe("collection",async () => {
                 }
             });
 
+            console.log("collection edited in ", performance.now() - timecurr, "ms")
+
+            timecurr = performance.now();
             const res = await caller.collection.getCollectionById({
                 id:collection.id, 
                 includeDecks:true
             })
+            
+            console.log("result fetched in ", performance.now() - timecurr, "ms")
             expect(res.name).toBe("edited-testcollection")
             
             expect(res.collectionDecks[0].deckId).toBe(full_deck_1.id)
             expect(res.collectionDecks[1].deckId).toBe(full_deck_2.id)
+            console.log("total runtime: ", performance.now() - timeinit, " ms")
         })
         
     });

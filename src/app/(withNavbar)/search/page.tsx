@@ -1,6 +1,13 @@
 import { api } from "@/app/api/trpc/server";
 import DeckList from "@/components/DeckList";
 import SearchInput from "@/components/SearchInput";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Flashlearn - Søk Studiekort",
+  description:
+    "Søk etter studiekort på Flashlearn for å finne nøyaktig det du trenger for å forbedre dine studieferdigheter og kunnskap.",
+};
 
 export default async function SearchPage({
   searchParams,

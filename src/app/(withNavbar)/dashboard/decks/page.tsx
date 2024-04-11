@@ -1,6 +1,11 @@
 import DeckList from "@/components/DeckList";
 import NewDeckButton from "@/components/NewDeckButton";
 import CategoryTabs from "./CategoryTabs";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Flashlearn - Studiekort",
+};
 
 export default async function DecksPage({
   searchParams,

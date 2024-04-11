@@ -155,9 +155,15 @@ export default function CollectionCard({ collection }: CollectionCardProps) {
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
-                <Button size="icon" variant="ghost">
+                <Link
+                  href={`/collections/${collection.id}/edit`}
+                  className={buttonVariants({
+                    size: "icon",
+                    variant: "ghost",
+                  })}
+                >
                   <Pencil size={16} />
-                </Button>
+                </Link>
               </TooltipTrigger>
               <TooltipContent>Rediger samling</TooltipContent>
             </Tooltip>

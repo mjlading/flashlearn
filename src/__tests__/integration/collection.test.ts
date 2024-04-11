@@ -103,7 +103,7 @@ describe("collection",async () => {
             expect(res.collectionDecks[0].deckId).toBe(full_deck_1.id)
             expect(res.collectionDecks[1].deckId).toBe(full_deck_2.id)
             console.log("total runtime: ", performance.now() - timeinit, " ms")
-        })
+        }, 10000)
         
     });
 

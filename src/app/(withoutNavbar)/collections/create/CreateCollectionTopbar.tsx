@@ -10,7 +10,13 @@ import { api } from "@/app/api/trpc/client";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 
-export default function CreateCollectionTopbar() {
+export default function CreateCollectionTopbar({
+  edit = false,
+  collectionId,
+}: {
+  edit?: boolean;
+  collectionId?: string;
+}) {
   const form = useFormContext<z.infer<typeof formSchema>>();
   const router = useRouter();
 
@@ -25,9 +31,25 @@ export default function CreateCollectionTopbar() {
       });
     },
   });
+  const editCollectionMutation = api.collection.editCollection.useMutation({
+    onSuccess: (data) => {
+      toast.success("Redigeringen av " + data.name + " er lagret");
+      router.push("/dashboard/collections");
+    },
+    onError: () => {
+      toast.error("Redigeringen kunne ikke lagres", {
+        description: "Vennligst prøv igjen",
+      });
+    },
+  });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    createCollectionMutation.mutate(values);
+    edit
+      ? editCollectionMutation.mutate({
+          collection: values,
+          id: collectionId as string,
+        })
+      : createCollectionMutation.mutate(values);
   }
 
   return (

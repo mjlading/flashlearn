@@ -1,6 +1,5 @@
 "use client";
 
-import PracticeModeSelector from "./Deck/PracticeModeSelector"
 import { subjectNameMap, subjectStyles } from "@/lib/subject";
 import { cn, dateDifferenceFromNow, SerializedStateDates } from "@/lib/utils";
 import { GraduationCap, History } from "lucide-react";

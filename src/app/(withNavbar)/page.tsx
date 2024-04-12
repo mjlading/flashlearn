@@ -1,9 +1,6 @@
-import { auth } from "@/auth";
 import AuthButton from "@/components/AuthButton";
 
 export default async function Home() {
-  const session = await auth();
-
   return (
     <>
       <div className="inset-y-30 mx-auto max-w-full lg:w-[50rem]">

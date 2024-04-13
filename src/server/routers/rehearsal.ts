@@ -104,4 +104,13 @@ export const rehearsalRouter = router({
         },
       });
     }),
+  getUserRehearsals: protectedProcedure.query(async ({ ctx }) => {
+    const rehearsals = await ctx.prisma.rehearsal.findMany({
+      where: {
+        userId: ctx.session.user.id,
+      },
+    });
+
+    return rehearsals;
+  }),
 });

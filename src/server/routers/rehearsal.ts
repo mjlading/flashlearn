@@ -104,13 +104,30 @@ export const rehearsalRouter = router({
         },
       });
     }),
-  getUserRehearsals: protectedProcedure.query(async ({ ctx }) => {
-    const rehearsals = await ctx.prisma.rehearsal.findMany({
-      where: {
-        userId: ctx.session.user.id,
-      },
-    });
+  getUserRehearsals: protectedProcedure
+    .input(
+      z.object({
+        includeSubjects: z.boolean().default(false),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      const rehearsals = await ctx.prisma.rehearsal.findMany({
+        where: {
+          userId: ctx.session.user.id,
+        },
+        include: {
+          deckRehearsals: {
+            include: {
+              deck: {
+                include: {
+                  subject: input.includeSubjects,
+                },
+              },
+            },
+          },
+        },
+      });
 
-    return rehearsals;
-  }),
+      return rehearsals;
+    }),
 });

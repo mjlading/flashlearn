@@ -38,6 +38,7 @@
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
     "cmdk": "^0.2.1",
+    "d3-force": "^3.0.0",
     "dotenv": "^16.4.5",
     "formidable": "^3.5.1",
     "lucide-react": "^0.316.0",
@@ -62,6 +63,7 @@
   },
   "devDependencies": {
     "@testing-library/react": "^14.2.1",
+    "@types/d3-force": "^3.0.9",
     "@types/formidable": "^3.4.5",
     "@types/jsdom": "^21.1.6",
     "@types/node": "^20.11.19",

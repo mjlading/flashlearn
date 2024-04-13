@@ -1,5 +1,6 @@
 "use client";
 
+import { Skeleton } from "@/components/ui/skeleton";
 import { SerializedStateDates } from "@/lib/utils";
 import type { Rehearsal } from "@prisma/client";
 import { Mode } from "@prisma/client";
@@ -98,7 +99,7 @@ export default function FavoriteMode({
   }
 
   return (
-    <section className="col-span-1 bg-blue-200 p-4 rounded-2xl">
+    <section className="col-span-1 bg-blue-100 p-4 rounded-2xl">
       <h2 className="font-semibold text-xl leading-loose">Favoritt modus</h2>
       {favoriteModeObj ? (
         <div>
@@ -108,7 +109,7 @@ export default function FavoriteMode({
           <Pie data={favoriteModeObj.pieData} />
         </div>
       ) : (
-        <h1>no mode</h1>
+        <Skeleton />
       )}
     </section>
   );

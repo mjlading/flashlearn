@@ -83,6 +83,7 @@ export default function DeckCardDialogContent({ deck }: Props) {
       <Separator className="my-4" />
 
       {/* Rehearsal Mode Selection */}
+
       <div className="flex flex-col">
         <Label htmlFor="select-mode" className="text-center mb-4">
           Øvemodus
@@ -92,11 +93,20 @@ export default function DeckCardDialogContent({ deck }: Props) {
           value={modeSelected}
           onValueChange={(newValue) => setModeSelected(newValue)}
         >
+        {session.data?.user && !isUsersDeck && (
           <TabsList className="grid w-full grid-cols-3">
             <TabsTrigger value="visual">Visuell</TabsTrigger>
             <TabsTrigger value="write">Skriftlig</TabsTrigger>
             <TabsTrigger value="oral">Muntlig</TabsTrigger>
           </TabsList>
+        )}
+        {!session.data?.user && (
+          <TabsList className="grid w-full grid-cols-3">
+            <TabsTrigger value="visual">Visuell</TabsTrigger>
+            <TabsTrigger disabled={true} value="write">Skriftlig</TabsTrigger>
+            <TabsTrigger disabled={true} value="oral">Muntlig</TabsTrigger>
+          </TabsList>
+        )}
         </Tabs>
       </div>
 
@@ -111,6 +121,7 @@ export default function DeckCardDialogContent({ deck }: Props) {
           Start
         </Link>
       </DialogFooter>
+      
     </DialogContent>
   );
 }

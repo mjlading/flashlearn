@@ -2,6 +2,8 @@ import { api } from "@/app/api/trpc/server";
 import VisualRehearsal from "./VisualRehearsal";
 import WriteRehearsal from "./WriteRehearsal";
 import OralRehearsal from "./OralRehearsal";
+import { auth } from "@/auth";
+import { redirect } from "next/navigation";
 
 export default async function DeckRehearsalPage({
   params,
@@ -22,6 +24,11 @@ export default async function DeckRehearsalPage({
 
   if (mode === "visual") {
     return <VisualRehearsal flashcards={deck.flashcards} />;
+  }
+  const session = await auth()
+  if (!session?.user){
+    console.log("guest user")
+    redirect("../../../");
   }
 
   if (mode === "write") {

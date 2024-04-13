@@ -46,7 +46,7 @@ export default function SubjectWordCloud({
     const simulation = d3
       .forceSimulation(words)
       .force("charge", d3.forceManyBody().strength(5))
-      .force("center", d3.forceCenter(300 / 2, 300 / 2))
+      .force("center", d3.forceCenter(250 / 2, 250 / 2))
       .force(
         "collision",
         d3.forceCollide().radius((d: any) => d.weight * 10 + 20)
@@ -60,9 +60,9 @@ export default function SubjectWordCloud({
   }
 
   return (
-    <section className="col-span-2 p-4 bg-green-100 rounded-2xl">
+    <section className="col-span-1 p-4 bg-green-100 dark:bg-green-900/50 rounded-2xl">
       <h2 className="font-semibold text-xl leading-loose">Mine fagområder</h2>
-      <svg ref={svgRef} height="300" width="300" className="mx-auto">
+      <svg ref={svgRef} height="250" width="250" className="mx-auto">
         {nodes.map((node, index) => (
           <g key={index} transform={`translate(${node.x}, ${node.y})`}>
             <circle
@@ -71,7 +71,7 @@ export default function SubjectWordCloud({
             />
             {React.createElement(subjectStyles[node.text].icon, {
               style: {
-                transform: "translate(-3.8%, -3.8%)",
+                transform: "translate(-5%, -5%)",
               },
             })}
           </g>

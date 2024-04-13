@@ -99,8 +99,8 @@ export default function FavoriteMode({
   }
 
   return (
-    <section className="col-span-1 bg-blue-100 p-4 rounded-2xl">
-      <h2 className="font-semibold text-xl leading-loose">Favoritt modus</h2>
+    <section className="col-span-1 bg-blue-100 dark:bg-blue-900/50 p-4 rounded-2xl">
+      <h2 className="font-semibold text-xl leading-loose">Favorittmodus</h2>
       {favoriteModeObj ? (
         <div>
           <span>{favoriteModeObj.favoriteMode}</span>

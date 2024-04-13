@@ -93,7 +93,7 @@ export default function DeckCardDialogContent({ deck }: Props) {
           value={modeSelected}
           onValueChange={(newValue) => setModeSelected(newValue)}
         >
-        {session.data?.user && !isUsersDeck && (
+        {session.data?.user && (
           <TabsList className="grid w-full grid-cols-3">
             <TabsTrigger value="visual">Visuell</TabsTrigger>
             <TabsTrigger value="write">Skriftlig</TabsTrigger>

@@ -186,7 +186,7 @@ export const aiRouter = router({
       ];
 
       const completion = await openai.chat.completions.create({
-        model: "gpt-4-turbo-preview",
+        model: "gpt-3.5-turbo",
         tools: tools,
         tool_choice: { type: "function", function: { name: "generate_tags" } }, // Forces function_call
         messages: [

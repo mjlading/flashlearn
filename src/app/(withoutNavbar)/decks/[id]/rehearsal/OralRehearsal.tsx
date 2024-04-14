@@ -31,7 +31,6 @@ export default function OralRehearsal({
   const [isRecording, setIsRecording] = useState(false);
   const [feedbacks, setFeedbacks] = useState<Feedback[]>([]);
   const [handsfreeMode, setHandsfreeMode] = useState<boolean>(true);
-  const [progress, setProgress] = useState(0);
 
   const isSpeaking = useRef(false);
   const questionAudio = useRef(new Audio());
@@ -54,8 +53,6 @@ export default function OralRehearsal({
 
   useEffect(() => {
     if (currentIndex === 0) return;
-
-    setProgress(((currentIndex + 1) / flashcards.length) * 100);
 
     const textInput = flashcards[currentIndex].front;
     playAudioFromText(textInput);

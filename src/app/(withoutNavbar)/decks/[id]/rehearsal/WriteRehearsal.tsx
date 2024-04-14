@@ -3,20 +3,18 @@
 import { api } from "@/app/api/trpc/client";
 import Flashcard from "@/components/Flashcard";
 import { LoadingSpinner } from "@/components/LoadingSpinner";
-import { Button } from "@/components/ui/button";
-import { Progress } from "@/components/ui/progress";
 import { percentageToHsl } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { type Flashcard as FlashcardType } from "@prisma/client";
-import { Bot, ChevronLeft, ChevronRight } from "lucide-react";
+import { Bot } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useEffect, useRef, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 import { AnswerForm, Feedback, FormSchema } from "./AnswerForm";
-import RehearsalFinishedDialog from "./RehearsalFinishedDialog";
 import ProgressBar from "./ProgressBar";
+import RehearsalFinishedDialog from "./RehearsalFinishedDialog";
 
 export default function WriteRehearsal({
   flashcards,
@@ -33,7 +31,6 @@ export default function WriteRehearsal({
 
   const [currentIndex, setCurrentIndex] = useState(0);
   const [currentFlashcard, setCurrentFlashcard] = useState(flashcards[0]);
-  const [progress, setProgress] = useState(0);
   const [feedbacks, setFeedbacks] = useState<Feedback[]>([]);
   const averageScore = useRef(0);
   const timeSpent = useRef(0);
@@ -57,13 +54,7 @@ export default function WriteRehearsal({
 
   useEffect(() => {
     setCurrentFlashcard(flashcards[currentIndex]);
-    setProgress(((currentIndex + 1) / flashcards.length) * 100);
   }, [currentIndex, flashcards]);
-
-  useEffect(() => {
-    window.addEventListener("keydown", handleKeydown);
-    return () => window.removeEventListener("keydown", handleKeydown);
-  });
 
   useEffect(() => {
     if (!deckId || !recentRehearsal) return; //TODO: temporary workaround for collections
@@ -115,24 +106,6 @@ export default function WriteRehearsal({
       handleRehearsalFinished();
     }
   }, [feedbacks]);
-
-  function handleKeydown(event: KeyboardEvent) {
-    if (event.code === "ArrowRight") {
-      nextFlashcard();
-    } else if (event.code === "ArrowLeft") {
-      previousFlashcard();
-    }
-  }
-
-  function nextFlashcard() {
-    const nextIndex = Math.min(currentIndex + 1, flashcards.length - 1);
-    setCurrentIndex(nextIndex);
-  }
-
-  function previousFlashcard() {
-    const previousIndex = Math.max(currentIndex - 1, 0);
-    setCurrentIndex(previousIndex);
-  }
 
   function handleSetFeedback(feedback: Feedback) {
     setFeedbacks((prev) => {

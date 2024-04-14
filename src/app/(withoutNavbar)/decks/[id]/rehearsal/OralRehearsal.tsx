@@ -20,6 +20,7 @@ import { toast } from "sonner";
 import { Feedback } from "./AnswerForm";
 import PreOralRehearsal from "./PreOralRehearsal";
 import ProgressBar from "./ProgressBar";
+import MicInput from "./MicInput";
 
 export default function OralRehearsal({
   flashcards,
@@ -280,30 +281,10 @@ export default function OralRehearsal({
 
       {/* The mic input section */}
       {!userAnswers[currentIndex] && (
-        <div className="flex flex-col items-center gap-8">
-          <h2
-            className={`font-semibold text-xl ${
-              isRecording ? "text-default" : "text-gray-400"
-            }`}
-          >
-            {isRecording ? "Si svaret ditt" : "Hør oppgaven"}
-          </h2>
-          <div
-            className={`
-          rounded-full p-8 shadow-md
-        ${
-          isRecording
-            ? "bg-blue-400 text-slate-900"
-            : "bg-gray-100 text-slate-400"
-        }`}
-          >
-            {!isRecording ? (
-              <MessageCircleQuestion size={60} />
-            ) : (
-              <Mic size={60} />
-            )}
-          </div>
-        </div>
+        <MicInput
+          isRecording={isRecording}
+          stopMicRecording={stopMicRecording}
+        />
       )}
 
       {/* The user's answer section */}
@@ -361,10 +342,6 @@ export default function OralRehearsal({
           </div>
         )}
       </div>
-
-      {isRecording && (
-        <Button onClick={() => stopMicRecording()}>Stop lydopptak</Button>
-      )}
       {feedbacks[currentIndex] && currentIndex !== flashcards.length - 1 && (
         <Button onClick={() => setCurrentIndex(currentIndex + 1)}>
           Fortsett

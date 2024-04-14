@@ -1,23 +1,25 @@
 "use client";
 
 import { api } from "@/app/api/trpc/client";
+import { LoadingSpinner } from "@/components/LoadingSpinner";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
+import { Progress } from "@/components/ui/progress";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { cn, percentageToHsl } from "@/lib/utils";
 import { type Flashcard as FlashcardType } from "@prisma/client";
 import { Bot, Ear, MessageCircleQuestion, Mic } from "lucide-react";
 import { useSession } from "next-auth/react";
+import { useTheme } from "next-themes";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { Feedback } from "./AnswerForm";
-import { LoadingSpinner } from "@/components/LoadingSpinner";
-import { cn, percentageToHsl } from "@/lib/utils";
-import { useTheme } from "next-themes";
+import PreOralRehearsal from "./PreOralRehearsal";
 
 export default function OralRehearsal({
   flashcards,
@@ -28,6 +30,8 @@ export default function OralRehearsal({
   const [userAnswers, setUserAnswers] = useState<string[]>([]);
   const [isRecording, setIsRecording] = useState(false);
   const [feedbacks, setFeedbacks] = useState<Feedback[]>([]);
+  const [handsfreeMode, setHandsfreeMode] = useState<boolean>(true);
+  const [progress, setProgress] = useState(0);
 
   const isSpeaking = useRef(false);
   const questionAudio = useRef(new Audio());
@@ -36,6 +40,8 @@ export default function OralRehearsal({
     "questionAudio"
   );
   const mediaRecorder = useRef<MediaRecorder | null>(null);
+  const [showPreRehearsalScreen, setShowPreRehearsalScreen] =
+    useState<boolean>(true);
 
   const generateFeedbackMututation = api.ai.generateFeedback.useMutation();
 
@@ -44,26 +50,23 @@ export default function OralRehearsal({
 
   useEffect(() => {
     getMicAudio();
-  });
+  }, []);
 
   useEffect(() => {
-    const textInput = flashcards[currentIndex].front;
+    if (currentIndex === 0) return;
 
-    // Key is used to prevent caching
-    fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/api/audio/textToSpeech?key=${currentIndex}`,
-      {
-        method: "POST",
-        body: textInput,
-      }
-    ).then(async (res) => {
-      const data = await res.blob();
-      const url = URL.createObjectURL(data);
-      questionAudio.current = new Audio(url);
-      playAudio(questionAudio.current);
-      recentlyPlayedAudio.current = "questionAudio";
-    });
+    setProgress(((currentIndex + 1) / flashcards.length) * 100);
+
+    const textInput = flashcards[currentIndex].front;
+    playAudioFromText(textInput);
   }, [currentIndex]);
+
+  function startRehearsal() {
+    setShowPreRehearsalScreen(false);
+
+    const textInput = flashcards[0].front;
+    playAudioFromText(textInput);
+  }
 
   async function fetchTranscription(blob: Blob) {
     try {
@@ -124,16 +127,21 @@ export default function OralRehearsal({
   }
 
   async function startMicRecording() {
+    console.log("Attempting to start recording");
+
     setIsRecording(true);
-    if (!mediaRecorder.current) return;
-    if (mediaRecorder.current.state === "recording") {
-      mediaRecorder.current = null;
+    if (!mediaRecorder.current) {
+      console.log("MediaRecorder not initialized, initializing now");
       await getMicAudio();
     }
-    if (!mediaRecorder.current) return;
+    if (!mediaRecorder.current || mediaRecorder.current.state === "recording") {
+      console.log("Not mediarecorder or its currently recording");
+      return;
+    }
 
     mediaRecorder.current.start();
     console.log("Recorder started");
+    console.log(mediaRecorder.current.state);
 
     let chunks: Blob[] = [];
 
@@ -141,7 +149,7 @@ export default function OralRehearsal({
       chunks.push(e.data);
     };
 
-    mediaRecorder.current.onstop = async (e) => {
+    mediaRecorder.current.onstop = async () => {
       setIsRecording(false);
       console.log("Recorder stopped");
 
@@ -152,11 +160,19 @@ export default function OralRehearsal({
     };
   }
 
+  function stopMicRecording() {
+    if (mediaRecorder.current && mediaRecorder.current.state === "recording") {
+      console.log("Stopping recording");
+      mediaRecorder.current.stop();
+      setIsRecording(false);
+    }
+  }
+
   function playAudio(audio: HTMLAudioElement) {
     if (isSpeaking.current) return;
     isSpeaking.current = true;
 
-    async function onAudioEnded() {
+    function onAudioEnded() {
       audio.removeEventListener("ended", onAudioEnded);
 
       // When feedback audio is finished playing, skip recording mic
@@ -188,6 +204,25 @@ export default function OralRehearsal({
       });
   }
 
+  async function playAudioFromText(text: string) {
+    // Key is used to prevent caching
+    fetch(
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/audio/textToSpeech?key=${currentIndex}`,
+      {
+        method: "POST",
+        body: text,
+      }
+    ).then(async (res) => {
+      const data = await res.blob();
+      const url = URL.createObjectURL(data);
+
+      mediaRecorder.current?.stop();
+      questionAudio.current = new Audio(url);
+      playAudio(questionAudio.current);
+      recentlyPlayedAudio.current = "questionAudio";
+    });
+  }
+
   async function getMicAudio() {
     if (navigator.mediaDevices) {
       navigator.mediaDevices
@@ -209,8 +244,20 @@ export default function OralRehearsal({
     }
   }
 
+  if (showPreRehearsalScreen) {
+    return (
+      <PreOralRehearsal
+        handsfreeMode={handsfreeMode}
+        setHandsfreeMode={setHandsfreeMode}
+        onStartClicked={startRehearsal}
+      />
+    );
+  }
+
   return (
-    <div className="flex flex-col gap-16">
+    <div className="flex flex-col gap-16 w-full max-w-[40rem]">
+      <Progress value={progress} className="h-2" />
+
       {/* The ear (audio play) button */}
       {!userAnswers[currentIndex] && (
         <TooltipProvider>
@@ -259,19 +306,19 @@ export default function OralRehearsal({
       )}
 
       {/* The user's answer section */}
-      <div className="flex gap-2">
-        <Avatar className="h-8 w-8 shadow-sm">
-          <AvatarImage src={session.data?.user.image ?? ""} alt="profil" />
-          <AvatarFallback>meg</AvatarFallback>
-        </Avatar>
+      <div className="flex gap-2 justify-end pl-10">
         <div
           className={cn(
             `${theme === "dark" ? "bg-slate-800" : "bg-slate-200"}`,
-            "rounded-3xl rounded-tl-md p-4"
+            "rounded-3xl rounded-tr-md p-4"
           )}
         >
           <p>{isRecording ? ". . ." : userAnswers[currentIndex]}</p>
         </div>
+        <Avatar className="h-8 w-8 shadow-sm">
+          <AvatarImage src={session.data?.user.image ?? ""} alt="profil" />
+          <AvatarFallback>meg</AvatarFallback>
+        </Avatar>
       </div>
 
       {/* The feedback section */}
@@ -297,7 +344,8 @@ export default function OralRehearsal({
             </div>
 
             {/* The tips */}
-            <ul className="space-y-4">
+            {/* TODO: abstract? */}
+            <ul className="space-y-4 pr-10">
               {feedbacks[currentIndex].tips?.map((tip) => (
                 <div key={tip} className="flex gap-2">
                   <div className="rounded-full p-1 h-fit shadow-sm bg-purple-600 text-white">
@@ -313,10 +361,8 @@ export default function OralRehearsal({
         )}
       </div>
 
-      {!!isRecording && (
-        <Button onClick={() => mediaRecorder.current?.stop()}>
-          Stop lydopptak
-        </Button>
+      {isRecording && (
+        <Button onClick={() => stopMicRecording()}>Stop lydopptak</Button>
       )}
       {feedbacks[currentIndex] && currentIndex !== flashcards.length - 1 && (
         <Button onClick={() => setCurrentIndex(currentIndex + 1)}>

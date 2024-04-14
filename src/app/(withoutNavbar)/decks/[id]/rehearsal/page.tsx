@@ -25,10 +25,10 @@ export default async function DeckRehearsalPage({
   if (mode === "visual") {
     return <VisualRehearsal flashcards={deck.flashcards} />;
   }
-  const session = await auth()
-  if (!session?.user){
-    console.log("guest user")
-    redirect("../../../");
+  const session = await auth();
+  if (!session?.user) {
+    console.log("Not logged in, redirecting");
+    redirect("/api/auth/signin");
   }
 
   if (mode === "write") {

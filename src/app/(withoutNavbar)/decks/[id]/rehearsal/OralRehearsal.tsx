@@ -4,7 +4,6 @@ import { api } from "@/app/api/trpc/client";
 import { LoadingSpinner } from "@/components/LoadingSpinner";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { Progress } from "@/components/ui/progress";
 import {
   Tooltip,
   TooltipContent,
@@ -20,6 +19,7 @@ import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { Feedback } from "./AnswerForm";
 import PreOralRehearsal from "./PreOralRehearsal";
+import ProgressBar from "./ProgressBar";
 
 export default function OralRehearsal({
   flashcards,
@@ -255,8 +255,12 @@ export default function OralRehearsal({
   }
 
   return (
-    <div className="flex flex-col gap-16 w-full max-w-[40rem]">
-      <Progress value={progress} className="h-2" />
+    <main className="flex flex-col gap-16 w-full max-w-[40rem] height-minus-navbar">
+      <ProgressBar
+        currentIndex={currentIndex}
+        numFlashcards={flashcards.length}
+        setCurrentIndex={setCurrentIndex}
+      />
 
       {/* The ear (audio play) button */}
       {!userAnswers[currentIndex] && (
@@ -369,6 +373,6 @@ export default function OralRehearsal({
           Fortsett
         </Button>
       )}
-    </div>
+    </main>
   );
 }

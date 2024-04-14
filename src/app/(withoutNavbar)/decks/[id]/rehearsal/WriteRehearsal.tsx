@@ -16,6 +16,7 @@ import { toast } from "sonner";
 import { z } from "zod";
 import { AnswerForm, Feedback, FormSchema } from "./AnswerForm";
 import RehearsalFinishedDialog from "./RehearsalFinishedDialog";
+import ProgressBar from "./ProgressBar";
 
 export default function WriteRehearsal({
   flashcards,
@@ -177,25 +178,11 @@ export default function WriteRehearsal({
 
   return (
     <main className="space-y-8 w-full max-w-[40rem] px-2">
-      <div className="flex items-center gap-2">
-        <Button
-          onClick={() => previousFlashcard()}
-          disabled={currentIndex === 0}
-          size="icon"
-          variant="ghost"
-        >
-          <ChevronLeft />
-        </Button>
-        <Progress value={progress} className="h-2" />
-        <Button
-          onClick={() => nextFlashcard()}
-          disabled={currentIndex === flashcards.length - 1}
-          size="icon"
-          variant="ghost"
-        >
-          <ChevronRight />
-        </Button>
-      </div>
+      <ProgressBar
+        currentIndex={currentIndex}
+        numFlashcards={flashcards.length}
+        setCurrentIndex={setCurrentIndex}
+      />
       <FormProvider {...form}>
         <Flashcard
           flashcard={currentFlashcard}

@@ -68,7 +68,7 @@ export const userRouter = router({
       const userId = ctx.session.user.id;
 
       // Check if the nickname is unique
-      const existingUser = await ctx.prisma.user.findUnique({
+      const existingUser = await ctx.prisma.user.findFirst({
         where: {
           nickname: input,
         },

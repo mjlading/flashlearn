@@ -18,6 +18,7 @@ import {
 } from "./ui/dropdown-menu";
 import { DropDownMenuItemThemeToggle } from "./DropDownMenuItemThemeToggle";
 import SearchInput from "./SearchInput";
+import XPDisplay from "./XPDisplay";
 
 function ProfileDropdownMenu({ user }: { user: User }) {
   const userInitials = user?.name
@@ -95,7 +96,10 @@ export default function Navbar() {
           </Link>
           <SearchInput />
         </div>
-        <ProfileButton />
+        <div className="flex items-center gap-8">
+          <XPDisplay />
+          <ProfileButton />
+        </div>
       </nav>
     </header>
   );

@@ -1,3 +1,4 @@
+import { PrismaAdapter } from "@auth/prisma-adapter";
 import { protectedProcedure, publicProcedure, router } from "../trpc";
 import z from "zod";
 
@@ -61,4 +62,30 @@ export const userRouter = router({
 
     return top10WithUser;
   }),
+  setNickname: protectedProcedure
+    .input(z.string().min(2).max(50))
+    .mutation(async ({ ctx, input }) => {
+      const userId = ctx.session.user.id;
+
+      // Check if the nickname is unique
+      const existingUser = await ctx.prisma.user.findUnique({
+        where: {
+          nickname: input,
+        },
+      });
+
+      if (existingUser) {
+        return "NICKNAME_IN_USE";
+      }
+
+      await ctx.prisma.user.update({
+        where: {
+          id: userId,
+        },
+        data: {
+          nickname: input,
+          preferencesSet: true,
+        },
+      });
+    }),
 });

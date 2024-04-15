@@ -61,6 +61,7 @@ model User {
   // Custom fields
   xp             Int     @default(0)
   preferencesSet Boolean @default(false)
+  nickname       String? @unique
 }
 
 model VerificationToken {

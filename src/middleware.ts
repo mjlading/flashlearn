@@ -6,7 +6,7 @@ export async function middleware(request: NextRequest) {
   // Check if user has preferences set
   // If not, redirect to user config page
   const session = await auth();
-  console.log("THE SESSION: ", session?.user);
+
   const preferencesSet = session?.user.preferencesSet || false;
 
   if (!preferencesSet && session?.user) {

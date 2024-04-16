@@ -290,10 +290,8 @@ export default function OralRehearsal({
       {/* The user's answer section */}
       <div className="flex gap-2 justify-end pl-10">
         <div
-          className={cn(
-            `${theme === "dark" ? "bg-slate-800" : "bg-slate-200"}`,
-            "rounded-3xl rounded-tr-md p-4"
-          )}
+          className="dark:bg-slate-800 bg-slate-200
+            rounded-3xl rounded-tr-md p-4"
         >
           <p>{isRecording ? ". . ." : userAnswers[currentIndex]}</p>
         </div>

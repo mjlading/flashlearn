@@ -127,4 +127,16 @@ export const userRouter = router({
         },
       });
     }),
+  /**
+   * Deletes the logged in user
+   */
+  deleteUser: protectedProcedure.mutation(async ({ ctx }) => {
+    const userId = ctx.session.user.id;
+
+    await ctx.prisma.user.delete({
+      where: {
+        id: userId,
+      },
+    });
+  }),
 });

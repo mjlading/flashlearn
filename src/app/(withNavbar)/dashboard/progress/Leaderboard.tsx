@@ -15,14 +15,14 @@ export default function Leaderboard() {
         <Brain className="fill-orange-100" />
       </div>
       <ol className="space-y-2">
-        {top10WithUser.data?.top10.map(({ name, xp }, index) => (
+        {top10WithUser.data?.top10.map(({ nickname, xp }, index) => (
           <>
-            <li key={name} className="flex items-center justify-between">
+            <li key={nickname} className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <div className="text-center font-bold text-white rounded-full h-6 w-6 bg-yellow-400">
                   {index + 1}
                 </div>
-                <span>{name}</span>
+                <span>{nickname}</span>
               </div>
               <span className="text-orange-400 font-semibold">{xp}</span>
             </li>
@@ -40,7 +40,7 @@ export default function Leaderboard() {
               {top10WithUser.data?.userRank.rank}
             </div>
             <span className="font-semibold">
-              {top10WithUser.data?.userRank.name}
+              {top10WithUser.data?.userRank.nickname}
             </span>
           </div>
           <span className="text-orange-400 font-semibold">

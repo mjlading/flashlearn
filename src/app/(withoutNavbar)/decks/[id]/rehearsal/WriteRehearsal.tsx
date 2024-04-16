@@ -34,6 +34,7 @@ export default function WriteRehearsal({
   const [feedbacks, setFeedbacks] = useState<Feedback[]>([]);
   const averageScore = useRef(0);
   const timeSpent = useRef(0);
+  const xpGain = useRef(0);
   const [dialogOpen, setDialogOpen] = useState(false);
 
   const saveRehearsalStartedMutation =
@@ -41,6 +42,8 @@ export default function WriteRehearsal({
   const saveRehearsalFinishedMutation =
     api.rehearsal.saveRehearsalFinished.useMutation();
   const updateTimeSpentMutation = api.rehearsal.updateTimeSpent.useMutation();
+  const addXPMutation = api.user.addXp.useMutation();
+
   const isFinished = useRef(false);
 
   let recentRehearsal: any = undefined;
@@ -140,6 +143,9 @@ export default function WriteRehearsal({
       new Date().getTime() -
       new Date(saveRehearsalStartedMutation.data.dateStart).getTime();
 
+    xpGain.current = calculateXPGain();
+    addXPMutation.mutate(xpGain.current);
+
     // Set isFinished to true in db
     saveRehearsalFinishedMutation.mutate({
       rehearsalId: rehearsalData.id,
@@ -147,6 +153,22 @@ export default function WriteRehearsal({
       score: averageScore.current,
       deckId: deckId as string,
     });
+  }
+
+  function calculateXPGain() {
+    let xp = 0;
+    for (const f of feedbacks) {
+      xp += f.score / 4;
+    }
+
+    const expectedTimeSpent = feedbacks.length * 1000 * 120;
+
+    // Longer time spent = more xp
+    const timeMultiplier = Math.min(expectedTimeSpent / timeSpent.current, 2);
+
+    xp = xp * timeMultiplier;
+
+    return xp;
   }
 
   return (
@@ -221,6 +243,7 @@ export default function WriteRehearsal({
           timeSpent={timeSpent.current}
           creatorUserId={creatorUserId}
           deckId={deckId}
+          xpGain={xpGain.current}
         />
       )}
     </main>

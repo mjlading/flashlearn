@@ -22,7 +22,7 @@ export const userRouter = router({
 
     const top10 = await ctx.prisma.user.findMany({
       where: {
-        name: {
+        nickname: {
           not: null,
         },
       },
@@ -31,7 +31,7 @@ export const userRouter = router({
       },
       take: 10,
       select: {
-        name: true,
+        nickname: true,
         xp: true,
       },
     });
@@ -39,12 +39,12 @@ export const userRouter = router({
     // Get user's placement/rank
     // Using raw SQL since prisma does not support SQL window functions
     const userRank = await ctx.prisma.$queryRaw<
-      [{ rank: BigInt; xp: Number; name: string }]
+      [{ rank: BigInt; xp: Number; nickname: string }]
     >`
-      SELECT name, rank, xp FROM (
-        SELECT id, name, xp, RANK() OVER (ORDER BY xp DESC)
+      SELECT nickname, rank, xp FROM (
+        SELECT id, nickname, xp, RANK() OVER (ORDER BY xp DESC)
         FROM "User"
-        WHERE name IS NOT NULL
+        WHERE nickname IS NOT NULL
       ) AS ranked_users
       WHERE id = ${userId}
     `;
@@ -56,7 +56,7 @@ export const userRouter = router({
     };
 
     const top10WithUser = {
-      top10: top10 as { name: string; xp: number }[],
+      top10: top10 as { nickname: string; xp: number }[],
       userRank: userRankFormatted,
     };
 
@@ -87,5 +87,23 @@ export const userRouter = router({
           preferencesSet: true,
         },
       });
+    }),
+  addXp: protectedProcedure
+    .input(z.number())
+    .mutation(async ({ ctx, input }) => {
+      const userId = ctx.session.user.id;
+
+      const response = await ctx.prisma.user.update({
+        where: {
+          id: userId,
+        },
+        data: {
+          xp: {
+            increment: input,
+          },
+        },
+      });
+
+      return response;
     }),
 });

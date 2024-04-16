@@ -411,4 +411,32 @@ export const deckRouter = router({
 
       return newDeck;
     }),
+  upsertUserDeckKnowledge: protectedProcedure
+    .input(
+      z.object({
+        knowledgeLevel: z.number(),
+        deckId: z.string(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const userId = ctx.session.user.id;
+      const { deckId, knowledgeLevel } = input;
+
+      await ctx.prisma.userDeckKnowledge.upsert({
+        create: {
+          deckId: deckId,
+          userId: userId,
+          knowledgeLevel: knowledgeLevel,
+        },
+        update: {
+          knowledgeLevel: knowledgeLevel,
+        },
+        where: {
+          userId_deckId: {
+            deckId: deckId,
+            userId: userId,
+          },
+        },
+      });
+    }),
 });

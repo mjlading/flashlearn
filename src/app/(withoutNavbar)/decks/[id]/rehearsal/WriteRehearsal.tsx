@@ -43,6 +43,8 @@ export default function WriteRehearsal({
     api.rehearsal.saveRehearsalFinished.useMutation();
   const updateTimeSpentMutation = api.rehearsal.updateTimeSpent.useMutation();
   const addXPMutation = api.user.addXp.useMutation();
+  const upsertUserDeckKnowledgeMutation =
+    api.deck.upsertUserDeckKnowledge.useMutation();
 
   const isFinished = useRef(false);
 
@@ -153,6 +155,12 @@ export default function WriteRehearsal({
       score: averageScore.current,
       deckId: deckId as string,
     });
+
+    // Set user deck knowledge
+    upsertUserDeckKnowledgeMutation.mutate({
+      deckId: deckId,
+      knowledgeLevel: averageScore.current,
+    });
   }
 
   function calculateXPGain() {
@@ -231,6 +239,7 @@ export default function WriteRehearsal({
           currentIndex={currentIndex}
           disabled={!!feedbacks[currentIndex]}
           setFeedback={handleSetFeedback}
+          deckId={deckId}
         />
       </FormProvider>
 

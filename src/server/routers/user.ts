@@ -118,7 +118,7 @@ export const userRouter = router({
     .mutation(async ({ ctx, input }) => {
       const userId = ctx.session.user.id;
 
-      await ctx.prisma.user.update({
+      return await ctx.prisma.user.update({
         where: {
           id: userId,
         },
@@ -138,5 +138,18 @@ export const userRouter = router({
         id: userId,
       },
     });
+  }),
+  getAcademicLevel: protectedProcedure.query(({ ctx }) => {
+    const userId = ctx.session.user.id;
+    const academicLevel = ctx.prisma.user.findUnique({
+      where: {
+        id: userId,
+      },
+      select: {
+        academicLevel: true,
+      },
+    });
+
+    return academicLevel;
   }),
 });

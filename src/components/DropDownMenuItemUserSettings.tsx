@@ -2,7 +2,7 @@
 
 import { api } from "@/app/api/trpc/client";
 import { AlertTriangle, UserCog } from "lucide-react";
-import { signOut } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { Button } from "./ui/button";
@@ -14,6 +14,18 @@ import {
   DialogHeader,
   DialogTrigger,
 } from "./ui/dialog";
+import { Label } from "./ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "./ui/select";
+import { academicLevelMap } from "@/lib/academicLevel";
+import { useEffect, useState } from "react";
+import { type AcademicLevel } from "@prisma/client";
+import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 
 export default function DialogContentUserSettings({
   userName,
@@ -21,6 +33,21 @@ export default function DialogContentUserSettings({
   userName: string | null | undefined;
 }) {
   const deleteUserMutation = api.user.deleteUser.useMutation();
+  const academicLevelQuery = api.user.getAcademicLevel.useQuery();
+  const setAcademicLevelMutation = api.user.setAcademicLevel.useMutation();
+
+  const [academicLevel, setAcademicLevel] = useState<AcademicLevel | undefined>(
+    undefined
+  );
+
+  const session = useSession();
+
+  useEffect(() => {
+    if (academicLevelQuery.data) {
+      setAcademicLevel(academicLevelQuery.data.academicLevel as AcademicLevel);
+    }
+  }, [academicLevelQuery.data]);
+
   const router = useRouter();
 
   function handleDeleteUser() {
@@ -40,14 +67,65 @@ export default function DialogContentUserSettings({
       });
   }
 
+  function handleAcademicLevelChanged(value: string) {
+    if (!academicLevel) return;
+
+    setAcademicLevel(value as AcademicLevel);
+
+    setAcademicLevelMutation
+      .mutateAsync({
+        academicLevel: value,
+      })
+      .then((data) => {
+        toast.success(
+          `Akademisk nivå er endret til ${
+            academicLevelMap[data.academicLevel!]
+          }`
+        );
+      });
+  }
+
   return (
     <DialogContent>
       <DialogHeader>
         <div className="flex items-center gap-2 leading-loose mb-4">
           <UserCog />
-          <h2>BrukerInstillinger</h2>
+          <h2 className="text-lg">BrukerInstillinger</h2>
         </div>
       </DialogHeader>
+      {/* User profile info */}
+      <div className="flex items-center gap-4">
+        <Avatar className="h-9 w-9">
+          <AvatarImage src={session.data?.user.image ?? ""} alt="profil" />
+          <AvatarFallback>meg</AvatarFallback>
+        </Avatar>
+        <span className="font-semibold">{session.data?.user.nickname}</span>
+      </div>
+
+      {/* Change academic level section */}
+      <div className="mb-8 mt-2 space-y-1">
+        <Label>Akademisk nivå</Label>
+        <Select
+          onValueChange={handleAcademicLevelChanged}
+          value={academicLevel}
+        >
+          <SelectTrigger>
+            <SelectValue />
+          </SelectTrigger>
+
+          <SelectContent>
+            {Object.keys(academicLevelMap).map((academicLevelOption) => (
+              <SelectItem value={academicLevelOption} key={academicLevelOption}>
+                {academicLevelMap[academicLevelOption]}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+        <p className="text-muted-foreground text-sm">
+          Akademisk nivå brukes bl.a. for å tilpasse øvinger
+        </p>
+      </div>
+
       {/* Delete user data section */}
       <div className="bg-warning/10 rounded p-4 border border-warning">
         <p className="font-semibold leading-loose mb-1">Slett brukerdata</p>

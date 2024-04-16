@@ -11,6 +11,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { Brain } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -22,6 +23,7 @@ export default function RehearsalFinishedDialog({
   timeSpent,
   creatorUserId,
   deckId,
+  xpGain,
 }: {
   open: boolean;
   onOpenChange: (val: boolean) => void;
@@ -29,6 +31,7 @@ export default function RehearsalFinishedDialog({
   timeSpent: number;
   creatorUserId: string;
   deckId: string;
+  xpGain: number;
 }) {
   const session = useSession();
   const { push } = useRouter();
@@ -80,7 +83,7 @@ export default function RehearsalFinishedDialog({
 
         {/* Stats */}
         <div className="my-8 flex gap-10 justify-center w-full sm:w-[80%] mx-auto">
-          <div className="flex flex-1 flex-col items-center p-4 rounded-lg shadow-md">
+          <div className="flex flex-1 flex-col items-center p-4 rounded-xl shadow-md border">
             <p className="font-medium text-gray-700 dark:text-white">
               Tid brukt
             </p>
@@ -88,12 +91,16 @@ export default function RehearsalFinishedDialog({
               {timeSpent && msToTimeString(timeSpent)}
             </span>
           </div>
-          <div className="flex flex-1 flex-col items-center p-4 bg-white rounded-lg shadow-md">
+          <div className="flex flex-1 flex-col items-center p-4 rounded-xl shadow-md border">
             <p className="font-medium text-gray-700 dark:text-white">Score</p>
             <span className="mt-1 text-lg font-semibold text-green-500">
               {averageScore.toFixed(0)}%
             </span>
           </div>
+        </div>
+        <div className="flex items-center w-fit border mx-auto rounded-full p-4 mb-4">
+          <Brain className="text-orange-400 fill-orange-100 mr-1" />
+          <span className="font-bold text-orange-400">+{xpGain}</span>
         </div>
 
         {/* Star rating input */}

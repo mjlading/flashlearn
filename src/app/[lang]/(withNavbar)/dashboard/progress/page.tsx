@@ -4,6 +4,7 @@ import { api } from "@/app/api/trpc/client";
 import FavoriteMode from "./FavoriteMode";
 import SubjectWordCloud from "./SubjectWordCloud";
 import StreakLineChart from "./StreakLineChart";
+import Leaderboard from "./Leaderboard";
 
 export default function ProgressPage() {
   const rehearsals = api.rehearsal.getUserRehearsals.useQuery({
@@ -19,9 +20,7 @@ export default function ProgressPage() {
       <div className="grid lg:grid-cols-3 grid-cols-1 grid-rows-2 gap-8 pb-7">
         <StreakLineChart rehearsals={rehearsals.data} />
 
-        <div className="col-span-1 row-span-2 bg-yellow-100 dark:bg-yellow-300/30 rounded-2xl p-4">
-          <h2 className="font-semibold text-xl leading-loose">Toppliste</h2>
-        </div>
+        <Leaderboard />
 
         <SubjectWordCloud
           subjects={rehearsals.data?.flatMap((rehearsal) =>

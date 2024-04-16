@@ -3,21 +3,40 @@ import GitHub from "next-auth/providers/github";
 import Google from "next-auth/providers/google";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import prisma from "./lib/prisma";
+import { User } from "next-auth";
+
+interface ExtendedUserProperties {
+  preferencesSet?: boolean;
+  nickname?: string;
+}
 
 export const authConfig = {
   providers: [GitHub, Google],
   adapter: PrismaAdapter(prisma),
   session: { strategy: "jwt" },
   callbacks: {
-    jwt({ token, account, user }) {
-      if (account) {
+    async jwt({ token, account, user, session, trigger }) {
+      // console.log("jwt callback: ", { token, user, session, trigger });
+
+      if (
+        trigger === "update" &&
+        session?.nickname &&
+        session?.preferencesSet
+      ) {
+        token.nickname = session.nickname;
+        token.preferencesSet = session.preferencesSet;
+      }
+
+      if (account && user) {
         token.accessToken = account.access_token;
-        token.id = user?.id;
+        token.id = user.id;
+        const extendedUser = user as User & ExtendedUserProperties;
+        token.preferencesSet = extendedUser.preferencesSet;
       }
       return token;
     },
-    session({ session, token }: any) {
-      // session.accessToken = token.accessToken;
+    async session({ session, token }: any) {
+      // console.log("session callback", { session, token });
 
       if (token.sub) {
         session.user.id = token.sub;
@@ -25,7 +44,9 @@ export const authConfig = {
         console.error("Token SUB is missing");
       }
 
-      // console.log("Session callback - Modified session object:", session);
+      // Add the preferencesSet boolean to the session
+      session.user.preferencesSet = token.preferencesSet ?? false;
+      session.user.nickname = token.nickname;
 
       return session;
     },

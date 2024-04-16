@@ -57,6 +57,12 @@ model User {
   rehearsals            Rehearsal[]
   collections           Collection[]
   roadmapUserProgresses RoadmapUserProgress[]
+
+  // Custom fields
+  xp             Int            @default(0)
+  preferencesSet Boolean        @default(false)
+  nickname       String?
+  academicLevel  AcademicLevel?
 }
 
 model VerificationToken {

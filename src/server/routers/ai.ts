@@ -274,7 +274,7 @@ export const aiRouter = router({
       ];
 
       const completion = await openai.chat.completions.create({
-        model: "gpt-3.5-turbo",
+        model: "gpt-4-turbo-preview",
         tools: tools,
         tool_choice: {
           type: "function",
@@ -361,7 +361,7 @@ export const aiRouter = router({
       ];
 
       const completion = await openai.chat.completions.create({
-        model: "gpt-3.5-turbo",
+        model: "gpt-4-turbo-preview",
         tools: tools,
         tool_choice: {
           type: "function",
@@ -429,7 +429,7 @@ export const aiRouter = router({
       ];
 
       const completion = await openai.chat.completions.create({
-        model: "gpt-3.5-turbo",
+        model: "gpt-4-turbo-preview",
         tools: tools,
         tool_choice: {
           type: "function",

@@ -1,9 +1,11 @@
 import { auth } from "@/auth";
 import { cn } from "@/lib/utils";
 import { LayoutDashboard } from "lucide-react";
-import { User } from "next-auth";
+import { User as NextAuthUser } from "next-auth";
 import Link from "next/link";
 import DropDownMenuItemSignOut from "./DropDownMenuItemSignOut";
+import { DropDownMenuItemThemeToggle } from "./DropDownMenuItemThemeToggle";
+import SearchInput from "./SearchInput";
 import SignInButton from "./SignInButton";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { buttonVariants } from "./ui/button";
@@ -16,8 +18,11 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
-import { DropDownMenuItemThemeToggle } from "./DropDownMenuItemThemeToggle";
-import SearchInput from "./SearchInput";
+import XPDisplay from "./XPDisplay";
+
+interface User extends NextAuthUser {
+  nickname?: string;
+}
 
 function ProfileDropdownMenu({ user }: { user: User }) {
   const userInitials = user?.name
@@ -39,7 +44,7 @@ function ProfileDropdownMenu({ user }: { user: User }) {
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56 mr-8">
         <DropdownMenuLabel className="truncate mb-[-5px]">
-          {user.name}
+          {user.nickname}
         </DropdownMenuLabel>
         <span className="ml-2 text-muted-foreground text-sm truncate">
           {user.email}
@@ -61,17 +66,8 @@ function ProfileDropdownMenu({ user }: { user: User }) {
   );
 }
 
-async function ProfileButton() {
-  const session = await auth();
-  return (
-    <>
-      {session?.user ? (
-        <ProfileDropdownMenu user={session.user} />
-      ) : (
-        <SignInButton />
-      )}
-    </>
-  );
+async function ProfileButton({ user }: { user: User | undefined }) {
+  return <>{user ? <ProfileDropdownMenu user={user} /> : <SignInButton />}</>;
 }
 
 const LINK_STYLE = cn(
@@ -82,7 +78,8 @@ const LINK_STYLE = cn(
   "text-md"
 );
 
-export default function Navbar() {
+export default async function Navbar() {
+  const session = await auth();
   return (
     <header className="sticky top-0 z-50 py-2 px-8 border-b bg-background">
       <nav className="flex items-center justify-between flex-wrap gap-2">
@@ -95,7 +92,10 @@ export default function Navbar() {
           </Link>
           <SearchInput />
         </div>
-        <ProfileButton />
+        <div className="flex items-center gap-8">
+          {session?.user && <XPDisplay />}
+          <ProfileButton user={session?.user} />
+        </div>
       </nav>
     </header>
   );

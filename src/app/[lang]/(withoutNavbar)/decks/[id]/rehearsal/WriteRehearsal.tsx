@@ -3,18 +3,17 @@
 import { api } from "@/app/api/trpc/client";
 import Flashcard from "@/components/Flashcard";
 import { LoadingSpinner } from "@/components/LoadingSpinner";
-import { Button } from "@/components/ui/button";
-import { Progress } from "@/components/ui/progress";
 import { percentageToHsl } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { type Flashcard as FlashcardType } from "@prisma/client";
-import { Bot, ChevronLeft, ChevronRight } from "lucide-react";
+import { Bot } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useEffect, useRef, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 import { AnswerForm, Feedback, FormSchema } from "./AnswerForm";
+import ProgressBar from "./ProgressBar";
 import RehearsalFinishedDialog from "./RehearsalFinishedDialog";
 
 export default function WriteRehearsal({
@@ -32,10 +31,10 @@ export default function WriteRehearsal({
 
   const [currentIndex, setCurrentIndex] = useState(0);
   const [currentFlashcard, setCurrentFlashcard] = useState(flashcards[0]);
-  const [progress, setProgress] = useState(0);
   const [feedbacks, setFeedbacks] = useState<Feedback[]>([]);
   const averageScore = useRef(0);
   const timeSpent = useRef(0);
+  const xpGain = useRef(0);
   const [dialogOpen, setDialogOpen] = useState(false);
 
   const saveRehearsalStartedMutation =
@@ -43,6 +42,8 @@ export default function WriteRehearsal({
   const saveRehearsalFinishedMutation =
     api.rehearsal.saveRehearsalFinished.useMutation();
   const updateTimeSpentMutation = api.rehearsal.updateTimeSpent.useMutation();
+  const addXPMutation = api.user.addXp.useMutation();
+
   const isFinished = useRef(false);
 
   let recentRehearsal: any = undefined;
@@ -56,13 +57,7 @@ export default function WriteRehearsal({
 
   useEffect(() => {
     setCurrentFlashcard(flashcards[currentIndex]);
-    setProgress(((currentIndex + 1) / flashcards.length) * 100);
   }, [currentIndex, flashcards]);
-
-  useEffect(() => {
-    window.addEventListener("keydown", handleKeydown);
-    return () => window.removeEventListener("keydown", handleKeydown);
-  });
 
   useEffect(() => {
     if (!deckId || !recentRehearsal) return; //TODO: temporary workaround for collections
@@ -115,24 +110,6 @@ export default function WriteRehearsal({
     }
   }, [feedbacks]);
 
-  function handleKeydown(event: KeyboardEvent) {
-    if (event.code === "ArrowRight") {
-      nextFlashcard();
-    } else if (event.code === "ArrowLeft") {
-      previousFlashcard();
-    }
-  }
-
-  function nextFlashcard() {
-    const nextIndex = Math.min(currentIndex + 1, flashcards.length - 1);
-    setCurrentIndex(nextIndex);
-  }
-
-  function previousFlashcard() {
-    const previousIndex = Math.max(currentIndex - 1, 0);
-    setCurrentIndex(previousIndex);
-  }
-
   function handleSetFeedback(feedback: Feedback) {
     setFeedbacks((prev) => {
       const newFeedbacks = [...prev];
@@ -166,6 +143,9 @@ export default function WriteRehearsal({
       new Date().getTime() -
       new Date(saveRehearsalStartedMutation.data.dateStart).getTime();
 
+    xpGain.current = calculateXPGain();
+    addXPMutation.mutate(xpGain.current);
+
     // Set isFinished to true in db
     saveRehearsalFinishedMutation.mutate({
       rehearsalId: rehearsalData.id,
@@ -175,27 +155,29 @@ export default function WriteRehearsal({
     });
   }
 
+  function calculateXPGain() {
+    let xp = 0;
+    for (const f of feedbacks) {
+      xp += f.score / 4;
+    }
+
+    const expectedTimeSpent = feedbacks.length * 1000 * 120;
+
+    // Longer time spent = more xp
+    const timeMultiplier = Math.min(expectedTimeSpent / timeSpent.current, 2);
+
+    xp = xp * timeMultiplier;
+
+    return xp;
+  }
+
   return (
     <main className="space-y-8 w-full max-w-[40rem] px-2">
-      <div className="flex items-center gap-2">
-        <Button
-          onClick={() => previousFlashcard()}
-          disabled={currentIndex === 0}
-          size="icon"
-          variant="ghost"
-        >
-          <ChevronLeft />
-        </Button>
-        <Progress value={progress} className="h-2" />
-        <Button
-          onClick={() => nextFlashcard()}
-          disabled={currentIndex === flashcards.length - 1}
-          size="icon"
-          variant="ghost"
-        >
-          <ChevronRight />
-        </Button>
-      </div>
+      <ProgressBar
+        currentIndex={currentIndex}
+        numFlashcards={flashcards.length}
+        setCurrentIndex={setCurrentIndex}
+      />
       <FormProvider {...form}>
         <Flashcard
           flashcard={currentFlashcard}
@@ -261,6 +243,7 @@ export default function WriteRehearsal({
           timeSpent={timeSpent.current}
           creatorUserId={creatorUserId}
           deckId={deckId}
+          xpGain={xpGain.current}
         />
       )}
     </main>

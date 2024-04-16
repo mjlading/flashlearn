@@ -1,6 +1,7 @@
-import { PrismaAdapter } from "@auth/prisma-adapter";
-import { protectedProcedure, publicProcedure, router } from "../trpc";
+import { academicLevelMap } from "@/lib/academicLevel";
+import { AcademicLevel } from "@prisma/client";
 import z from "zod";
+import { protectedProcedure, router } from "../trpc";
 
 export const userRouter = router({
   getXP: protectedProcedure.query(async ({ ctx }) => {
@@ -105,5 +106,25 @@ export const userRouter = router({
       });
 
       return response;
+    }),
+  setAcademicLevel: protectedProcedure
+    .input(
+      z.object({
+        academicLevel: z.enum(
+          Object.keys(academicLevelMap) as [string, ...string[]]
+        ),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const userId = ctx.session.user.id;
+
+      await ctx.prisma.user.update({
+        where: {
+          id: userId,
+        },
+        data: {
+          academicLevel: input.academicLevel as AcademicLevel,
+        },
+      });
     }),
 });

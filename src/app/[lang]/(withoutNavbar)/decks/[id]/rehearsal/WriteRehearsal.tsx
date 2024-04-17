@@ -239,7 +239,6 @@ export default function WriteRehearsal({
           currentIndex={currentIndex}
           disabled={!!feedbacks[currentIndex]}
           setFeedback={handleSetFeedback}
-          deckId={deckId}
         />
       </FormProvider>
 

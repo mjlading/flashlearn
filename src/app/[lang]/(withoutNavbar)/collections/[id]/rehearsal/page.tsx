@@ -1,5 +1,5 @@
-import VisualRehearsal from "@/app/(withoutNavbar)/decks/[id]/rehearsal/VisualRehearsal";
-import WriteRehearsal from "@/app/(withoutNavbar)/decks/[id]/rehearsal/WriteRehearsal";
+import VisualRehearsal from "@/app/[lang]/(withoutNavbar)/decks/[id]/rehearsal/VisualRehearsal";
+import WriteRehearsal from "@/app/[lang]/(withoutNavbar)/decks/[id]/rehearsal/WriteRehearsal";
 import { api } from "@/app/api/trpc/server";
 
 export default async function CollectionRehearsalPage({

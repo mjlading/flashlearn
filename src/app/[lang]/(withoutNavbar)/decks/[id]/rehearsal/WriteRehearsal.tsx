@@ -241,7 +241,7 @@ export default function WriteRehearsal({
           setFeedback={handleSetFeedback}
         />
       </FormProvider>
-      <></>
+
       {/* Dialog that displays when the rehearsal is finished */}
       {deckId && creatorUserId && (
         <RehearsalFinishedDialog

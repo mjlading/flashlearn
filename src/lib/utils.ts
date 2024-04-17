@@ -59,3 +59,19 @@ export function percentageToHsl(
   var hue = percentage * (hue1 - hue0) + hue0;
   return "hsl(" + hue + `, 100%, ${lightness}%)`;
 }
+
+export function percentageToTwBgColor(percentage: number): string {
+  if (percentage >= 100) {
+    return "bg-green-500"; // Green for 100
+  } else if (percentage <= 0) {
+    return "bg-red-500"; // Red for 0
+  } else if (percentage < 25) {
+    return "bg-red-600";
+  } else if (percentage < 50) {
+    return "bg-orange-500";
+  } else if (percentage < 75) {
+    return "bg-yellow-500";
+  } else {
+    return "bg-lime-500";
+  }
+}

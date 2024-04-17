@@ -23,6 +23,7 @@ import {
   TooltipTrigger,
 } from "./ui/tooltip";
 import Link from "next/link";
+import KnowledgeLevel from "./KnowledgeLevel";
 
 export interface DeckCardProps {
   // Convert types dateCreated and dateChanged from Date to string
@@ -45,6 +46,11 @@ export default function DeckCard({
   // Fetch the tags
   const tags = api.deck.getTagsByDeckId.useQuery(deck.id);
 
+  // Fetch the user's knowledge level of this deck
+  const knowledgeLevel = api.deck.getUserDeckKnowledge.useQuery({
+    deckId: deck.id,
+  });
+
   return (
     <Dialog>
       <Card className="text-left">
@@ -53,7 +59,16 @@ export default function DeckCard({
             <DialogTrigger asChild>
               <button className="w-full">
                 <CardHeader className="flex flex-row items-center justify-between py-3 cursor-pointer">
-                  <CardTitle className="text-lg">{deck.name}</CardTitle>
+                  <div className="flex items-center">
+                    <CardTitle className="text-lg">{deck.name}</CardTitle>
+
+                    {/* The user's deck knowledge level */}
+                    {knowledgeLevel.data?.knowledgeLevel && (
+                      <KnowledgeLevel
+                        knowledgeLevel={knowledgeLevel.data?.knowledgeLevel}
+                      />
+                    )}
+                  </div>
                   <div className="flex gap-4">
                     {/* Number of flashcards */}
                     <NumFlashcards numFlashcards={deck.numFlashcards} />

@@ -411,4 +411,73 @@ export const deckRouter = router({
 
       return newDeck;
     }),
+  upsertUserDeckKnowledge: protectedProcedure
+    .input(
+      z.object({
+        score: z.number(),
+        deckId: z.string(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const userId = ctx.session.user.id;
+      const { deckId, score } = input;
+
+      const existing = await ctx.prisma.userDeckKnowledge.findUnique({
+        where: {
+          userId_deckId: {
+            userId: userId,
+            deckId: deckId,
+          },
+        },
+        select: {
+          knowledgeLevel: true,
+        },
+      });
+
+      const currentKnowledgeLevel = existing?.knowledgeLevel || 0;
+      const diff = score - currentKnowledgeLevel;
+      const change = diff / 2 + 10;
+
+      let newKnowledgeLevel = currentKnowledgeLevel + change;
+      newKnowledgeLevel = Math.max(0, Math.min(newKnowledgeLevel, 100));
+
+      await ctx.prisma.userDeckKnowledge.upsert({
+        create: {
+          deckId: deckId,
+          userId: userId,
+          knowledgeLevel: score / 2,
+        },
+        update: {
+          knowledgeLevel: newKnowledgeLevel,
+        },
+        where: {
+          userId_deckId: {
+            deckId: deckId,
+            userId: userId,
+          },
+        },
+      });
+    }),
+  getUserDeckKnowledge: protectedProcedure
+    .input(
+      z.object({
+        deckId: z.string(),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      const userId = ctx.session.user.id;
+      const { deckId } = input;
+
+      const deckKnowledge = await ctx.prisma.userDeckKnowledge.findFirst({
+        where: {
+          userId: userId,
+          deckId: deckId,
+        },
+        select: {
+          knowledgeLevel: true, // Only need this
+        },
+      });
+
+      return deckKnowledge;
+    }),
 });

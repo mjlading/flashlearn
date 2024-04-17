@@ -439,4 +439,26 @@ export const deckRouter = router({
         },
       });
     }),
+  getUserDeckKnowledge: protectedProcedure
+    .input(
+      z.object({
+        deckId: z.string(),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      const userId = ctx.session.user.id;
+      const { deckId } = input;
+
+      const deckKnowledge = await ctx.prisma.userDeckKnowledge.findFirst({
+        where: {
+          userId: userId,
+          deckId: deckId,
+        },
+        select: {
+          knowledgeLevel: true, // Only need this
+        },
+      });
+
+      return deckKnowledge;
+    }),
 });

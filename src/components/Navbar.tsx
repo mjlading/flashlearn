@@ -1,6 +1,6 @@
 import { auth } from "@/auth";
 import { cn } from "@/lib/utils";
-import { LayoutDashboard } from "lucide-react";
+import { LayoutDashboard, Settings, UserCog } from "lucide-react";
 import { User as NextAuthUser } from "next-auth";
 import Link from "next/link";
 import DropDownMenuItemSignOut from "./DropDownMenuItemSignOut";
@@ -19,6 +19,15 @@ import {
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 import XPDisplay from "./XPDisplay";
+import DropDownMenuItemUserSettings from "./DropDownMenuItemUserSettings";
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTrigger,
+} from "./ui/dialog";
+import DialogContentUserSettings from "./DropDownMenuItemUserSettings";
 
 interface User extends NextAuthUser {
   nickname?: string;
@@ -33,36 +42,46 @@ function ProfileDropdownMenu({ user }: { user: User }) {
     : "";
 
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <button className="rounded-full">
-          <Avatar className="h-9 w-9">
-            <AvatarImage src={user.image ?? ""} alt="profil" />
-            <AvatarFallback>{userInitials}</AvatarFallback>
-          </Avatar>
-        </button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-56 mr-8">
-        <DropdownMenuLabel className="truncate mb-[-5px]">
-          {user.nickname}
-        </DropdownMenuLabel>
-        <span className="ml-2 text-muted-foreground text-sm truncate">
-          {user.email}
-        </span>
-        <DropdownMenuSeparator className="mt-2" />
-        <DropdownMenuGroup>
-          <Link href="/dashboard">
+    <Dialog>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <button className="rounded-full">
+            <Avatar className="h-9 w-9">
+              <AvatarImage src={user.image ?? ""} alt="profil" />
+              <AvatarFallback>{userInitials}</AvatarFallback>
+            </Avatar>
+          </button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent className="w-56 mr-8">
+          <DropdownMenuLabel className="truncate mb-[-5px]">
+            {user.nickname}
+          </DropdownMenuLabel>
+          <span className="ml-2 text-muted-foreground text-sm truncate">
+            {user.email}
+          </span>
+          <DropdownMenuSeparator className="mt-2" />
+          <DropdownMenuGroup>
+            <Link href="/dashboard">
+              <DropdownMenuItem>
+                <LayoutDashboard className="mr-2 h-4 w-4" />
+                <span>Dashbord</span>
+              </DropdownMenuItem>
+            </Link>
+            <DropDownMenuItemThemeToggle />
             <DropdownMenuItem>
-              <LayoutDashboard className="mr-2 h-4 w-4" />
-              <span>Dashbord</span>
+              <DialogTrigger className="flex cursor-default items-center">
+                <UserCog className="mr-2 h-4 w-4" />
+                <span>Brukerinstillinger</span>
+              </DialogTrigger>
             </DropdownMenuItem>
-          </Link>
-          <DropDownMenuItemThemeToggle />
-        </DropdownMenuGroup>
-        <DropdownMenuSeparator />
-        <DropDownMenuItemSignOut />
-      </DropdownMenuContent>
-    </DropdownMenu>
+          </DropdownMenuGroup>
+          <DropdownMenuSeparator />
+          <DropDownMenuItemSignOut />
+        </DropdownMenuContent>
+      </DropdownMenu>
+      {/* The dialog that opens when clicking user settings */}
+      <DialogContentUserSettings userName={user.name} />
+    </Dialog>
   );
 }
 

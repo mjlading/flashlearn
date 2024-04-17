@@ -93,7 +93,7 @@ model Deck {
   numFlashcards Int
 
   userId String
-  user   User   @relation(fields: [userId], references: [id])
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   subjectName String
   subject     Subject @relation(fields: [subjectName], references: [name])
@@ -112,7 +112,7 @@ model Deck {
 
 // Many-to-many between User and Deck
 model BookmarkedDeck {
-  user   User   @relation(fields: [userId], references: [id])
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String
   deck   Deck   @relation(fields: [deckId], references: [id], onDelete: Cascade)
   deckId String
@@ -124,7 +124,7 @@ model BookmarkedDeck {
 model DeckRating {
   stars Int
 
-  user   User   @relation(fields: [userId], references: [id])
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String
   deck   Deck   @relation(fields: [deckId], references: [id], onDelete: Cascade)
   deckId String
@@ -136,7 +136,7 @@ model DeckRating {
 model UserDeckKnowledge {
   knowledgeLevel Int
 
-  user   User   @relation(fields: [userId], references: [id])
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String
   deck   Deck   @relation(fields: [deckId], references: [id], onDelete: Cascade)
   deckId String
@@ -180,7 +180,7 @@ model Rehearsal {
   timeSpent  Int      @default(0)
   isFinished Boolean  @default(false)
 
-  user   User   @relation(fields: [userId], references: [id])
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String
   Deck   Deck   @relation(fields: [deckId], references: [id], onDelete: Cascade)
   deckId String
@@ -218,7 +218,7 @@ model Collection {
   name        String  @unique
   description String?
 
-  user   User   @relation(fields: [userId], references: [id])
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String
 
   collectionDecks CollectionDeck[]
@@ -276,7 +276,7 @@ model RoadmapUserProgress {
 
   roadmap   Roadmap @relation(fields: [roadmapId], references: [id])
   roadmapId String
-  user      User    @relation(fields: [userId], references: [id])
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    String
 
   @@id([roadmapId, userId])

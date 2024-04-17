@@ -1,7 +1,8 @@
 import AuthButton from "@/components/AuthButton";
 
 
-export default async function Home({ params: { lang } }) {
+export default async function Home({ params: { lang } }:{params:{lang:any}}) {
+  console.log(lang);
   return (
     <>
       <div className="inset-y-30 mx-auto max-w-full lg:w-[50rem]">

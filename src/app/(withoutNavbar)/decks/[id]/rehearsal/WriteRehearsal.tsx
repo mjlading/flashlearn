@@ -159,7 +159,7 @@ export default function WriteRehearsal({
     // Set user deck knowledge
     upsertUserDeckKnowledgeMutation.mutate({
       deckId: deckId,
-      knowledgeLevel: averageScore.current,
+      score: averageScore.current,
     });
   }
 

@@ -1,4 +1,4 @@
-import { Feedback } from "@/app/(withoutNavbar)/decks/[id]/rehearsal/AnswerForm";
+import { Feedback } from "@/app/[lang]/(withoutNavbar)/decks/[id]/rehearsal/AnswerForm";
 import { GeneratedFlashcard } from "@/components/GenerateFlashcardsInput";
 import openai, { generateEmbedding, generateEmbeddings } from "@/lib/ai";
 import { getCosineSimilarities } from "@/lib/cosine";

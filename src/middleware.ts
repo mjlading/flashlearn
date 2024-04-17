@@ -2,36 +2,11 @@ import NextAuth from "next-auth";
 import { auth, authConfig } from "./auth";
 import { NextRequest, NextResponse } from "next/server";
 
-export async function middleware(request: NextRequest) {
-  // Check if user has preferences set
-  // If not, redirect to user config page
-  const session = await auth();
-
-  const preferencesSet = session?.user.preferencesSet || false;
-
-  if (!preferencesSet && session?.user) {
-    // Redirect to profile setup page
-    return NextResponse.redirect(new URL("/profileSetup", request.url));
-  }
-
-  return NextResponse.next();
-}
-
-// Matcher configuration to exclude specific paths
-export const config = {
-  matcher: [
-    // apply middleware to all paths except these, including the profileSetup page
-    "/((?!profileSetup|api|_next/static|_next/image|favicon.ico).*)",
-  ],
-};
 
 export default NextAuth(authConfig).auth;
 
 import { match } from '@formatjs/intl-localematcher'
 import Negotiator from 'negotiator'
-
-import { NextResponse } from 'next/server'
-import type { NextRequest } from 'next/server'
 
 // available localizations
 let locales:readonly string[] = ['en']
@@ -50,39 +25,76 @@ function getLocale(request:NextRequest) {
     return match(languages, locales, defaultLocale)
 }
 
-function skipLangForAuth(pathname:string) {
-  const authPaths = [`api/auth`,`api/auth/signIn`, `api/auth/error`, `api/auth/providers`]
+function skipLangForApi(pathname:string) {
+  const authPaths = [`api`]
 
   const skipLangAuth = authPaths.some(
     (path) => pathname.startsWith(`/${path}/`) || pathname === `/${path}`
   )
-  console.log("caught url:", pathname, " with result: ", skipLangAuth)
+  //console.log("caught url:", pathname, " with result: ", skipLangAuth)
   return skipLangAuth
 }
 
-export function middleware(request:NextRequest){
+export async function middleware(request: NextRequest) {
+  /*
+  * 1. check if url leads to auth 
+  * 2. check if pathname has locale
+  * 3. on initial login, redirect to account setup 
+  * 
+  * Make sure that account setup works?
+  * 
+  */
 
-    const { pathname } = request.nextUrl
-    const pathnameHasLocale = locales.some(
-      (locale) => pathname.startsWith(`/${locale}/`) || pathname === `/${locale}`
-    )
-    //console.log("\n", pathname)
-    const skipLangAuth = skipLangForAuth(pathname);
-    
-    if (pathnameHasLocale || skipLangAuth) return
-   
+  const { pathname } = request.nextUrl
+
+  console.log("\n", pathname)
+
+  if (skipLangForApi(pathname)) {
+    console.log("going to authentication page")
+    return NextResponse.next()
+  };
+
+
+  const pathnameHasLocale = locales.some(
+    (locale) => pathname.startsWith(`/${locale}/`) || pathname === `/${locale}`
+  )
+ 
+  if (!pathnameHasLocale)  {   
     // Redirect if there is no locale
     const locale = getLocale(request)
     request.nextUrl.pathname = `/${locale}${pathname}`
     // e.g. incoming request is /products
     // The new URL is now /en-US/products
+    console.log("redirecting to locale")
     return NextResponse.redirect(request.nextUrl)
+  }
+
+  // Check if user has preferences set
+  // If not, redirect to user config page
+  const session = await auth();
+
+  const preferencesSet = session?.user.preferencesSet || false;
+
+  if ((
+    request.nextUrl.pathname !== `/${getLocale(request)}/profileSetup`) &&!preferencesSet && session?.user) {
+    //create redirect link
+    const locale = getLocale(request)
+    request.nextUrl.pathname = `/${locale}/profileSetup`
+
+    console.log("redirecting bc we are going to profileSetup")
+    // Redirect to profile setup page
+    return NextResponse.redirect(request.nextUrl);
+  }
+
+  return NextResponse.next();
 }
 
+// Matcher configuration to exclude specific paths
 export const config = {
-    matcher: [
-      // Skip all internal paths (_next)
-      '/((?!_next).*)',
-      // Optional: only run on root (/) URL
-    ],
-  }
+  matcher: [
+    // apply middleware to all paths except these, including the profileSetup page
+    "/((?!profileSetup|api|_next/static|_next/image|favicon.ico).*)",
+    // Skip all internal paths (_next)
+    '/((?!_next).*)',
+  ],
+};

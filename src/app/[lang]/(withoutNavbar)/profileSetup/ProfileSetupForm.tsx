@@ -1,6 +1,7 @@
 "use client";
 
 import { api } from "@/app/api/trpc/client";
+import { getDictionary } from "@/app/dictionaries/dictionaries";
 import { LoadingSpinner } from "@/components/LoadingSpinner";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -29,19 +30,23 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 
-const formSchema = z.object({
-  nickname: z
-    .string()
-    .min(2, {
-      message: "Kallenavn må være minst 2 tegn",
-    })
-    .max(50, {
-      message: "Kallenavn kan være max 50 tegn",
-    }),
-  academicLevel: z.enum(Object.keys(academicLevelMap) as [string, ...string[]]),
-});
-
-export default function ProfileSetupForm() {
+export default function ProfileSetupForm(
+  {
+    dict
+  }:{  
+    dict:Awaited<ReturnType<typeof getDictionary>> // fancy unwrap
+  }) {
+  const formSchema = z.object({
+    nickname: z
+      .string()
+      .min(2, {
+        message: dict.profileSetupPage.nicknameMinimum,
+      })
+      .max(50, {
+        message: dict.profileSetupPage.nicknameMaximum,
+      }),
+    academicLevel: z.enum(Object.keys(academicLevelMap) as [string, ...string[]]),
+  });
   const setNicknameMutation = api.user.setNickname.useMutation();
   const setAcademicLevelMutation = api.user.setAcademicLevel.useMutation();
   const session = useSession();
@@ -60,7 +65,7 @@ export default function ProfileSetupForm() {
     const response = await setNicknameMutation.mutateAsync(values.nickname);
 
     if (response === "NICKNAME_IN_USE") {
-      toast.info("Kallenavnet er allerede tatt. Vennligst velg et annet");
+      toast.info(dict.profileSetupPage.nicknameTaken);
       return;
     }
 
@@ -71,7 +76,7 @@ export default function ProfileSetupForm() {
     // Manually update the session
     await session.update({ nickname: values.nickname, preferencesSet: true });
 
-    toast.success("Profilen din er oppdatert!");
+    toast.success(dict.profileSetupPage.updateSuccess);
 
     router.push("/dashboard");
   }
@@ -85,7 +90,7 @@ export default function ProfileSetupForm() {
           name="nickname"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Kallenavn</FormLabel>
+              <FormLabel>{dict.profileSetupPage.nickname}</FormLabel>
               <FormControl>
                 <div className="flex items-center gap-2">
                   <Avatar className="h-8 w-8 shadow-sm">
@@ -93,12 +98,12 @@ export default function ProfileSetupForm() {
                       src={session.data?.user.image ?? ""}
                       alt="profil"
                     />
-                    <AvatarFallback>meg</AvatarFallback>
+                    <AvatarFallback>{dict.profileSetupPage.me}</AvatarFallback>
                   </Avatar>
-                  <Input placeholder="Ditt kallenavn" {...field} />
+                  <Input placeholder={dict.profileSetupPage.yourNickname} {...field} />
                 </div>
               </FormControl>
-              <FormDescription>Ditt offentlige visningsnavn</FormDescription>
+              <FormDescription>{dict.profileSetupPage.yourPublicNickname}</FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -110,7 +115,7 @@ export default function ProfileSetupForm() {
             name="academicLevel"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Akademisk nivå</FormLabel>
+                <FormLabel>{dict.profileSetupPage.academicLevel}</FormLabel>
                 <Select
                   onValueChange={field.onChange}
                   defaultValue={field.value}
@@ -147,7 +152,7 @@ export default function ProfileSetupForm() {
           {setNicknameMutation.isLoading && (
             <LoadingSpinner className="mr-2" size={20} />
           )}
-          Lagre
+          {dict.profileSetupPage.save}
         </Button>
       </form>
     </Form>

@@ -1,5 +1,26 @@
 {
     "home":{
-        "title":"Flashlearn"
+        "title":"Flashlearn",
+        "slogan":"Oppdag noe nytt å lære - la nysgjerrigheten lede veien!"
+    },
+    "signInPage":{
+        "signIn":"Logg inn",
+        "thirdPartyLogin":"Velg en tredjeparts autentisering for rask og sikker innlogging",
+        "termsAndConditions":"Vilkår",
+        "privacy":"Personvern",
+        "chooseProvider":"Fortsett med"
+    },
+    "profileSetupPage":{
+        "beforeYouContinue":"Før du fortsetter",
+        "nickname":"Kallenavn",
+        "yourNickname":"Ditt kallenavn",
+        "nicknameTaken":"Kallenavnet er allerede tatt. Vennligst velg et annet",
+        "me":"Meg",
+        "yourPublicNickname":"Ditt offentlige visningsnavn",
+        "academicLevel":"Akademisk nivå",
+        "updateSuccess":"Profilen din har blitt oppdattert!",
+        "save":"Lagre",
+        "nicknameMinimum":"Kallenavn må være minst 2 tegn",
+        "nicknameMaximum":"Kallenavn kan være max 50 tegn"
     }
 }

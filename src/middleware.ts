@@ -9,7 +9,7 @@ import { match } from '@formatjs/intl-localematcher'
 import Negotiator from 'negotiator'
 
 // available localizations
-let locales:readonly string[] = ['en']
+let locales:readonly string[] = ['en', 'no']
 
 function getLocale(request:NextRequest) {
     

@@ -1,5 +1,6 @@
 "use client";
 
+import useLocale from "@/hooks/useLocale";
 import { cn } from "@/lib/utils";
 import {
   GraduationCap,
@@ -13,32 +14,33 @@ import { usePathname } from "next/navigation";
 
 export default function Sidebar() {
   const pathname = usePathname();
+  const locale = useLocale();
 
   const links = [
     {
       text: "Dashbord",
-      href: "/dashboard",
+      href: `/${locale}/dashboard`,
       icon: <LayoutDashboard size={20} />,
     },
     {
       text: "Studiekort",
-      href: "/dashboard/decks",
+      href: `/${locale}/dashboard/decks`,
       icon: <Layers3 size={20} />,
       query: "?category=recent",
     },
     {
       text: "Samlinger",
-      href: "/dashboard/collections",
+      href: `/${locale}/dashboard/collections`,
       icon: <SquareStack size={20} />,
     },
     {
       text: "Emner",
-      href: "/dashboard/courses",
+      href: `/${locale}/dashboard/courses`,
       icon: <GraduationCap size={20} />,
     },
     {
       text: "Fremgang",
-      href: "/dashboard/progress",
+      href: `/${locale}/dashboard/progress`,
       icon: <TrendingUp size={20} />,
     },
   ];

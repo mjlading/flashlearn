@@ -3,8 +3,13 @@
 import { signIn, signOut, useSession } from "next-auth/react";
 import { Button } from "./ui/button";
 import { LoadingSpinner } from "./LoadingSpinner";
+import { getDictionary } from "@/app/dictionaries/dictionaries";
 
-export default function AuthButton() {
+export default function AuthButton({
+  dict
+}:{  
+  dict:Awaited<ReturnType<typeof getDictionary>> // fancy unwrap
+}) {
   const session = useSession();
 
   if (session.status === "loading") {
@@ -19,11 +24,11 @@ export default function AuthButton() {
     <>
       {session.status === "authenticated" ? (
         <Button onClick={() => signOut()}>
-          <span>Logg ut</span>
+          <span>{dict.home.signOut}</span>
         </Button>
       ) : (
         <Button onClick={() => signIn()}>
-          <span>Logg inn</span>
+          <span>{dict.home.signIn}</span>
         </Button>
       )}
     </>

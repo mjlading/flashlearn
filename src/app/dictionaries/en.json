@@ -1,7 +1,9 @@
 {
     "home":{
         "title":"Flashlearn",
-        "slogan":"Discover new knowledge - Let your curiosity lead the way!"
+        "slogan":"Discover new knowledge - Let your curiosity lead the way!",
+        "signIn":"Sign in",
+        "signOut":"Sign out"
     },
     "signInPage":{
         "signIn":"Sign in",
@@ -22,5 +24,8 @@
         "save":"Save",
         "nicknameMinimum":"Nickname must contain at least 2 letters",
         "nicknameMaximum":"Nickname can contain at most 50 letters"
+    },
+    "dashboard":{
+        "dashboard":"dashboard"
     }
 }

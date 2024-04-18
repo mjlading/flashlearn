@@ -27,5 +27,27 @@
     },
     "dashboard":{
         "dashboard":"dashboard"
+    },
+    "progress":{
+        "progress":"Progress"
+    },
+    "explore":{
+        "explore":"Explore"
+    },
+    "decks":{
+        "studyCards":"Flashcards",
+        "newDeck":"New deck",
+        "recent":"Recent",
+        "created":"Created",
+        "bookmarked":"Bookmarked",
+        "noDecks":{
+            "noSets":"No sets found 🤷‍♂️",
+            "noRecentSets":"You have no recent sets",
+            "noRecentSetsEx":"Your recently practiced sets will appear here",
+            "noCreatedSets":"You don't have any flashcards 😔",
+            "noCreatedSetsEx":"Create a set to start learning!",
+            "noBookmakedSets":"You have no bookmarked sets",
+            "noBookmakedSetsEx":"Your bookmarked sets will appear here"
+        }
     }
 }

@@ -1,11 +1,14 @@
 import { api } from "@/app/api/trpc/server";
+import { getDictionary } from "@/app/dictionaries/dictionaries";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Link from "next/link";
 
 export default async function CategoryTabs({
   initialCategory,
+  dict
 }: {
   initialCategory: string;
+  dict:Awaited<ReturnType<typeof getDictionary>> // fancy unwrap
 }) {
   const deckCounts = await api.deck.countDecksByCategories.query();
 
@@ -18,17 +21,17 @@ export default async function CategoryTabs({
       <TabsList className="grid w-full grid-cols-3">
         <TabsTrigger value="recent" asChild>
           <Link href={`/dashboard/decks?category=recent`}>
-            Nylige {formattedDeckCount(deckCounts.countRecent)}
+            {dict.decks.recent} {formattedDeckCount(deckCounts.countRecent)}
           </Link>
         </TabsTrigger>
         <TabsTrigger value="created" asChild>
           <Link href={`/dashboard/decks?category=created`}>
-            Laget {formattedDeckCount(deckCounts.countCreated)}{" "}
+          {dict.decks.created} {formattedDeckCount(deckCounts.countCreated)}{" "}
           </Link>
         </TabsTrigger>
         <TabsTrigger value="bookmarked" asChild>
           <Link href={`/dashboard/decks?category=bookmarked`}>
-            Bokmerkede {formattedDeckCount(deckCounts.countBookmarked)}
+          {dict.decks.bookmarked} {formattedDeckCount(deckCounts.countBookmarked)}
           </Link>
         </TabsTrigger>
       </TabsList>

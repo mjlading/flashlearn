@@ -27,5 +27,27 @@
     },
     "dashboard":{
         "dashboard":"dashbord"
+    },
+    "progress":{
+        "progress":"Fremgang"
+    },
+    "explore":{
+        "explore":"Utforsk"
+    },
+    "decks":{
+        "studyCards":"Studiekort",
+        "newDeck":"Nytt dekk",
+        "recent":"Nylige",
+        "created":"Laget",
+        "bookmarked":"Bokmerkede",
+        "noDecks":{
+            "noSets":"Ingen sett funnet 🤷‍♂️",
+            "noRecentSets":"Du har ingen nylige sett",
+            "noRecentSetsEx":"Dine nylige øvde sett vil vises her",
+            "noCreatedSets":"Du har ingen studiekort 😔",
+            "noCreatedSetsEx":"Lag et sett for å komme i gang med læringen din!",
+            "noBookmakedSets":"Du har ingen bokmerkede sett",
+            "noBookmakedSetsEx":"Dine bokmerkede sett vil vises her"
+        }
     }
 }

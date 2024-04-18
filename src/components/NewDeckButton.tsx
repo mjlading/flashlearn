@@ -1,8 +1,13 @@
 import { Plus } from "lucide-react";
 import Link from "next/link";
 import { ButtonProps, buttonVariants } from "./ui/button";
+import { getDictionary } from "@/app/dictionaries/dictionaries";
 
-export default function NewDeckButton({ ...props }: ButtonProps) {
+interface dictAndButtonProps extends ButtonProps {
+  dict:Awaited<ReturnType<typeof getDictionary>> // fancy unwrap
+}
+
+export default function NewDeckButton({ dict, ...props }: dictAndButtonProps) {
   return (
     <Link
       href={"/decks/create"}
@@ -13,7 +18,7 @@ export default function NewDeckButton({ ...props }: ButtonProps) {
       })}
     >
       <Plus size={20} className="mr-1" />
-      Nytt sett
+      {dict.decks.newDeck}
     </Link>
   );
 }

@@ -9,6 +9,7 @@ import DeckCard from "./DeckCard";
 import DeckListSkeleton from "./DeckListSkeleton";
 import NoDecks from "./NoDecks";
 import { Skeleton } from "./ui/skeleton";
+import { getDictionary } from "@/app/dictionaries/dictionaries";
 
 /**
  * DeckList component displays a list of Decks.
@@ -22,6 +23,7 @@ import { Skeleton } from "./ui/skeleton";
  */
 
 export interface DeckListProps {
+  dict:Awaited<ReturnType<typeof getDictionary>>; // fancy unwrap
   initialDecks?: SerializedStateDates<Deck, "dateCreated" | "dateChanged">[];
   subject?: string;
   category?: "recent" | "created" | "bookmarked";
@@ -32,7 +34,8 @@ export interface DeckListProps {
   ) => void;
 }
 
-export default function DeckList(props: DeckListProps) {
+export default function DeckList(
+  props: DeckListProps) {
   const infiniteQuery = api.deck.infiniteDecks.useInfiniteQuery(
     {
       limit: 10, // Page size
@@ -51,7 +54,6 @@ export default function DeckList(props: DeckListProps) {
       },
     }
   );
-
   const [inViewRef, inView] = useInView({
     threshold: 0,
   });

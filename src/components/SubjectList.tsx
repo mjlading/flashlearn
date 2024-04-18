@@ -1,11 +1,16 @@
 import { api } from "@/app/api/trpc/server";
+import { getDictionary } from "@/app/dictionaries/dictionaries";
 import { subjectNameMap, subjectStyles } from "@/lib/subject";
 import { GraduationCap } from "lucide-react";
 import { unstable_noStore } from "next/cache";
 import Link from "next/link";
 import React from "react";
 
-export default async function SubjectList() {
+export default async function SubjectList({
+  dict
+}:{
+  dict:Awaited<ReturnType<typeof getDictionary>> // fancy unwrap
+}) {
   unstable_noStore();
   const subjects = await api.subject.getSubjects.query();
 

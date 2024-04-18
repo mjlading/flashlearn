@@ -6,9 +6,9 @@ import { LoadingSpinner } from "./LoadingSpinner";
 import { getDictionary } from "@/app/dictionaries/dictionaries";
 
 export default function AuthButton({
-  dict
-}:{  
-  dict:Awaited<ReturnType<typeof getDictionary>> // fancy unwrap
+  dict,
+}: {
+  dict: Awaited<ReturnType<typeof getDictionary>>; // fancy unwrap
 }) {
   const session = useSession();
 
@@ -27,8 +27,8 @@ export default function AuthButton({
           <span>{dict.home.signOut}</span>
         </Button>
       ) : (
-        <Button onClick={() => signIn()}>
-          <span>{dict.home.signIn}</span>
+        <Button onClick={() => signIn()} size="lg">
+          <span>{dict.home.getStarted}</span>
         </Button>
       )}
     </>

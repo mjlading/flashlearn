@@ -6,6 +6,7 @@ import Link from "next/link";
 import CollectionCard from "./CollectionCard";
 import { buttonVariants } from "./ui/button";
 import { Skeleton } from "./ui/skeleton";
+import { getDictionary } from "@/app/dictionaries/dictionaries";
 
 function CollectionListSkeleton() {
   return (
@@ -17,12 +18,14 @@ function CollectionListSkeleton() {
   );
 }
 
-function NoCollections() {
+function NoCollections(
+  {dict}:{dict:Awaited<ReturnType<typeof getDictionary>>, // fancy unwrap
+  }) {
   return (
     <div className="h-full text-center flex flex-col items-center justify-center gap-4">
-      <h2 className="font-semibold text-lg">Du har ingen samlinger</h2>
+      <h2 className="font-semibold text-lg">{dict.collections.noCollections}</h2>
       <p className="text-muted-foreground">
-        Lag en samling for å organisere og øve flere sett sammen
+        {dict.collections.noCollectionDescription}
       </p>
       <Link
         href="/collections/create"
@@ -32,7 +35,7 @@ function NoCollections() {
         })}
       >
         <Plus size={20} className="mr-1" />
-        Ny samling
+        {dict.collections.newCollection}
       </Link>
 
       <div className="mt-8">
@@ -42,7 +45,10 @@ function NoCollections() {
   );
 }
 
-export default function CollectionList() {
+export default function CollectionList(
+  {dict}:{
+    dict:Awaited<ReturnType<typeof getDictionary>>, // fancy unwrap
+  }) {
   const collections = api.collection.getUserCollections.useQuery();
 
   if (collections.isLoading) {
@@ -50,14 +56,14 @@ export default function CollectionList() {
   }
 
   if (collections.data?.length === 0) {
-    return <NoCollections />;
+    return <NoCollections dict={dict}/>;
   }
 
   return (
     <div className="space-y-3 pb-7">
       {collections.data?.map((collection) => (
         <div key={collection.id}>
-          <CollectionCard collection={collection} />
+          <CollectionCard dict={dict} collection={collection} />
         </div>
       ))}
     </div>

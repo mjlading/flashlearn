@@ -39,8 +39,10 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "./ui/tooltip";
+import { getDictionary } from "@/app/dictionaries/dictionaries";
 
 export interface CollectionCardProps {
+  dict:Awaited<ReturnType<typeof getDictionary>>, // fancy unwrap
   collection: {
     id: string;
     name: string;
@@ -54,7 +56,7 @@ export interface CollectionCardProps {
   };
 }
 
-export default function CollectionCard({ collection }: CollectionCardProps) {
+export default function CollectionCard({ dict, collection }: CollectionCardProps) {
   const [showDecks, setShowDecks] = useState(false);
   const [modeSelected, setModeSelected] = useState("write");
   const router = useRouter();
@@ -169,7 +171,7 @@ export default function CollectionCard({ collection }: CollectionCardProps) {
             </Tooltip>
           </TooltipProvider>
 
-          <DeleteCollectionButton collection={collection} />
+          <DeleteCollectionButton dict={dict} collection={collection} />
         </div>
       </CardFooter>
     </Card>

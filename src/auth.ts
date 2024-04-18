@@ -46,7 +46,7 @@ export const authConfig = {
 
       // Add the preferencesSet boolean to the session
       session.user.preferencesSet = token.preferencesSet ?? false;
-      console.log("users preferences set to: ", session.user.preferencesSet)
+      console.log("users preferences set to: ", session.user.preferencesSet);
       session.user.nickname = token.nickname;
 
       return session;

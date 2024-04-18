@@ -1,32 +1,34 @@
 {
-    "home":{
-        "title":"Flashlearn",
-        "slogan":"Discover new knowledge - Let your curiosity lead the way!",
-        "signIn":"Sign in",
-        "signOut":"Sign out"
-    },
-    "signInPage":{
-        "signIn":"Sign in",
-        "thirdPartyLogin":"Choose a third party authentication for quick and safe access",
-        "termsAndConditions":"Terms and conditions",
-        "privacy":"Privacy",
-        "chooseProvider":"Sign in with"
-    },
-    "profileSetupPage":{
-        "beforeYouContinue":"Before you continue",
-        "nickname":"Nickname",
-        "yourNickname":"Your nickname",
-        "nicknameTaken":"Nickname already taken. Please choose another",
-        "me":"Me",
-        "yourPublicNickname":"Your public nickname",
-        "academicLevel":"Academic level",
-        "updateSuccess":"Your profile has been updated!",
-        "save":"Save",
-        "nicknameMinimum":"Nickname must contain at least 2 letters",
-        "nicknameMaximum":"Nickname can contain at most 50 letters"
-    },
-    "dashboard":{
-        "dashboard":"dashboard"
+  "home": {
+    "title": "Flashlearn",
+    "slogan": "Discover new knowledge - Let your curiosity lead the way!",
+    "signIn": "Sign in",
+    "signOut": "Sign out",
+    "getStarted": "Start learning!",
+    "dashboard": "Dashboard"
+  },
+  "signInPage": {
+    "signIn": "Sign in",
+    "thirdPartyLogin": "Choose a third party authentication for quick and safe access",
+    "termsAndConditions": "Terms and conditions",
+    "privacy": "Privacy",
+    "chooseProvider": "Sign in with"
+  },
+  "profileSetupPage": {
+    "beforeYouContinue": "Before you continue",
+    "nickname": "Nickname",
+    "yourNickname": "Your nickname",
+    "nicknameTaken": "Nickname already taken. Please choose another",
+    "me": "Me",
+    "yourPublicNickname": "Your public nickname",
+    "academicLevel": "Academic level",
+    "updateSuccess": "Your profile has been updated!",
+    "save": "Save",
+    "nicknameMinimum": "Nickname must contain at least 2 letters",
+    "nicknameMaximum": "Nickname can contain at most 50 letters"
+  },
+  "dashboard": {
+    "dashboard": "dashboard"
     },
     "progress":{
         "progress":"Progress"
@@ -49,5 +51,5 @@
             "noBookmakedSets":"You have no bookmarked sets",
             "noBookmakedSetsEx":"Your bookmarked sets will appear here"
         }
-    }
+  }
 }

@@ -1,7 +1,9 @@
 {
     "home":{
         "title":"Flashlearn",
-        "slogan":"Oppdag noe nytt å lære - la nysgjerrigheten lede veien!"
+        "slogan":"Oppdag noe nytt å lære - la nysgjerrigheten lede veien!",
+        "signIn":"Logg inn",
+        "signOut":"Logg ut"
     },
     "signInPage":{
         "signIn":"Logg inn",
@@ -22,5 +24,8 @@
         "save":"Lagre",
         "nicknameMinimum":"Kallenavn må være minst 2 tegn",
         "nicknameMaximum":"Kallenavn kan være max 50 tegn"
+    },
+    "dashboard":{
+        "dashboard":"dashbord"
     }
 }

@@ -1,5 +1,6 @@
 "use client";
 
+import { getDictionary } from "@/app/dictionaries/dictionaries";
 import { Button } from "@/components/ui/button";
 import { signIn } from "next-auth/react";
 import Image from "next/image";
@@ -7,9 +8,11 @@ import Image from "next/image";
 export default function ProviderButton({
   provider,
   logo,
+  dict
 }: {
   provider: string;
   logo: any;
+  dict:Awaited<ReturnType<typeof getDictionary>> // fancy unwrap
 }) {
   function handleSignIn() {
     signIn(provider, { callbackUrl: "/dashboard" });
@@ -34,7 +37,7 @@ export default function ProviderButton({
         src={logo}
       />
       <span className="ml-4">
-        Fortsett med {capitalizeFirstLetter(provider)}
+        {dict.signInPage.chooseProvider} {capitalizeFirstLetter(provider)}
       </span>
     </Button>
   );

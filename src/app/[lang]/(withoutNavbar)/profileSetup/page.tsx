@@ -1,14 +1,17 @@
+import { getDictionary } from "@/app/dictionaries/dictionaries";
 import ProfileSetupForm from "./ProfileSetupForm";
 
-export default function ProfileSetupPage() {
+export default async function ProfileSetupPage({params:{lang}}:{params:{lang:any}}) {
+  
+  const dict = await getDictionary(lang);
   return (
     <div className="h-[100vh] flex items-center justify-center">
       <main>
         <div className="bg-accent p-8 rounded-2xl shadow-sm">
           <h1 className="font-bold text-2xl leading-loose mb-4">
-            Før du fortsetter
+            {dict.profileSetupPage.beforeYouContinue}
           </h1>
-          <ProfileSetupForm />
+          <ProfileSetupForm dict={dict}/>
         </div>
       </main>
     </div>

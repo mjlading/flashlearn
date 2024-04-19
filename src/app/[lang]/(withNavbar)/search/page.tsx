@@ -1,4 +1,5 @@
 import { api } from "@/app/api/trpc/server";
+import { getDictionary } from "@/app/dictionaries/dictionaries";
 import DeckList from "@/components/DeckList";
 import SearchInput from "@/components/SearchInput";
 import { Metadata } from "next";
@@ -10,14 +11,18 @@ export const metadata: Metadata = {
 };
 
 export default async function SearchPage({
+  params,
   searchParams,
 }: {
+  params:{
+    lang:any
+  }
   searchParams: {
     q: string;
   };
 }) {
   const { q } = searchParams; // The search query
-
+  const dict = await getDictionary(params.lang);
   // Fetch initial results and count on the server in paralell
   const [{ decks }, hits] = await Promise.all([
     api.deck.infiniteDecks.query({
@@ -46,7 +51,7 @@ export default async function SearchPage({
           </p>
         </div>
 
-        <DeckList initialDecks={decks} query={q} />
+        <DeckList dict={dict} initialDecks={decks} query={q} />
       </main>
     </div>
   );

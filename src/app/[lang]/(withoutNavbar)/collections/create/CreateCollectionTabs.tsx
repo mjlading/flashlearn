@@ -12,6 +12,8 @@ import { useTheme } from "next-themes";
 import { api } from "@/app/api/trpc/client";
 import { toast } from "sonner";
 import { useFormContext } from "react-hook-form";
+import { dictType } from "@/app/dictionaries/dictionariesClientSide";
+import { useDictionary } from "@/lib/DictProvider";
 
 export default function CreateCollecionTabs({
   addedDecks,
@@ -22,6 +24,7 @@ export default function CreateCollecionTabs({
     SetStateAction<SerializedStateDates<Deck, "dateCreated" | "dateChanged">[]>
   >;
 }) {
+  const dict = useDictionary();
   type SimilarDeck = SerializedStateDates<
     Deck,
     "dateCreated" | "dateChanged"
@@ -84,6 +87,7 @@ export default function CreateCollecionTabs({
           <TabsContent value="created">
             <ScrollArea className="h-[calc(100vh-200px)] pr-3">
               <DeckList
+                dict={dict}
                 category="created"
                 addable={true}
                 onAddClicked={(deck) => handleAddClicked(deck)}

@@ -1,4 +1,5 @@
 import { api } from "@/app/api/trpc/server";
+import { getDictionary } from "@/app/dictionaries/dictionaries";
 import DeckList from "@/components/DeckList";
 import { subjectNameMap, subjectStyles } from "@/lib/subject";
 import React, { Suspense } from "react";
@@ -8,8 +9,11 @@ export default async function SubjectPage({
 }: {
   params: {
     subject: string;
+    lang:any;
   };
 }) {
+
+  const dict = await getDictionary(params.lang);
   const subject = params.subject;
 
   const norwegianSubjectName = subjectNameMap[subject];
@@ -33,7 +37,7 @@ export default async function SubjectPage({
       <h3 className="text-muted-foreground mb-12">
         Trykk på et stikkord for å se mere spesifikke sett
       </h3>
-      <DeckList initialDecks={initialDecks} subject={subject} />
+      <DeckList dict={dict} initialDecks={initialDecks} subject={subject} />
     </>
   );
 }

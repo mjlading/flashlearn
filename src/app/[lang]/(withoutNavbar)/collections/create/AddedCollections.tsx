@@ -4,6 +4,7 @@ import { SerializedStateDates } from "@/lib/utils";
 import type { Deck } from "@prisma/client";
 import { Dispatch, SetStateAction } from "react";
 import { useFormContext } from "react-hook-form";
+import { useDictionary } from "@/lib/DictProvider";
 
 export default function AddedCollections({
   addedDecks,
@@ -15,7 +16,7 @@ export default function AddedCollections({
   >;
 }) {
   const form = useFormContext();
-
+  const dict = useDictionary();
   function handleRemoveClicked(
     deck: SerializedStateDates<Deck, "dateCreated" | "dateChanged">
   ) {
@@ -29,7 +30,7 @@ export default function AddedCollections({
   return (
     <div className="mx-4 py-2">
       <h2 className="text-center text-lg font-semibold mt-3 mb-12">
-        Lagt til sett
+      {dict.collections.createCollection.addedSets}
       </h2>
       <ScrollArea className="h-[calc(100vh-155px)] pr-3">
         <div className="space-y-3 pb-7">

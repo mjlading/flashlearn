@@ -56,7 +56,25 @@
         "collections":"Samlinger",
         "newCollection":"Ny samling",
         "noCollections":"Du har ingen samlinger",
-        "noCollectionDescription":"Lag en samling for å organisere og øve flere sett sammen"
+        "noCollectionDescription":"Lag en samling for å organisere og øve flere sett sammen",
+        "createCollection":{
+            "aboutCollection":"Om samlingen",
+            "addToCollection":"Legg til sett",
+            "placeholderName":"Gi samlingen din et navn",
+            "placeholderDescription":"Gi samlingen din en beskrivelse",
+            "name":"Navn",
+            "description":"Beskrivelse (valgfri)",
+            "saveCollection":"Lagre samling",
+            "toasts":{
+                "yourCollection":"Samlingen  ",
+                "isStored":" har blitt lagret",
+                "saveFailed":"Samlingen kunne ikke lagres",
+                "tryAgain":"Vennligst prøv igjen",
+                "editWorked":"Redigeringen av  ",
+                "editFailed":"Endringene dine kunne ikke lagres"
+            },
+            "addedSets":"Lagt til sett"
+        }
     },
     "courses":{
         "courses":"Emner"

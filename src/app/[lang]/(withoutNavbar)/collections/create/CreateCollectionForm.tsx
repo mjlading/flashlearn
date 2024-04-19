@@ -11,6 +11,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { useFormContext } from "react-hook-form";
 import { z } from "zod";
+import { useDictionary } from "@/lib/DictProvider";
 
 export const formSchema = z.object({
   name: z
@@ -26,7 +27,7 @@ export const formSchema = z.object({
 
 export default function CreateCollectionForm() {
   const form = useFormContext<z.infer<typeof formSchema>>();
-
+  const dict = useDictionary();
   return (
     <Form {...form}>
       <form
@@ -42,11 +43,11 @@ export default function CreateCollectionForm() {
             name="name"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Navn</FormLabel>
+                <FormLabel>{dict.collections.createCollection.name}</FormLabel>
                 <FormControl>
                   <Input
                     autoFocus
-                    placeholder="Gi samlingen din et navn"
+                    placeholder={dict.collections.createCollection.placeholderName}
                     {...field}
                     maxLength={50}
                   />
@@ -61,11 +62,11 @@ export default function CreateCollectionForm() {
             name="description"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Beskrivelse (valgfri)</FormLabel>
+                <FormLabel>{dict.collections.createCollection.description}</FormLabel>
                 <FormControl>
                   <Input
                     autoFocus
-                    placeholder="Gi samlingen din en beskrivelse"
+                    placeholder={dict.collections.createCollection.placeholderDescription}
                     {...field}
                     maxLength={500}
                   />

@@ -9,6 +9,7 @@ import { LoadingSpinner } from "@/components/LoadingSpinner";
 import { api } from "@/app/api/trpc/client";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { useDictionary } from "@/lib/DictProvider";
 
 export default function CreateCollectionTopbar({
   edit = false,
@@ -17,28 +18,35 @@ export default function CreateCollectionTopbar({
   edit?: boolean;
   collectionId?: string;
 }) {
+  const dict = useDictionary();
   const form = useFormContext<z.infer<typeof formSchema>>();
   const router = useRouter();
 
   const createCollectionMutation = api.collection.createCollection.useMutation({
     onSuccess: (data) => {
-      toast.success("Samlingen " + data.name + " er lagret");
+      toast.success(
+        dict.collections.createCollection.toasts.yourCollection + 
+        data.name + 
+        dict.collections.createCollection.toasts.isStored);
       router.push("/dashboard/collections");
     },
     onError: () => {
-      toast.error("Samlingen kunne ikke lagres", {
-        description: "Vennligst prøv igjen",
+      toast.error(dict.collections.createCollection.toasts.saveFailed, {
+        description: dict.collections.createCollection.toasts.tryAgain,
       });
     },
   });
   const editCollectionMutation = api.collection.editCollection.useMutation({
     onSuccess: (data) => {
-      toast.success("Redigeringen av " + data.name + " er lagret");
+      toast.success(
+        dict.collections.createCollection.toasts.editWorked + 
+        data.name + 
+        dict.collections.createCollection.toasts.isStored);
       router.push("/dashboard/collections");
     },
     onError: () => {
-      toast.error("Redigeringen kunne ikke lagres", {
-        description: "Vennligst prøv igjen",
+      toast.error(dict.collections.createCollection.toasts.editFailed, {
+        description: dict.collections.createCollection.toasts.tryAgain,
       });
     },
   });
@@ -68,7 +76,7 @@ export default function CreateCollectionTopbar({
           (createCollectionMutation.isLoading && (
             <LoadingSpinner size={20} className="mr-2" />
           ))}
-        Lagre samling
+        {dict.collections.createCollection.saveCollection}
       </Button>
     </header>
   );

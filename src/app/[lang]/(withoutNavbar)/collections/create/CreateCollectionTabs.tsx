@@ -12,7 +12,6 @@ import { useTheme } from "next-themes";
 import { api } from "@/app/api/trpc/client";
 import { toast } from "sonner";
 import { useFormContext } from "react-hook-form";
-import { dictType } from "@/app/dictionaries/dictionariesClientSide";
 import { useDictionary } from "@/lib/DictProvider";
 
 export default function CreateCollecionTabs({
@@ -68,10 +67,11 @@ export default function CreateCollecionTabs({
     <Tabs defaultValue="meta" className="flex flex-col mx-4 py-2">
       <TabsList>
         <TabsTrigger value="meta" className="w-full text-md font-semibold">
-          Meta
+          {dict.collections.createCollection.aboutCollection}
         </TabsTrigger>
         <TabsTrigger value="addDecks" className="w-full text-md font-semibold">
-          Legg til sett
+         
+          {dict.collections.createCollection.addToCollection}
         </TabsTrigger>
       </TabsList>
       <TabsContent value="meta" className="mt-12">

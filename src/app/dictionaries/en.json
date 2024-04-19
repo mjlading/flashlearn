@@ -56,7 +56,25 @@
         "collections":"Collections",
         "newCollection":"New collection",
         "noCollections":"You have no collections",
-        "noCollectionDescription":"Create a collection to organize and practice multiple sets at once"
+        "noCollectionDescription":"Create a collection to organize and practice multiple sets at once",
+        "createCollection":{
+            "aboutCollection":"About",
+            "addToCollection":"Add sets",
+            "placeholderName":"Give your collection a name",
+            "placeholderDescription":"Describe your collection",
+            "name":"Name",
+            "description":"Description (optional)",
+            "saveCollection":"Save collection",
+            "toasts":{
+                "yourCollection":"The collection ",
+                "isStored":" has been stored",
+                "saveFailed":"The collection could not be stored",
+                "tryAgain":"Please try again",
+                "editWorked":"Your edit of ",
+                "editFailed":"Your changes could not be stored"
+            },
+            "addedSets":"Added sets"
+        }
     },
     "courses":{
         "courses":"Courses"

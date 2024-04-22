@@ -60,7 +60,22 @@
             "created":"Opprettet ",
             "lastEdited":"Sist endret "
         },
-        "practiceMode":"Øvingsmodus"
+        "practiceMode":"Øvingsmodus",
+        "editDeck":"Rediger sett",
+        "createDeck":{
+            "added":"La til ",
+            "flashcards":" studiekort",
+            "giveSetName":"Gi settet ditt et navn",
+            "name":"Navn",
+            "field":"Fagfelt",
+            "private":"Privat",
+            "privateDescription":"Private sett er kun synlige for deg.",
+            "academicLevel":"Academic level",
+            "addFlashcard":"Add flashcard",
+            "addFlashcardDescription":"Hvert kort har en fremside og en bakside. Fremsiden kan ha et begrep eller spørsmål, og baksiden kan ha et svar eller en forklaring.",
+            "placeholderFront":"Fremside",
+            "placeholderBack":"Bakside"
+        }
     },
     "collections":{
         "collections":"Samlinger",

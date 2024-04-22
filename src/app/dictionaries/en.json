@@ -61,7 +61,23 @@
             "lastEdited":"Updated "
             
         },
-        "practiceMode":"Practice mode"
+        "practiceMode":"Practice mode",
+        "editDeck":"Edit deck",
+        "createDeck":{
+            "added":"Added ",
+            "flashcards":" flashcards",
+            "giveSetName":"Give your set a name",
+            "name":"Name",
+            "field":"Field of study",
+            "private":"Private",
+            "privateDescription":"Private sets are only visible to you.",
+            "academicLevel":"Academic level",
+            "addFlashcard":"Add flashcard",
+            "addFlashcardDescription":"Every flashcard has a front and back. The front has a term or question, and the back side can contain an answer or explanation.",
+            "placeholderFront":"Front",
+            "placeholderBack":"Back"
+        }
+          
     },
     "collections":{
         "collections":"Collections",

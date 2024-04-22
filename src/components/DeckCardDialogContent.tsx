@@ -87,7 +87,7 @@ export default function DeckCardDialogContent({ deck }: Props) {
 
       <div className="flex flex-col">
         <Label htmlFor="select-mode" className="text-center mb-4">
-          {dict.decks.startPractice.practiceMode}
+          {dict.decks.practiceMode}
         </Label>
         <Tabs
           id="select-mode"

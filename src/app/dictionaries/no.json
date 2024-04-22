@@ -5,8 +5,7 @@
         "slogan": "Oppdag noe nytt å lære - la nysgjerrigheten lede veien!",
         "signIn": "Logg inn",
         "signOut": "Logg ut",
-        "getStarted": "Kom i gang!",
-        "dashboard": "Dashbord"
+        "getStarted": "Kom i gang!"
     },
     "signInPage": {
         "signIn": "Logg inn",
@@ -115,7 +114,8 @@
     },
     "userDropDown":{
         "dashboard":"Dashbord",
-        "userSettings":"Brukerinstillinger"
+        "userSettings":"Brukerinstillinger",
+        "switchTheme":"Bytt tema"
     },
     "starRating":{
         "avgStars":"Gjennomsnittlig vurdering",

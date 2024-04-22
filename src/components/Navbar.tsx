@@ -62,7 +62,7 @@ function HamburgerDropdownMenu() {
   );
 }
 
-function ProfileDropdownMenu({ user }: { user: User }) {
+function ProfileDropdownMenu({ dict, user }: { dict:Awaited<ReturnType<typeof getDictionary>>, user: User }) {
   const userInitials = user?.name
     ? user.name
         .split(" ")
@@ -93,14 +93,14 @@ function ProfileDropdownMenu({ user }: { user: User }) {
             <Link href="/dashboard">
               <DropdownMenuItem>
                 <LayoutDashboard className="mr-2 h-4 w-4" />
-                <span>Dashbord</span>
+                <span>{dict.userDropDown.dashboard}</span>
               </DropdownMenuItem>
             </Link>
             <DropDownMenuItemThemeToggle />
             <DropdownMenuItem>
               <DialogTrigger className="flex cursor-default items-center">
                 <UserCog className="mr-2 h-4 w-4" />
-                <span>Brukerinstillinger</span>
+                <span>{dict.userDropDown.userSettings}</span>
               </DialogTrigger>
             </DropdownMenuItem>
           </DropdownMenuGroup>
@@ -114,8 +114,8 @@ function ProfileDropdownMenu({ user }: { user: User }) {
   );
 }
 
-async function ProfileButton({ user }: { user: User | undefined }) {
-  return <>{user ? <ProfileDropdownMenu user={user} /> : <SignInButton />}</>;
+async function ProfileButton({ dict, user }: { dict:Awaited<ReturnType<typeof getDictionary>>, user: User | undefined }) {
+  return <>{user ? <ProfileDropdownMenu dict={dict} user={user} /> : <SignInButton />}</>;
 }
 
 const LINK_STYLE = cn(
@@ -152,7 +152,7 @@ export default async function Navbar(
         </ul>
         <div className="flex items-center gap-8">
           {session?.user && <XPDisplay />}
-          <ProfileButton user={session?.user} />
+          <ProfileButton dict={dict} user={session?.user} />
         </div>
       </nav>
     </header>

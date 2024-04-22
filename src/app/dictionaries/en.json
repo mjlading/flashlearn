@@ -5,8 +5,7 @@
         "slogan": "Discover new knowledge - Let your curiosity lead the way!",
         "signIn": "Sign in",
         "signOut": "Sign out",
-        "getStarted": "Start learning!",
-        "dashboard": "Dashboard"
+        "getStarted": "Start learning!"
     },
     "signInPage": {
         "signIn": "Sign in",
@@ -117,7 +116,8 @@
     },
     "userDropDown":{
         "dashboard":"Dashboard",
-        "userSettings":"User settings"
+        "userSettings":"User settings",
+        "switchTheme":"Switch theme"
     },
     "starRating":{
         "avgStars":"Average rating",

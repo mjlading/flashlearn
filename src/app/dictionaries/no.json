@@ -1,4 +1,5 @@
 {
+    "lang":"no",
     "home": {
         "title": "Flashlearn",
         "slogan": "Oppdag noe nytt å lære - la nysgjerrigheten lede veien!",
@@ -50,7 +51,16 @@
             "noCreatedSetsEx":"Lag et sett for å komme i gang med læringen din!",
             "noBookmakedSets":"Du har ingen bokmerkede sett",
             "noBookmakedSetsEx":"Dine bokmerkede sett vil vises her"
-        }
+        },
+        "startPractice":{
+            "visual":"Visuell",
+            "written":"Skriftlig",
+            "oral":"Muntlig",
+            "start":"Start",
+            "created":"Opprettet ",
+            "lastEdited":"Sist endret "
+        },
+        "practiceMode":"Øvingsmodus"
     },
     "collections":{
         "collections":"Samlinger",
@@ -74,7 +84,9 @@
                 "editFailed":"Endringene dine kunne ikke lagres"
             },
             "addedSets":"Lagt til sett"
-        }
+        },
+        "addDeck":"Legg til",
+        "removeDeck":"Fjern"
     },
     "courses":{
         "courses":"Emner"
@@ -89,5 +101,9 @@
     "userDropDown":{
         "dashboard":"Dashbord",
         "userSettings":"Brukerinstillinger"
+    },
+    "starRating":{
+        "avgStars":"Gjennomsnittlig vurdering",
+        "noRatings":"Ingen vurderinger"
     }
 }

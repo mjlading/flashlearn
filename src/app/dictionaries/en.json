@@ -1,4 +1,5 @@
-{
+{   
+    "lang":"en",
     "home": {
         "title": "Flashlearn",
         "slogan": "Discover new knowledge - Let your curiosity lead the way!",
@@ -50,7 +51,17 @@
             "noCreatedSetsEx":"Create a set to start learning!",
             "noBookmakedSets":"You have no bookmarked sets",
             "noBookmakedSetsEx":"Your bookmarked sets will appear here"
-        }
+        },
+        "startPractice":{
+            "visual":"Visual",
+            "written":"Written",
+            "oral":"Oral",
+            "start":"Start",
+            "created":"Created ",
+            "lastEdited":"Updated "
+            
+        },
+        "practiceMode":"Practice mode"
     },
     "collections":{
         "collections":"Collections",
@@ -74,7 +85,9 @@
                 "editFailed":"Your changes could not be stored"
             },
             "addedSets":"Added sets"
-        }
+        },
+        "addDeck":"Add to collection",
+        "removeDeck":"Remove from collection"
     },
     "courses":{
         "courses":"Courses"
@@ -89,5 +102,9 @@
     "userDropDown":{
         "dashboard":"Dashboard",
         "userSettings":"User settings"
+    },
+    "starRating":{
+        "avgStars":"Average rating",
+        "noRatings":"No ratings"
     }
 }

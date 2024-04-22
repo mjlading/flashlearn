@@ -5,8 +5,12 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "./ui/tooltip";
+import { dictType } from "@/app/dictionaries/dictionariesClientSide";
+import { useDictionary } from "@/lib/DictProvider";
 
 export default function StarRating({ stars }: { stars: number | null }) {
+  
+  const dict = useDictionary();
   return (
     <>
       {stars ? (
@@ -19,14 +23,14 @@ export default function StarRating({ stars }: { stars: number | null }) {
               </div>
             </TooltipTrigger>
             <TooltipContent>
-              <p>Gjennomsnittlig vurdering</p>
+              <p>{dict.starRating.avgStars}</p>
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>
       ) : (
         <div className="flex w-fit gap-2 items-center text-muted-foreground text-sm">
           <Star size={18} />
-          <p>Ingen vurderinger</p>
+          <p>{dict.starRating.noRatings}</p>
         </div>
       )}
     </>

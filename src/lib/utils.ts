@@ -2,6 +2,8 @@ import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 import moment from "moment";
 import "moment/locale/nb";
+import "moment/locale/en-gb";
+import { Locale } from "../../i18n-config";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -36,10 +38,13 @@ export function getBaseUrl() {
   return `http://localhost:${process.env.PORT ?? 3000}`;
 }
 
-moment.locale("nb"); // Set the locale to norwegian
 
 // Returns a string like '2 dager siden'
-export function dateDifferenceFromNow(date: string) {
+export function dateDifferenceFromNow(locale:string, date: string) {
+  if (locale === "no")
+    moment.locale("nb"); // Set the locale  to norwegian
+  else if (locale === "en")
+    moment.locale("en-gb"); // Set the locale  to english (gb) // Hardcoded solution needs case for each supported language
   return moment(date).fromNow();
 }
 

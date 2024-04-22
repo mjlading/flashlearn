@@ -16,7 +16,7 @@ export const authConfig = {
   session: { strategy: "jwt" },
   callbacks: {
     async jwt({ token, account, user, session, trigger }) {
-      // console.log("jwt callback: ", { token, user, session, trigger });
+      console.log("jwt callback: ", { token, user, session, trigger });
 
       if (
         trigger === "update" &&
@@ -31,12 +31,29 @@ export const authConfig = {
         token.accessToken = account.access_token;
         token.id = user.id;
         const extendedUser = user as User & ExtendedUserProperties;
-        token.preferencesSet = extendedUser.preferencesSet;
+
+        // Directly fetch preferences from the database if not available in session
+        if (!extendedUser.preferencesSet) {
+          console.log("fetching db user");
+          const dbUser = await prisma.user.findUnique({
+            where: { id: user.id },
+            select: {
+              preferencesSet: true,
+              nickname: true,
+            },
+          });
+
+          token.preferencesSet = dbUser?.preferencesSet;
+          token.nickname = dbUser?.nickname;
+        } else {
+          token.preferencesSet = extendedUser.preferencesSet;
+          token.nickname = extendedUser.nickname;
+        }
       }
       return token;
     },
     async session({ session, token }: any) {
-      // console.log("session callback", { session, token });
+      console.log("session callback", { session, token });
 
       if (token.sub) {
         session.user.id = token.sub;
@@ -45,7 +62,7 @@ export const authConfig = {
       }
 
       // Add the preferencesSet boolean to the session
-      session.user.preferencesSet = token.preferencesSet ?? false;
+      session.user.preferencesSet = token.preferencesSet;
       console.log("users preferences set to: ", session.user.preferencesSet);
       session.user.nickname = token.nickname;
 

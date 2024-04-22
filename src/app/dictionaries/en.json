@@ -78,5 +78,16 @@
     },
     "courses":{
         "courses":"Courses"
+    },
+    "sidebar":{
+        "dashboard": "Dashboard",
+        "progress":"Progress",
+        "flashcards":"Flashcards",
+        "collections":"Collections",
+        "courses":"Courses"
+    },
+    "userDropDown":{
+        "dashboard":"Dashboard",
+        "userSettings":"User settings"
     }
 }

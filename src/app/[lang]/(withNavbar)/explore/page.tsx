@@ -1,7 +1,8 @@
 import { getDictionary } from "@/app/dictionaries/dictionaries";
 import SubjectList from "@/components/SubjectList";
+import { Locale } from "@/../i18n-config";
 
-export default async function ExplorePage({params:{lang}}:{params:{lang:any}}) {
+export default async function ExplorePage({params:{lang}}:{params:{lang:Locale}}) {
   
   const dict = await getDictionary(lang);
 

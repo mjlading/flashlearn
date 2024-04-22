@@ -28,6 +28,8 @@ import {
   DialogTrigger,
 } from "./ui/dialog";
 import DialogContentUserSettings from "./DropDownMenuItemUserSettings";
+import { dictType } from "@/app/dictionaries/dictionariesClientSide";
+import { getDictionary } from "@/app/dictionaries/dictionaries";
 
 interface User extends NextAuthUser {
   nickname?: string;
@@ -97,17 +99,19 @@ const LINK_STYLE = cn(
   "text-md"
 );
 
-export default async function Navbar() {
+export default async function Navbar(
+  {dict}
+  :{dict:Awaited<ReturnType<typeof getDictionary>>}) {
   const session = await auth();
   return (
     <header className="sticky top-0 z-50 py-2 px-8 border-b backdrop-blur">
       <nav className="flex items-center justify-between flex-wrap gap-2">
         <div className="flex items-center">
           <Link className={LINK_STYLE} href="/">
-            Flashlearn
+            {dict.home.title}
           </Link>
           <Link className={LINK_STYLE} href="/explore">
-            Utforsk
+            {dict.explore.explore}
           </Link>
           <SearchInput />
         </div>

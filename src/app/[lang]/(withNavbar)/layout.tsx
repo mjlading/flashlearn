@@ -1,10 +1,17 @@
+import { getDictionary } from "@/app/dictionaries/dictionaries";
 import Navbar from "@/components/Navbar";
 import { PropsWithChildren } from "react";
+import { Locale } from "@/../i18n-config";
 
-export default function WithNavbarLayout({ children }: PropsWithChildren) {
+interface PropsWithChildrenAndDict extends PropsWithChildren {
+  params:{lang:Locale}
+}
+
+export default async function WithNavbarLayout({ params:{lang}, children }: PropsWithChildrenAndDict) {
+  const dict = await getDictionary(lang);
   return (
     <>
-      <Navbar />
+      <Navbar dict={dict}/>
       {children}
     </>
   );

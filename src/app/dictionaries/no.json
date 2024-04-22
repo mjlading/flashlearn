@@ -78,5 +78,16 @@
     },
     "courses":{
         "courses":"Emner"
+    },
+    "sidebar":{
+        "dashboard": "Dashbord",
+        "progress":"Fremgang",
+        "flashcards":"Flashkort",
+        "collections":"Samlinger",
+        "courses":"Emner"
+    },
+    "userDropDown":{
+        "dashboard":"Dashbord",
+        "userSettings":"Brukerinstillinger"
     }
 }

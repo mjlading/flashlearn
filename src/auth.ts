@@ -32,6 +32,7 @@ export const authConfig = {
         token.id = user.id;
         const extendedUser = user as User & ExtendedUserProperties;
         token.preferencesSet = extendedUser.preferencesSet;
+        token.nickname = extendedUser.nickname;
       }
       return token;
     },
@@ -45,7 +46,7 @@ export const authConfig = {
       }
 
       // Add the preferencesSet boolean to the session
-      session.user.preferencesSet = token.preferencesSet ?? false;
+      session.user.preferencesSet = token.preferencesSet;
       console.log("users preferences set to: ", session.user.preferencesSet);
       session.user.nickname = token.nickname;
 

@@ -1,6 +1,6 @@
 import { auth } from "@/auth";
 import { cn } from "@/lib/utils";
-import { LayoutDashboard, Settings, UserCog } from "lucide-react";
+import { LayoutDashboard, Menu, Settings, UserCog } from "lucide-react";
 import { User as NextAuthUser } from "next-auth";
 import Link from "next/link";
 import DropDownMenuItemSignOut from "./DropDownMenuItemSignOut";
@@ -8,7 +8,7 @@ import { DropDownMenuItemThemeToggle } from "./DropDownMenuItemThemeToggle";
 import SearchInput from "./SearchInput";
 import SignInButton from "./SignInButton";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
-import { buttonVariants } from "./ui/button";
+import { Button, buttonVariants } from "./ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -31,6 +31,33 @@ import DialogContentUserSettings from "./DropDownMenuItemUserSettings";
 
 interface User extends NextAuthUser {
   nickname?: string;
+}
+
+function HamburgerDropdownMenu() {
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button variant="ghost">
+          <Menu />
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent>
+        <ul className="items-center">
+          <li>
+            <Link className={LINK_STYLE} href="/">
+              Flashlearn
+            </Link>
+          </li>
+          <li>
+            <Link className={LINK_STYLE} href="/explore">
+              Utforsk
+            </Link>
+          </li>
+          <SearchInput />
+        </ul>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
 }
 
 function ProfileDropdownMenu({ user }: { user: User }) {
@@ -102,15 +129,23 @@ export default async function Navbar() {
   return (
     <header className="sticky top-0 z-50 py-2 px-8 border-b backdrop-blur">
       <nav className="flex items-center justify-between flex-wrap gap-2">
-        <div className="flex items-center">
-          <Link className={LINK_STYLE} href="/">
-            Flashlearn
-          </Link>
-          <Link className={LINK_STYLE} href="/explore">
-            Utforsk
-          </Link>
-          <SearchInput />
+        {/* Hamburger menu for mobile view */}
+        <div className="md:hidden">
+          <HamburgerDropdownMenu />
         </div>
+        <ul className="hidden md:flex items-center">
+          <li>
+            <Link className={LINK_STYLE} href="/">
+              Flashlearn
+            </Link>
+          </li>
+          <li>
+            <Link className={LINK_STYLE} href="/explore">
+              Utforsk
+            </Link>
+          </li>
+          <SearchInput />
+        </ul>
         <div className="flex items-center gap-8">
           {session?.user && <XPDisplay />}
           <ProfileButton user={session?.user} />

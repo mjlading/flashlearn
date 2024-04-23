@@ -189,7 +189,7 @@ export default function WriteRehearsal({
 
   const variants = {
     hidden: { opacity: 0, y: 50 },
-    visible: (i) => ({
+    visible: (i: number) => ({
       opacity: 1,
       y: 0,
       transition: {
@@ -222,12 +222,12 @@ export default function WriteRehearsal({
           {feedbacks[currentIndex] && (
             <div className="space-y-4">
               {/* The score */}
-              {typeof feedbacks[currentIndex].score === "number" && (
+              {feedbacks[currentIndex].score !== undefined && (
                 <div
                   className="rounded-full mx-auto w-fit p-2 shadow-sm font-semibold"
                   style={{
                     backgroundColor: percentageToHsl(
-                      feedbacks[currentIndex].score / 100,
+                      (feedbacks[currentIndex]?.score || 0) / 100,
                       0,
                       120,
                       theme === "dark" ? 20 : 65

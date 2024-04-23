@@ -16,7 +16,7 @@ export const authConfig = {
   session: { strategy: "jwt" },
   callbacks: {
     async jwt({ token, account, user, session, trigger }) {
-      // console.log("jwt callback: ", { token, user, session, trigger });
+      //console.log("jwt callback: ", { token, user, session, trigger });
 
       if (
         trigger === "update" &&
@@ -53,7 +53,7 @@ export const authConfig = {
       return token;
     },
     async session({ session, token }: any) {
-      // console.log("session callback", { session, token });
+      //console.log("session callback", { session, token });
 
       if (token.sub) {
         session.user.id = token.sub;
@@ -75,8 +75,8 @@ export const authConfig = {
       // Define the paths that require authentication
       const protectedPaths = ["/dashboard", "/decks/create"];
 
-      const isProtected = protectedPaths.some((path) =>
-        nextUrl.pathname.startsWith(path)
+      const isProtected = protectedPaths.some(
+        (path) => nextUrl.pathname.startsWith(path) //TODO: CHECK IF THIS COVERS PATHS THAT INCLUDE LANG
       );
 
       if (isProtected && !isLoggedIn) {

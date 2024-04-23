@@ -1,11 +1,12 @@
 {
+    "lang":"no",
     "home": {
         "title": "Flashlearn",
         "slogan": "Oppdag noe nytt å lære - la nysgjerrigheten lede veien!",
         "signIn": "Logg inn",
         "signOut": "Logg ut",
         "getStarted": "Kom i gang!",
-        "dashboard": "Dashbord"
+        "dashboard":"Dashboard"
     },
     "signInPage": {
         "signIn": "Logg inn",
@@ -50,6 +51,30 @@
             "noCreatedSetsEx":"Lag et sett for å komme i gang med læringen din!",
             "noBookmakedSets":"Du har ingen bokmerkede sett",
             "noBookmakedSetsEx":"Dine bokmerkede sett vil vises her"
+        },
+        "startPractice":{
+            "visual":"Visuell",
+            "written":"Skriftlig",
+            "oral":"Muntlig",
+            "start":"Start",
+            "created":"Opprettet ",
+            "lastEdited":"Sist endret "
+        },
+        "practiceMode":"Øvingsmodus",
+        "editDeck":"Rediger sett",
+        "createDeck":{
+            "added":"La til ",
+            "flashcards":" studiekort",
+            "giveSetName":"Gi settet ditt et navn",
+            "name":"Navn",
+            "field":"Fagfelt",
+            "private":"Privat",
+            "privateDescription":"Private sett er kun synlige for deg.",
+            "academicLevel":"Academic level",
+            "addFlashcard":"Add flashcard",
+            "addFlashcardDescription":"Hvert kort har en fremside og en bakside. Fremsiden kan ha et begrep eller spørsmål, og baksiden kan ha et svar eller en forklaring.",
+            "placeholderFront":"Fremside",
+            "placeholderBack":"Bakside"
         }
     },
     "collections":{
@@ -74,9 +99,27 @@
                 "editFailed":"Endringene dine kunne ikke lagres"
             },
             "addedSets":"Lagt til sett"
-        }
+        },
+        "addDeck":"Legg til",
+        "removeDeck":"Fjern"
     },
     "courses":{
         "courses":"Emner"
+    },
+    "sidebar":{
+        "dashboard": "Dashbord",
+        "progress":"Fremgang",
+        "flashcards":"Flashkort",
+        "collections":"Samlinger",
+        "courses":"Emner"
+    },
+    "userDropDown":{
+        "dashboard":"Dashbord",
+        "userSettings":"Brukerinstillinger",
+        "switchTheme":"Bytt tema"
+    },
+    "starRating":{
+        "avgStars":"Gjennomsnittlig vurdering",
+        "noRatings":"Ingen vurderinger"
     }
 }

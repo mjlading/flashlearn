@@ -3,13 +3,14 @@ import { getDictionary } from "@/app/dictionaries/dictionaries";
 import DeckList from "@/components/DeckList";
 import { subjectNameMap, subjectStyles } from "@/lib/subject";
 import React, { Suspense } from "react";
+import { Locale } from "@/../i18n-config";
 
 export default async function SubjectPage({
   params,
 }: {
   params: {
     subject: string;
-    lang:any;
+    lang:Locale;
   };
 }) {
 

@@ -8,6 +8,7 @@ import { z } from "zod";
 import CreateDeckForm, { formSchema } from "../../create/CreateDeckForm";
 import CreateDeckTopbar from "../../create/CreateDeckTopbar";
 import { useEffect } from "react";
+import { useDictionary } from "@/lib/DictProvider";
 
 export default function EditDeckPage({
   params,
@@ -20,7 +21,7 @@ export default function EditDeckPage({
     id: params.id,
     includeFlashcards: true,
   });
-
+  const dict = useDictionary();
   const formattedFlashcards = deck.data?.flashcards.map((f) => {
     const formattedFlashcard: {
       front: string | undefined;
@@ -71,7 +72,7 @@ export default function EditDeckPage({
         <div className="flex flex-col space-y-8">
           <div className="flex gap-4 items-center">
             <Pen size={32} />
-            <h1 className="font-bold text-4xl">Rediger sett</h1>
+            <h1 className="font-bold text-4xl">{dict.decks.editDeck}</h1>
           </div>
           {deck.data?.flashcards && (
             <CreateDeckForm showGenerateFlashcardsInput={false} />

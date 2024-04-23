@@ -4,6 +4,7 @@ import { buttonVariants } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import { Metadata } from "next";
 import Link from "next/link";
+import { Locale } from "@/../i18n-config";
 
 export const metadata: Metadata = {
   title: "Flashlearn - Samlinger",
@@ -23,7 +24,7 @@ function NewCollectionButton({
   );
 }
 
-export default async function CollectionsPage({params:{lang}}:{params:{lang:any}}) {
+export default async function CollectionsPage({params:{lang}}:{params:{lang:Locale}}) {
 
   const dict = await getDictionary(lang);
 

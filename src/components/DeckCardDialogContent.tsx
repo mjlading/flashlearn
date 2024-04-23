@@ -23,6 +23,7 @@ import { Separator } from "./ui/separator";
 import { Tabs, TabsList, TabsTrigger } from "./ui/tabs";
 import { academicLevelMap } from "@/lib/academicLevel";
 import type { Deck } from "@prisma/client";
+import { useDictionary } from "@/lib/DictProvider";
 
 interface Props {
   // Convert types dateCreated and dateChanged from Date to string
@@ -34,7 +35,7 @@ export default function DeckCardDialogContent({ deck }: Props) {
   const session = useSession();
   const isUsersDeck = deck.userId === session?.data?.user.id;
   const style = subjectStyles[deck.subjectName];
-
+  const dict = useDictionary();
   return (
     <DialogContent>
       <DialogHeader>
@@ -68,9 +69,9 @@ export default function DeckCardDialogContent({ deck }: Props) {
           <div className="flex gap-2 items-center text-muted-foreground text-sm">
             <History size={18} />
             {deck.dateChanged.valueOf() === deck.dateCreated.valueOf() ? (
-              <p>Opprettet {dateDifferenceFromNow(deck.dateCreated)}</p>
+              <p>{dict.decks.startPractice.created} {dateDifferenceFromNow(dict.lang,deck.dateCreated)}</p>
             ) : (
-              <p>Sist endret {dateDifferenceFromNow(deck.dateChanged)}</p>
+              <p>{dict.decks.startPractice.lastEdited} {dateDifferenceFromNow(dict.lang, deck.dateChanged)}</p>
             )}
           </div>
         </div>
@@ -86,7 +87,7 @@ export default function DeckCardDialogContent({ deck }: Props) {
 
       <div className="flex flex-col">
         <Label htmlFor="select-mode" className="text-center mb-4">
-          Øvemodus
+          {dict.decks.practiceMode}
         </Label>
         <Tabs
           id="select-mode"
@@ -95,16 +96,16 @@ export default function DeckCardDialogContent({ deck }: Props) {
         >
         {session.data?.user && (
           <TabsList className="grid w-full grid-cols-3">
-            <TabsTrigger value="visual">Visuell</TabsTrigger>
-            <TabsTrigger value="write">Skriftlig</TabsTrigger>
-            <TabsTrigger value="oral">Muntlig</TabsTrigger>
+            <TabsTrigger value="visual">{dict.decks.startPractice.visual}</TabsTrigger>
+            <TabsTrigger value="write">{dict.decks.startPractice.written}</TabsTrigger>
+            <TabsTrigger value="oral">{dict.decks.startPractice.oral}</TabsTrigger>
           </TabsList>
         )}
         {!session.data?.user && (
           <TabsList className="grid w-full grid-cols-3">
-            <TabsTrigger value="visual">Visuell</TabsTrigger>
-            <TabsTrigger disabled={true} value="write">Skriftlig</TabsTrigger>
-            <TabsTrigger disabled={true} value="oral">Muntlig</TabsTrigger>
+            <TabsTrigger value="visual">{dict.decks.startPractice.visual}</TabsTrigger>
+            <TabsTrigger disabled={true} value="write">{dict.decks.startPractice.written}</TabsTrigger>
+            <TabsTrigger disabled={true} value="oral">{dict.decks.startPractice.oral}</TabsTrigger>
           </TabsList>
         )}
         </Tabs>
@@ -118,7 +119,7 @@ export default function DeckCardDialogContent({ deck }: Props) {
             className: "w-full",
           })}
         >
-          Start
+          {dict.decks.startPractice.start}
         </Link>
       </DialogFooter>
       

@@ -9,6 +9,7 @@ import { useFormContext } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 import { formSchema } from "./CreateDeckForm";
+import { useDictionary } from "@/lib/DictProvider";
 
 // This component handles the form submission logic
 // such as calling createDeckMutation, generateTagsMutation, classifySubjectMutation
@@ -22,7 +23,7 @@ export default function CreateDeckTopbar({
 }) {
   const form = useFormContext<z.infer<typeof formSchema>>();
   const router = useRouter();
-
+  const dict = useDictionary();
   const createAndSaveEmbeddingsMutation =
     api.flashcard.createAndSaveEmbeddings.useMutation();
   const createAndSaveDeckEmbeddingMutation =
@@ -30,7 +31,7 @@ export default function CreateDeckTopbar({
 
   const createDeckMutation = api.deck.createDeck.useMutation({
     onSuccess(data) {
-      router.push("/dashboard/decks?category=created");
+      router.push(`/${dict.lang}/dashboard/decks?category=created`);
 
       toast.success(
         <p>
@@ -41,7 +42,7 @@ export default function CreateDeckTopbar({
           action: {
             label: "Øv nå",
             onClick: () => {
-              router.push(`/decks/${data.id}/rehearsal?mode=visual`); // TODO: set mode to preffered mode
+              router.push(`/${dict.lang}/decks/${data.id}/rehearsal?mode=visual`); // TODO: set mode to preffered mode
             },
           },
         }
@@ -64,7 +65,7 @@ export default function CreateDeckTopbar({
   });
   const editDeckMutation = api.deck.editDeck.useMutation({
     onSuccess(data) {
-      router.push("/dashboard/decks?category=created");
+      router.push(`/${dict.lang}/dashboard/decks?category=created`);
 
       toast.success(
         <p>

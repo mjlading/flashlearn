@@ -2,11 +2,12 @@ import AuthButton from "@/components/AuthButton";
 import { getDictionary } from "../../dictionaries/dictionaries";
 import { AuroraBackground } from "@/components/AuroraBackground";
 import HomePageContent from "@/components/HomePageContent";
+import { Locale } from "@/../i18n-config";
 
 export default async function Home({
   params: { lang },
 }: {
-  params: { lang: any };
+  params: { lang: Locale };
 }) {
   const dict = await getDictionary(lang);
   return (

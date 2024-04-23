@@ -20,17 +20,17 @@ export default async function CategoryTabs({
     <Tabs value={initialCategory || "recent"} className="w-[25rem]">
       <TabsList className="grid w-full grid-cols-3">
         <TabsTrigger value="recent" asChild>
-          <Link href={`/dashboard/decks?category=recent`}>
+          <Link href={`/${dict.lang}/dashboard/decks?category=recent`}>
             {dict.decks.recent} {formattedDeckCount(deckCounts.countRecent)}
           </Link>
         </TabsTrigger>
         <TabsTrigger value="created" asChild>
-          <Link href={`/dashboard/decks?category=created`}>
+          <Link href={`/${dict.lang}/dashboard/decks?category=created`}>
           {dict.decks.created} {formattedDeckCount(deckCounts.countCreated)}{" "}
           </Link>
         </TabsTrigger>
         <TabsTrigger value="bookmarked" asChild>
-          <Link href={`/dashboard/decks?category=bookmarked`}>
+          <Link href={`/${dict.lang}/dashboard/decks?category=bookmarked`}>
           {dict.decks.bookmarked} {formattedDeckCount(deckCounts.countBookmarked)}
           </Link>
         </TabsTrigger>

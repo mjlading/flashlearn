@@ -3,6 +3,7 @@ import { getDictionary } from "@/app/dictionaries/dictionaries";
 import DeckList from "@/components/DeckList";
 import SearchInput from "@/components/SearchInput";
 import { Metadata } from "next";
+import { Locale } from "@/../i18n-config";
 
 export const metadata: Metadata = {
   title: "Flashlearn - Søk Studiekort",
@@ -15,7 +16,7 @@ export default async function SearchPage({
   searchParams,
 }: {
   params:{
-    lang:any
+    lang:Locale
   }
   searchParams: {
     q: string;

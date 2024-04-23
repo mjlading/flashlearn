@@ -28,6 +28,8 @@ import {
   DialogTrigger,
 } from "./ui/dialog";
 import DialogContentUserSettings from "./DropDownMenuItemUserSettings";
+import { dictType } from "@/app/dictionaries/dictionariesClientSide";
+import { getDictionary } from "@/app/dictionaries/dictionaries";
 
 interface User extends NextAuthUser {
   nickname?: string;
@@ -60,7 +62,7 @@ function HamburgerDropdownMenu() {
   );
 }
 
-function ProfileDropdownMenu({ user }: { user: User }) {
+function ProfileDropdownMenu({ dict, user }: { dict:Awaited<ReturnType<typeof getDictionary>>, user: User }) {
   const userInitials = user?.name
     ? user.name
         .split(" ")
@@ -88,17 +90,17 @@ function ProfileDropdownMenu({ user }: { user: User }) {
           </span>
           <DropdownMenuSeparator className="mt-2" />
           <DropdownMenuGroup>
-            <Link href="/dashboard">
+            <Link href={`/${dict.lang}/dashboard`}>
               <DropdownMenuItem>
                 <LayoutDashboard className="mr-2 h-4 w-4" />
-                <span>Dashbord</span>
+                <span>{dict.userDropDown.dashboard}</span>
               </DropdownMenuItem>
             </Link>
             <DropDownMenuItemThemeToggle />
             <DropdownMenuItem>
               <DialogTrigger className="flex cursor-default items-center">
                 <UserCog className="mr-2 h-4 w-4" />
-                <span>Brukerinstillinger</span>
+                <span>{dict.userDropDown.userSettings}</span>
               </DialogTrigger>
             </DropdownMenuItem>
           </DropdownMenuGroup>
@@ -112,8 +114,8 @@ function ProfileDropdownMenu({ user }: { user: User }) {
   );
 }
 
-async function ProfileButton({ user }: { user: User | undefined }) {
-  return <>{user ? <ProfileDropdownMenu user={user} /> : <SignInButton />}</>;
+async function ProfileButton({ dict, user }: { dict:Awaited<ReturnType<typeof getDictionary>>, user: User | undefined }) {
+  return <>{user ? <ProfileDropdownMenu dict={dict} user={user} /> : <SignInButton />}</>;
 }
 
 const LINK_STYLE = cn(
@@ -124,7 +126,9 @@ const LINK_STYLE = cn(
   "text-md"
 );
 
-export default async function Navbar() {
+export default async function Navbar(
+  {dict}
+  :{dict:Awaited<ReturnType<typeof getDictionary>>}) {
   const session = await auth();
   return (
     <header className="sticky top-0 z-50 py-2 px-8 border-b backdrop-blur">
@@ -135,20 +139,20 @@ export default async function Navbar() {
         </div>
         <ul className="hidden md:flex items-center">
           <li>
-            <Link className={LINK_STYLE} href="/">
-              Flashlearn
+            <Link className={LINK_STYLE} href={`/${dict.lang}`}>
+              {dict.home.title}
             </Link>
           </li>
           <li>
-            <Link className={LINK_STYLE} href="/explore">
-              Utforsk
+            <Link className={LINK_STYLE} href={`/${dict.lang}/explore`}>
+              {dict.explore.explore}
             </Link>
           </li>
           <SearchInput />
         </ul>
         <div className="flex items-center gap-8">
           {session?.user && <XPDisplay />}
-          <ProfileButton user={session?.user} />
+          <ProfileButton dict={dict} user={session?.user} />
         </div>
       </nav>
     </header>

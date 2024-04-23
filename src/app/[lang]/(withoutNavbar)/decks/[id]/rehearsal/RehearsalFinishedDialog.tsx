@@ -15,6 +15,7 @@ import { Brain } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { useDictionary } from "@/lib/DictProvider";
 
 export default function RehearsalFinishedDialog({
   open,
@@ -34,6 +35,7 @@ export default function RehearsalFinishedDialog({
   xpGain: number;
 }) {
   const session = useSession();
+  const dict = useDictionary();
   const { push } = useRouter();
   const setDeckRatingMutation = api.deck.setDeckRating.useMutation();
   const { data: deckRating } = api.deck.getDeckRating.useQuery({
@@ -59,7 +61,7 @@ export default function RehearsalFinishedDialog({
   }
 
   function handleContinueClicked() {
-    push("/dashboard");
+    push(`/${dict.lang}/dashboard`);
 
     // Save or update star rating
     if (stars === 0 || deckRating?.stars === stars) return;

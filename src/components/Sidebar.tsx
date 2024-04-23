@@ -11,35 +11,36 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useDictionary } from "@/lib/DictProvider";
 
 export default function Sidebar() {
   const pathname = usePathname();
   const locale = useLocale();
-
+  const dict = useDictionary();
   const links = [
     {
-      text: "Dashbord",
+      text: dict.sidebar.dashboard,
       href: `/${locale}/dashboard`,
       icon: <LayoutDashboard size={20} />,
     },
     {
-      text: "Studiekort",
+      text: dict.sidebar.flashcards,
       href: `/${locale}/dashboard/decks`,
       icon: <Layers3 size={20} />,
       query: "?category=recent",
     },
     {
-      text: "Samlinger",
+      text: dict.sidebar.collections,
       href: `/${locale}/dashboard/collections`,
       icon: <SquareStack size={20} />,
     },
     {
-      text: "Emner",
+      text: dict.sidebar.courses,
       href: `/${locale}/dashboard/courses`,
       icon: <GraduationCap size={20} />,
     },
     {
-      text: "Fremgang",
+      text: dict.sidebar.progress,
       href: `/${locale}/dashboard/progress`,
       icon: <TrendingUp size={20} />,
     },

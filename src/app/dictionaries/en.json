@@ -1,11 +1,12 @@
-{
+{   
+    "lang":"en",
     "home": {
         "title": "Flashlearn",
         "slogan": "Discover new knowledge - Let your curiosity lead the way!",
         "signIn": "Sign in",
         "signOut": "Sign out",
         "getStarted": "Start learning!",
-        "dashboard": "Dashboard"
+        "dashboard":"Dashboard"
     },
     "signInPage": {
         "signIn": "Sign in",
@@ -50,7 +51,33 @@
             "noCreatedSetsEx":"Create a set to start learning!",
             "noBookmakedSets":"You have no bookmarked sets",
             "noBookmakedSetsEx":"Your bookmarked sets will appear here"
+        },
+        "startPractice":{
+            "visual":"Visual",
+            "written":"Written",
+            "oral":"Oral",
+            "start":"Start",
+            "created":"Created ",
+            "lastEdited":"Updated "
+            
+        },
+        "practiceMode":"Practice mode",
+        "editDeck":"Edit deck",
+        "createDeck":{
+            "added":"Added ",
+            "flashcards":" flashcards",
+            "giveSetName":"Give your set a name",
+            "name":"Name",
+            "field":"Field of study",
+            "private":"Private",
+            "privateDescription":"Private sets are only visible to you.",
+            "academicLevel":"Academic level",
+            "addFlashcard":"Add flashcard",
+            "addFlashcardDescription":"Every flashcard has a front and back. The front has a term or question, and the back side can contain an answer or explanation.",
+            "placeholderFront":"Front",
+            "placeholderBack":"Back"
         }
+          
     },
     "collections":{
         "collections":"Collections",
@@ -74,9 +101,27 @@
                 "editFailed":"Your changes could not be stored"
             },
             "addedSets":"Added sets"
-        }
+        },
+        "addDeck":"Add to collection",
+        "removeDeck":"Remove from collection"
     },
     "courses":{
         "courses":"Courses"
+    },
+    "sidebar":{
+        "dashboard": "Dashboard",
+        "progress":"Progress",
+        "flashcards":"Flashcards",
+        "collections":"Collections",
+        "courses":"Courses"
+    },
+    "userDropDown":{
+        "dashboard":"Dashboard",
+        "userSettings":"User settings",
+        "switchTheme":"Switch theme"
+    },
+    "starRating":{
+        "avgStars":"Average rating",
+        "noRatings":"No ratings"
     }
 }

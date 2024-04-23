@@ -24,6 +24,7 @@ import {
 } from "./ui/tooltip";
 import Link from "next/link";
 import KnowledgeLevel from "./KnowledgeLevel";
+import { useDictionary } from "@/lib/DictProvider";
 
 export interface DeckCardProps {
   // Convert types dateCreated and dateChanged from Date to string
@@ -42,7 +43,7 @@ export default function DeckCard({
   onRemoveClicked,
 }: DeckCardProps) {
   const session = useSession();
-
+  const dict = useDictionary();
   // Fetch the tags
   const tags = api.deck.getTagsByDeckId.useQuery(deck.id);
 
@@ -127,7 +128,7 @@ export default function DeckCard({
                     <ArrowRight />
                   </Button>
                 </TooltipTrigger>
-                <TooltipContent>Legg til</TooltipContent>
+                <TooltipContent>{dict.collections.addDeck}</TooltipContent>
               </Tooltip>
             </TooltipProvider>
           )}
@@ -143,7 +144,7 @@ export default function DeckCard({
                     <X />
                   </Button>
                 </TooltipTrigger>
-                <TooltipContent>Fjern</TooltipContent>
+                <TooltipContent>{dict.collections.removeDeck}</TooltipContent>
               </Tooltip>
             </TooltipProvider>
           )}

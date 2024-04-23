@@ -12,8 +12,9 @@ import ProviderButton from "./ProviderButton";
 import GithubIcon from "@/../public/images/github-icon.svg";
 import GoogleIcon from "@/../public/images/googe-icon.svg";
 import { getDictionary } from '@/app/dictionaries/dictionaries'
+import { Locale } from "@/../i18n-config";
 
-export default async function SignInPage({params:{lang}}:{params:{lang:any}}) {
+export default async function SignInPage({params:{lang}}:{params:{lang:Locale}}) {
   const dict = await getDictionary(lang);
   return (
     <div className="flex flex-col gap-4">

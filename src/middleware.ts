@@ -49,13 +49,14 @@ export async function middleware(request: NextRequest) {
   console.log("\n", pathname);
 
   if (skipLangForApi(pathname)) {
-    console.log("going to authentication page");
+    console.log("pathname led to api");
     return NextResponse.next();
   }
 
   const pathnameHasLocale = locales.some(
     (locale) => pathname.startsWith(`/${locale}/`) || pathname === `/${locale}`
   );
+  console.log("\n", pathnameHasLocale, "\n");
 
   if (!pathnameHasLocale) {
     // Redirect if there is no locale
@@ -63,7 +64,7 @@ export async function middleware(request: NextRequest) {
     request.nextUrl.pathname = `/${locale}${pathname}`;
     // e.g. incoming request is /products
     // The new URL is now /en-US/products
-    console.log("redirecting to locale");
+    console.log("redirecting to locale", request.nextUrl.pathname);
     return NextResponse.redirect(request.nextUrl);
   }
 

@@ -23,6 +23,7 @@ import {
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
+import { useDictionary } from "@/lib/DictProvider";
 import { academicLevelMap } from "@/lib/academicLevel";
 import { subjectNameMap } from "@/lib/subject";
 import { useEffect } from "react";
@@ -55,7 +56,7 @@ export default function CreateDeckForm({
   showGenerateFlashcardsInput?: boolean;
 }) {
   const form = useFormContext<z.infer<typeof formSchema>>();
-
+  const dict = useDictionary();
   const { fields, append, remove } = useFieldArray({
     control: form.control,
     name: "flashcards",
@@ -74,12 +75,12 @@ export default function CreateDeckForm({
 
   function handleAddFlashcards(flashcards: GeneratedFlashcard[]) {
     remove(-1); // Remove last empty flashcard
-
     // TODO: temporary fix, will generate tags in future
     const flashcardsWithTags = flashcards.map((f) => ({ ...f, tag: "" }));
 
     append(flashcardsWithTags);
-    toast.success(`La til ${flashcards.length} studiekort`, {
+    const success = dict.decks.createDeck.added + flashcards.length + dict.decks.createDeck.flashcards
+    toast.success(success, {
       position: "top-center",
     });
   }
@@ -101,11 +102,11 @@ export default function CreateDeckForm({
             name="name"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Navn</FormLabel>
+                <FormLabel>{dict.decks.createDeck.name}</FormLabel>
                 <FormControl>
                   <Input
                     autoFocus
-                    placeholder="Gi settet ditt et navn"
+                    placeholder={dict.decks.createDeck.giveSetName}
                     {...field}
                     maxLength={50}
                   />
@@ -121,7 +122,7 @@ export default function CreateDeckForm({
             name="subjectName"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Fagområde</FormLabel>
+                <FormLabel>{dict.decks.createDeck.field}</FormLabel>
                 <Select
                   onValueChange={field.onChange}
                   defaultValue={field.value}
@@ -151,9 +152,9 @@ export default function CreateDeckForm({
               render={({ field }) => (
                 <FormItem className="flex justify-between items-center rounded-lg border p-4">
                   <div>
-                    <FormLabel>Privat</FormLabel>
+                    <FormLabel>{dict.decks.createDeck.private}</FormLabel>
                     <FormDescription className="text-sm text-muted-foreground">
-                      Private sett er kun synlige for deg.
+                      {dict.decks.createDeck.privateDescription}
                     </FormDescription>
                   </div>
                   <FormControl>
@@ -174,7 +175,7 @@ export default function CreateDeckForm({
               name="academicLevel"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Akademisk nivå</FormLabel>
+                  <FormLabel>{dict.decks.createDeck.academicLevel}</FormLabel>
                   <Select
                     onValueChange={field.onChange}
                     defaultValue={field.value}
@@ -205,11 +206,10 @@ export default function CreateDeckForm({
 
         {/* Flashcards input */}
         <div className="py-8">
-          <h4 className="mb-6 text-2xl font-medium">Legg til studiekort</h4>
+          <h4 className="mb-6 text-2xl font-medium">{dict.decks.createDeck.addFlashcard}</h4>
 
           <p className="mt-6 mb-8 text-muted-foreground max-w-xl">
-            Hvert kort har en fremside og en bakside. Fremsiden kan ha et begrep
-            eller spørsmål, og baksiden kan ha et svar eller en forklaring.
+            {dict.decks.createDeck.addFlashcardDescription}
           </p>
 
           {/* Generation input */}
@@ -231,7 +231,7 @@ export default function CreateDeckForm({
                     <FormItem className="flex-grow">
                       <FormControl>
                         <Textarea
-                          placeholder="Fremside"
+                          placeholder={dict.decks.createDeck.placeholderFront}
                           className="h-[12rem] resize-none p-4"
                           {...field}
                         />
@@ -248,7 +248,7 @@ export default function CreateDeckForm({
                     <FormItem className="flex-grow">
                       <FormControl>
                         <Textarea
-                          placeholder="Bakside"
+                          placeholder={dict.decks.createDeck.placeholderBack}
                           className="h-[12rem] resize-none p-4"
                           {...field}
                         />

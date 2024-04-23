@@ -21,7 +21,7 @@ export default function HomePageContent({ dict }: { dict: any }) {
       </h1>
       <h3 className="text-xl text-gray-600 mb-12">{dict.home.slogan}</h3>
       <div className="p-5 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
-        <AuthButton dict={dict} />
+        <AuthButton/>
       </div>
     </motion.div>
   );

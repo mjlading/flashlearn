@@ -5,7 +5,7 @@ function useLocale() {
   const pathname = usePathname();
 
   const locale = pathname.split("/")[1];
-
+  console.log("LOCALE: ", locale)
   return locale;
 }
 

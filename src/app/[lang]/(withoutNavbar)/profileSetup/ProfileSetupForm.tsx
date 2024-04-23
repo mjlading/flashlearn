@@ -78,7 +78,7 @@ export default function ProfileSetupForm(
 
     toast.success(dict.profileSetupPage.updateSuccess);
 
-    router.push("/dashboard");
+    router.push(`/${dict.lang}/dashboard`);
   }
 
   return (

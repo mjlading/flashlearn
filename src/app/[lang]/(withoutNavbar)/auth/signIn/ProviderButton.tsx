@@ -15,7 +15,7 @@ export default function ProviderButton({
   dict:Awaited<ReturnType<typeof getDictionary>> // fancy unwrap
 }) {
   function handleSignIn() {
-    signIn(provider, { callbackUrl: "/dashboard" });
+    signIn(provider, { callbackUrl: `/${dict.lang}/dashboard` });
   }
 
   function capitalizeFirstLetter(s: string) {

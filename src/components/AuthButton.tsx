@@ -3,16 +3,12 @@
 import { signIn, signOut, useSession } from "next-auth/react";
 import { Button, buttonVariants } from "./ui/button";
 import { LoadingSpinner } from "./LoadingSpinner";
-import { getDictionary } from "@/app/dictionaries/dictionaries";
 import Link from "next/link";
+import { useDictionary } from "@/lib/DictProvider";
 
-export default function AuthButton({
-  dict,
-}: {
-  dict: Awaited<ReturnType<typeof getDictionary>>; // fancy unwrap
-}) {
+export default function AuthButton() {
   const session = useSession();
-
+  const dict = useDictionary();
   if (session.status === "loading") {
     return (
       <Button disabled className="px-5">
@@ -24,7 +20,7 @@ export default function AuthButton({
   return (
     <>
       {session.status === "authenticated" ? (
-        <Link href="/dashboard" className={buttonVariants({ size: "lg" })}>
+        <Link href={`/${dict.lang}/dashboard`} className={buttonVariants({ size: "lg" })}>
           <span>{dict.home.dashboard}</span>
         </Link>
       ) : (

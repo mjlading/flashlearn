@@ -28,7 +28,7 @@ export default function CreateCollectionTopbar({
         dict.collections.createCollection.toasts.yourCollection + 
         data.name + 
         dict.collections.createCollection.toasts.isStored);
-      router.push("/dashboard/collections");
+      router.push(`/${dict.lang}/dashboard/collections`);
     },
     onError: () => {
       toast.error(dict.collections.createCollection.toasts.saveFailed, {
@@ -42,7 +42,7 @@ export default function CreateCollectionTopbar({
         dict.collections.createCollection.toasts.editWorked + 
         data.name + 
         dict.collections.createCollection.toasts.isStored);
-      router.push("/dashboard/collections");
+      router.push(`/${dict.lang}/dashboard/collections`);
     },
     onError: () => {
       toast.error(dict.collections.createCollection.toasts.editFailed, {

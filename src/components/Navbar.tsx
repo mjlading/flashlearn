@@ -90,7 +90,7 @@ function ProfileDropdownMenu({ dict, user }: { dict:Awaited<ReturnType<typeof ge
           </span>
           <DropdownMenuSeparator className="mt-2" />
           <DropdownMenuGroup>
-            <Link href="/dashboard">
+            <Link href={`/${dict.lang}/dashboard`}>
               <DropdownMenuItem>
                 <LayoutDashboard className="mr-2 h-4 w-4" />
                 <span>{dict.userDropDown.dashboard}</span>
@@ -139,12 +139,12 @@ export default async function Navbar(
         </div>
         <ul className="hidden md:flex items-center">
           <li>
-            <Link className={LINK_STYLE} href="/">
+            <Link className={LINK_STYLE} href={`/${dict.lang}`}>
               {dict.home.title}
             </Link>
           </li>
           <li>
-            <Link className={LINK_STYLE} href="/explore">
+            <Link className={LINK_STYLE} href={`/${dict.lang}/explore`}>
               {dict.explore.explore}
             </Link>
           </li>

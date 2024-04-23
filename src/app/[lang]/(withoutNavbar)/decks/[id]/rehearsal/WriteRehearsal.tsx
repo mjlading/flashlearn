@@ -15,6 +15,8 @@ import { z } from "zod";
 import { AnswerForm, Feedback, FormSchema } from "./AnswerForm";
 import ProgressBar from "./ProgressBar";
 import RehearsalFinishedDialog from "./RehearsalFinishedDialog";
+import { motion } from "framer-motion";
+import { TextGenerateEffect } from "@/components/TextGenerateEffect";
 
 export default function WriteRehearsal({
   flashcards,
@@ -31,7 +33,7 @@ export default function WriteRehearsal({
 
   const [currentIndex, setCurrentIndex] = useState(0);
   const [currentFlashcard, setCurrentFlashcard] = useState(flashcards[0]);
-  const [feedbacks, setFeedbacks] = useState<Feedback[]>([]);
+  const [feedbacks, setFeedbacks] = useState<Partial<Feedback>[]>([]);
   const averageScore = useRef(0);
   const timeSpent = useRef(0);
   const xpGain = useRef(0);
@@ -112,7 +114,7 @@ export default function WriteRehearsal({
     }
   }, [feedbacks]);
 
-  function handleSetFeedback(feedback: Feedback) {
+  function handleSetFeedback(feedback: Partial<Feedback>) {
     setFeedbacks((prev) => {
       const newFeedbacks = [...prev];
       newFeedbacks[currentIndex] = feedback;
@@ -127,8 +129,10 @@ export default function WriteRehearsal({
 
     // Display finished rehearsal modal
     averageScore.current =
-      feedbacks.reduce((previous, current) => previous + current.score, 0) /
-      feedbacks.length;
+      feedbacks.reduce(
+        (previous, current) => previous + (current.score || 0),
+        0
+      ) / feedbacks.length;
     setDialogOpen(true);
 
     const rehearsalData = saveRehearsalStartedMutation.data;
@@ -166,6 +170,10 @@ export default function WriteRehearsal({
   function calculateXPGain() {
     let xp = 0;
     for (const f of feedbacks) {
+      if (typeof f.score === "undefined") {
+        console.error("score was undefined when calculating xp");
+        return 0;
+      }
       xp += f.score / 4;
     }
 
@@ -178,6 +186,18 @@ export default function WriteRehearsal({
 
     return xp;
   }
+
+  const variants = {
+    hidden: { opacity: 0, y: 50 },
+    visible: (i) => ({
+      opacity: 1,
+      y: 0,
+      transition: {
+        delay: i * 0.2,
+        duration: 0.3,
+      },
+    }),
+  };
 
   return (
     <main className="space-y-8 w-full max-w-[40rem] px-2">
@@ -202,31 +222,40 @@ export default function WriteRehearsal({
           {feedbacks[currentIndex] && (
             <div className="space-y-4">
               {/* The score */}
-              <div
-                className="rounded-full mx-auto w-fit p-2 shadow-sm font-semibold"
-                style={{
-                  backgroundColor: percentageToHsl(
-                    feedbacks[currentIndex].score / 100,
-                    0,
-                    120,
-                    theme === "dark" ? 20 : 65
-                  ),
-                }}
-              >
-                {feedbacks[currentIndex].score} / 100
-              </div>
+              {typeof feedbacks[currentIndex].score === "number" && (
+                <div
+                  className="rounded-full mx-auto w-fit p-2 shadow-sm font-semibold"
+                  style={{
+                    backgroundColor: percentageToHsl(
+                      feedbacks[currentIndex].score / 100,
+                      0,
+                      120,
+                      theme === "dark" ? 20 : 65
+                    ),
+                  }}
+                >
+                  {feedbacks[currentIndex].score} / 100
+                </div>
+              )}
 
               {/* The tips */}
               <ul className="space-y-4">
-                {feedbacks[currentIndex].tips?.map((tip) => (
-                  <div key={tip} className="flex gap-2">
+                {feedbacks[currentIndex].tips?.map((tip, index) => (
+                  <motion.div
+                    key={index}
+                    className="flex gap-2"
+                    variants={variants}
+                    initial="hidden"
+                    animate="visible"
+                    custom={index}
+                  >
                     <div className="rounded-full p-1 h-fit shadow-sm bg-purple-600 text-white">
                       <Bot size={22} />
                     </div>
                     <li className="bg-slate-200 dark:bg-slate-800 rounded-3xl rounded-tl-md p-4">
-                      {tip}
+                      <TextGenerateEffect words={tip} className="text-sm" />
                     </li>
-                  </div>
+                  </motion.div>
                 ))}
               </ul>
             </div>

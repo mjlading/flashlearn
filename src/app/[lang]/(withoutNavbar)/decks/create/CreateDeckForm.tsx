@@ -75,7 +75,6 @@ export default function CreateDeckForm({
 
   function handleAddFlashcards(flashcards: GeneratedFlashcard[]) {
     remove(-1); // Remove last empty flashcard
-    const dict = useDictionary();
     // TODO: temporary fix, will generate tags in future
     const flashcardsWithTags = flashcards.map((f) => ({ ...f, tag: "" }));
 

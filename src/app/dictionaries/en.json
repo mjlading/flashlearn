@@ -5,7 +5,8 @@
         "slogan": "Discover new knowledge - Let your curiosity lead the way!",
         "signIn": "Sign in",
         "signOut": "Sign out",
-        "getStarted": "Start learning!"
+        "getStarted": "Start learning!",
+        "dashboard":"Dashboard"
     },
     "signInPage": {
         "signIn": "Sign in",

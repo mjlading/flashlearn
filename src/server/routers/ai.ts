@@ -2,13 +2,12 @@ import { Feedback } from "@/app/[lang]/(withoutNavbar)/decks/[id]/rehearsal/Answ
 import { GeneratedFlashcard } from "@/components/GenerateFlashcardsInput";
 import openai, { generateEmbedding, generateEmbeddings } from "@/lib/ai";
 import { getCosineSimilarities } from "@/lib/cosine";
-import { Flashcard, Deck } from "@prisma/client";
+import { Deck, Flashcard } from "@prisma/client";
+import fs from "fs";
+import path from "path";
 import pgvector from "pgvector";
 import { z } from "zod";
 import { protectedProcedure, publicProcedure, router } from "../trpc";
-import fs from "fs";
-import path from "path";
-import { incrementalJsonParse } from "@/lib/jsonParser";
 
 export const aiRouter = router({
   generateEmbedding: publicProcedure //test me
@@ -446,14 +445,14 @@ export const aiRouter = router({
                     `,
           },
         ],
-        stream: true,
       });
 
       // use of ! is safe here since we force the function call
+      const feedback: Feedback = JSON.parse(
+        completion.choices[0].message.tool_calls![0].function.arguments
+      );
 
-      const objectsGenerator = incrementalJsonParse(completion);
-
-      return objectsGenerator;
+      return feedback;
     }),
   textToSpeech: protectedProcedure
     .input(

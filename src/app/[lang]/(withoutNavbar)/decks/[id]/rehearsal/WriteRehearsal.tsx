@@ -185,7 +185,7 @@ export default function WriteRehearsal({
 
     xp = xp * timeMultiplier;
 
-    return xp.toFixed(0);
+    return Number(xp.toFixed(0));
   }
 
   const variants = {

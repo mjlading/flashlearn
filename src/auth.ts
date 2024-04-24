@@ -4,6 +4,7 @@ import Google from "next-auth/providers/google";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import prisma from "./lib/prisma";
 import { User } from "next-auth";
+import { i18n } from "../i18n-config";
 
 interface ExtendedUserProperties {
   preferencesSet?: boolean;
@@ -75,8 +76,22 @@ export const authConfig = {
       // Define the paths that require authentication
       const protectedPaths = ["/dashboard", "/decks/create"];
 
-      const isProtected = protectedPaths.some(
-        (path) => nextUrl.pathname.startsWith(path) //TODO: CHECK IF THIS COVERS PATHS THAT INCLUDE LANG
+      let path = nextUrl.pathname;
+      // Remove localization prefix url string
+      const locales = i18n.locales
+      console.log("path before cleaning", path)
+      const pathnameHasLocale = locales.some(
+        (locale) => path.startsWith(`/${locale}/`) || path === `/${locale}`
+      );
+      let pathWithoutLang;
+
+      if (!pathnameHasLocale) {
+        pathWithoutLang = path;
+      } else {
+        pathWithoutLang = path.slice(3);
+      }
+      const isProtected = protectedPaths.some((path) =>
+        pathWithoutLang.startsWith(path) 
       );
 
       if (isProtected && !isLoggedIn) {

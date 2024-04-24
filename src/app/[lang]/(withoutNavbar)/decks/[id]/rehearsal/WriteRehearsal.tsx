@@ -17,6 +17,7 @@ import ProgressBar from "./ProgressBar";
 import RehearsalFinishedDialog from "./RehearsalFinishedDialog";
 import { motion } from "framer-motion";
 import { TextGenerateEffect } from "@/components/TextGenerateEffect";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 export default function WriteRehearsal({
   flashcards,
@@ -184,7 +185,7 @@ export default function WriteRehearsal({
 
     xp = xp * timeMultiplier;
 
-    return xp;
+    return xp.toFixed(0);
   }
 
   const variants = {
@@ -200,7 +201,7 @@ export default function WriteRehearsal({
   };
 
   return (
-    <main className="space-y-8 w-full max-w-[40rem] px-2">
+    <main className="flex flex-col justify-between w-full max-w-[45rem] px-4 height-minus-navbar">
       <ProgressBar
         currentIndex={currentIndex}
         numFlashcards={flashcards.length}
@@ -209,13 +210,13 @@ export default function WriteRehearsal({
       <FormProvider {...form}>
         <Flashcard
           flashcard={currentFlashcard}
-          className="h-[10rem]"
+          className="h-[10rem] mt-4"
           mode="write"
           isFlipEnabled={!!feedbacks[currentIndex]}
         />
 
         {/* The feedback section */}
-        <div className="space-y-2">
+        <ScrollArea className="flex-1 space-y-2">
           {form.formState.isSubmitting && (
             <LoadingSpinner className="mx-auto" />
           )}
@@ -260,15 +261,17 @@ export default function WriteRehearsal({
               </ul>
             </div>
           )}
-        </div>
+        </ScrollArea>
 
         {/* The textarea input section */}
-        <AnswerForm
-          flashcard={currentFlashcard}
-          currentIndex={currentIndex}
-          disabled={!!feedbacks[currentIndex]}
-          setFeedback={handleSetFeedback}
-        />
+        <div className="pb-4">
+          <AnswerForm
+            flashcard={currentFlashcard}
+            currentIndex={currentIndex}
+            disabled={!!feedbacks[currentIndex]}
+            setFeedback={handleSetFeedback}
+          />
+        </div>
       </FormProvider>
 
       {/* Dialog that displays when the rehearsal is finished */}

@@ -44,7 +44,7 @@ export async function POST(request: Request) {
     messages: [
       {
         role: "user",
-        content: `Given a students answer to a flashcard quiz, give a score (0-100) and optional useful tips (concise and few) for improvement. If score=100 dont give tips.
+        content: `Given a students answer to a flashcard quiz, give a score (0-100) and optional useful tips (concise and few) for improvement. Avoid broad/general tips like "practice more" or "double-check your work", instead give spesific practical tips. If score=100 dont give tips.
                 flashcard front: ${front}
                 flashcard back: ${back}
                 The students answer: ${answer}

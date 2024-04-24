@@ -29,13 +29,13 @@ export interface DeckListProps {
   category?: "recent" | "created" | "bookmarked";
   query?: string;
   addable?: boolean;
+  keyword?: string;
   onAddClicked?: (
     deck: SerializedStateDates<Deck, "dateCreated" | "dateChanged">
   ) => void;
 }
 
-export default function DeckList(
-  props: DeckListProps) {
+export default function DeckList(props: DeckListProps) {
   const infiniteQuery = api.deck.infiniteDecks.useInfiniteQuery(
     {
       limit: 10, // Page size

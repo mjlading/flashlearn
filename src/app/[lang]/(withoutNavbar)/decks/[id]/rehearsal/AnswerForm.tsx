@@ -14,6 +14,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { SendHorizonal } from "lucide-react";
 import { toast } from "sonner";
+import useStreamedFeedback from "@/hooks/useStreamedFeedback";
 
 export type Feedback = {
   score: number;
@@ -32,12 +33,12 @@ export function AnswerForm({
 }: {
   flashcard: Flashcard;
   currentIndex: number;
-  setFeedback: (feedback: Feedback) => void;
+  setFeedback: (feedback: Partial<Feedback>) => void;
   disabled: boolean;
 }) {
   const form = useFormContext<z.infer<typeof FormSchema>>();
   const [answers, setAnswers] = useState<string[]>([]);
-  const generateFeedbackMututation = api.ai.generateFeedback.useMutation();
+  const { feedback, generateFeedback } = useStreamedFeedback();
 
   useEffect(() => {
     form.setValue("answer", answers[currentIndex] || "");
@@ -55,15 +56,19 @@ export function AnswerForm({
     return () => subscription.unsubscribe();
   }, [currentIndex, answers, form]);
 
+  useEffect(() => {
+    if (feedback) {
+      setFeedback(feedback);
+    }
+  }, [feedback]);
+
   async function onSubmit(data: z.infer<typeof FormSchema>) {
     try {
-      const feedback = await generateFeedbackMututation.mutateAsync({
+      await generateFeedback({
         front: flashcard.front,
         back: flashcard.back,
         answer: data.answer,
       });
-
-      setFeedback(feedback);
     } catch (error) {
       toast.error("Kunne ikke hente feedback, vennligst prøv igjen");
     }

@@ -7,6 +7,10 @@ interface AuroraBackgroundProps extends React.HTMLProps<HTMLDivElement> {
   showRadialGradient?: boolean;
 }
 
+/**
+ * This component is from
+ * https://ui.aceternity.com/components/text-generate-effect
+ */
 export const AuroraBackground = ({
   className,
   children,

@@ -1,19 +1,23 @@
+import { Locale } from "@/../i18n-config";
 import { api } from "@/app/api/trpc/server";
 import { getDictionary } from "@/app/dictionaries/dictionaries";
 import DeckList from "@/components/DeckList";
+import ExploreKeywords from "@/components/ExploreKeywords";
 import { subjectNameMap, subjectStyles } from "@/lib/subject";
-import React, { Suspense } from "react";
-import { Locale } from "@/../i18n-config";
+import React from "react";
 
 export default async function SubjectPage({
   params,
+  searchParams,
 }: {
   params: {
     subject: string;
-    lang:Locale;
+    lang: Locale;
+  };
+  searchParams: {
+    keyword: string;
   };
 }) {
-
   const dict = await getDictionary(params.lang);
   const subject = params.subject;
 
@@ -24,6 +28,7 @@ export default async function SubjectPage({
     await api.deck.infiniteDecks.query({
       limit: 10,
       subject: subject,
+      keyword: searchParams.keyword,
     })
   ).decks;
 
@@ -38,7 +43,13 @@ export default async function SubjectPage({
       <h3 className="text-muted-foreground mb-12">
         Trykk på et stikkord for å se mere spesifikke sett
       </h3>
-      <DeckList dict={dict} initialDecks={initialDecks} subject={subject} />
+      <ExploreKeywords subject={subject} activeKeyword={searchParams.keyword} />
+      <DeckList
+        dict={dict}
+        initialDecks={initialDecks}
+        subject={subject}
+        keyword={searchParams.keyword}
+      />
     </>
   );
 }

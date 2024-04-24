@@ -2,12 +2,12 @@ import { Feedback } from "@/app/[lang]/(withoutNavbar)/decks/[id]/rehearsal/Answ
 import { GeneratedFlashcard } from "@/components/GenerateFlashcardsInput";
 import openai, { generateEmbedding, generateEmbeddings } from "@/lib/ai";
 import { getCosineSimilarities } from "@/lib/cosine";
-import { Flashcard, Deck } from "@prisma/client";
+import { Deck, Flashcard } from "@prisma/client";
+import fs from "fs";
+import path from "path";
 import pgvector from "pgvector";
 import { z } from "zod";
 import { protectedProcedure, publicProcedure, router } from "../trpc";
-import fs from "fs";
-import path from "path";
 
 export const aiRouter = router({
   generateEmbedding: publicProcedure //test me

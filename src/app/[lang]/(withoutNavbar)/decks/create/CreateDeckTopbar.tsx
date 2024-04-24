@@ -42,7 +42,9 @@ export default function CreateDeckTopbar({
           action: {
             label: "Øv nå",
             onClick: () => {
-              router.push(`/${dict.lang}/decks/${data.id}/rehearsal?mode=visual`); // TODO: set mode to preffered mode
+              router.push(
+                `/${dict.lang}/decks/${data.id}/rehearsal?mode=visual`
+              ); // TODO: set mode to preffered mode
             },
           },
         }
@@ -176,7 +178,7 @@ export default function CreateDeckTopbar({
           }
           className="bg-blue-600 hover:bg-blue-700 text-white"
         >
-          {form.formState.isSubmitting ? (
+          {form.formState.isSubmitting || form.formState.isSubmitSuccessful ? (
             <>
               <LoadingSpinner size={20} className="mr-2" />
               {classifySubjectMutation.isLoading && "Bestemmer fagområde"}

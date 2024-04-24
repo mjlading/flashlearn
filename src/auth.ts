@@ -75,8 +75,8 @@ export const authConfig = {
       // Define the paths that require authentication
       const protectedPaths = ["/dashboard", "/decks/create"];
 
-      const isProtected = protectedPaths.some((path) =>
-        nextUrl.pathname.startsWith(path) //TODO: CHECK IF THIS COVERS PATHS THAT INCLUDE LANG
+      const isProtected = protectedPaths.some(
+        (path) => nextUrl.pathname.startsWith(path) //TODO: CHECK IF THIS COVERS PATHS THAT INCLUDE LANG
       );
 
       if (isProtected && !isLoggedIn) {

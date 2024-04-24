@@ -64,15 +64,15 @@ export const deckRouter = router({
         subject: z.string().optional(),
         category: z.enum(["recent", "created", "bookmarked"]).optional(),
         query: z.string().optional(),
+        keyword: z.string().optional(),
       })
     )
     .query(async ({ ctx, input }) => {
       const limit = input.limit ?? 10;
-      const { cursor, subject, category, query } = input;
+      const { cursor, subject, category, query, keyword } = input;
 
       const userId = ctx.session?.user.id;
       if (category && !userId) {
-        // does this let requests with category and a false userId through?
         throw new TRPCError({
           code: "BAD_REQUEST",
           message: "User must be logged in to access decks using 'category'",
@@ -110,6 +110,16 @@ export const deckRouter = router({
             },
             isPublic: true,
           }),
+          ...(keyword && {
+            flashcards: {
+              some: {
+                tag: {
+                  contains: keyword,
+                  mode: "insensitive",
+                },
+              },
+            },
+          }),
         },
         cursor: cursor ? { id: cursor } : undefined,
         orderBy:
@@ -122,6 +132,8 @@ export const deckRouter = router({
         const nextItem = decks.pop();
         nextCursor = nextItem!.id;
       }
+
+      console.log("found ", decks.length, " decks with keyword: ", keyword);
 
       return {
         decks,

@@ -4,8 +4,10 @@ import { buttonVariants } from "./ui/button";
 
 export default async function ExploreKeywords({
   subject,
+  activeKeyword,
 }: {
   subject: string;
+  activeKeyword?: string;
 }) {
   const keywords = await api.subject.getKeywordsInSubject.query({
     subject: subject,
@@ -19,7 +21,7 @@ export default async function ExploreKeywords({
           key={tag}
           href={`/explore/${subject}?keyword=${tag}`}
           className={buttonVariants({
-            variant: "secondary",
+            variant: activeKeyword === tag ? "default" : "secondary",
             className: "tracking-wide",
           })}
         >

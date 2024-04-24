@@ -23,19 +23,19 @@ import { getDictionary } from "@/app/dictionaries/dictionaries";
  */
 
 export interface DeckListProps {
-  dict:Awaited<ReturnType<typeof getDictionary>>; // fancy unwrap
+  dict: Awaited<ReturnType<typeof getDictionary>>; // fancy unwrap
   initialDecks?: SerializedStateDates<Deck, "dateCreated" | "dateChanged">[];
   subject?: string;
   category?: "recent" | "created" | "bookmarked";
   query?: string;
   addable?: boolean;
+  keyword?: string;
   onAddClicked?: (
     deck: SerializedStateDates<Deck, "dateCreated" | "dateChanged">
   ) => void;
 }
 
-export default function DeckList(
-  props: DeckListProps) {
+export default function DeckList(props: DeckListProps) {
   const infiniteQuery = api.deck.infiniteDecks.useInfiniteQuery(
     {
       limit: 10, // Page size

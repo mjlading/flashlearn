@@ -1,10 +1,10 @@
+import { Locale } from "@/../i18n-config";
 import { api } from "@/app/api/trpc/server";
 import { getDictionary } from "@/app/dictionaries/dictionaries";
 import DeckList from "@/components/DeckList";
-import { subjectNameMap, subjectStyles } from "@/lib/subject";
-import React, { Suspense } from "react";
-import { Locale } from "@/../i18n-config";
 import ExploreKeywords from "@/components/ExploreKeywords";
+import { subjectNameMap, subjectStyles } from "@/lib/subject";
+import React from "react";
 
 export default async function SubjectPage({
   params,
@@ -43,8 +43,13 @@ export default async function SubjectPage({
       <h3 className="text-muted-foreground mb-12">
         Trykk på et stikkord for å se mere spesifikke sett
       </h3>
-      <ExploreKeywords subject={subject} />
-      <DeckList dict={dict} initialDecks={initialDecks} subject={subject} />
+      <ExploreKeywords subject={subject} activeKeyword={searchParams.keyword} />
+      <DeckList
+        dict={dict}
+        initialDecks={initialDecks}
+        subject={subject}
+        keyword={searchParams.keyword}
+      />
     </>
   );
 }

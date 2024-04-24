@@ -21,6 +21,11 @@ export const subjectRouter = router({
           tag: {
             not: null,
           },
+          deck: {
+            subject: {
+              name: subject,
+            },
+          },
         },
         select: {
           tag: true,

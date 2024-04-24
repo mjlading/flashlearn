@@ -10,6 +10,7 @@ import DeckListSkeleton from "./DeckListSkeleton";
 import NoDecks from "./NoDecks";
 import { Skeleton } from "./ui/skeleton";
 import { getDictionary } from "@/app/dictionaries/dictionaries";
+import { useDictionary } from "@/lib/DictProvider";
 
 /**
  * DeckList component displays a list of Decks.
@@ -23,7 +24,6 @@ import { getDictionary } from "@/app/dictionaries/dictionaries";
  */
 
 export interface DeckListProps {
-  dict:Awaited<ReturnType<typeof getDictionary>>; // fancy unwrap
   initialDecks?: SerializedStateDates<Deck, "dateCreated" | "dateChanged">[];
   subject?: string;
   category?: "recent" | "created" | "bookmarked";

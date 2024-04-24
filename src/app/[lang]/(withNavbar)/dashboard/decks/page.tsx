@@ -26,7 +26,7 @@ export default async function DecksPage({
         <NewDeckButton dict={dict}/>
       </div>
       <CategoryTabs initialCategory={searchParams.category} dict={dict}/>
-      <DeckList category={searchParams.category} dict={dict}/>
+      <DeckList category={searchParams.category}/>
     </div>
   );
 }

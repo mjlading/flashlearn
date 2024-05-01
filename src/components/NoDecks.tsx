@@ -3,13 +3,14 @@ import React from "react";
 import { DeckListProps } from "./DeckList";
 import NewDeckButton from "./NewDeckButton";
 import { getDictionary } from "@/app/dictionaries/dictionaries";
+import { useDictionary } from "@/lib/DictProvider";
 
 
 
 export default function NoDecks(
    // fancy unwrap 
-{dict, subject, category }: DeckListProps) {
-  
+{subject, category }: DeckListProps) {
+  const dict = useDictionary();
   if (subject) {
     return <h2>{dict.decks.noDecks.noSets}</h2>;
   }

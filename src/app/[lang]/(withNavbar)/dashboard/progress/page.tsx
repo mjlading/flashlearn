@@ -5,11 +5,19 @@ import FavoriteMode from "./FavoriteMode";
 import SubjectWordCloud from "./SubjectWordCloud";
 import StreakLineChart from "./StreakLineChart";
 import Leaderboard from "./Leaderboard";
-
+import { useSession } from "next-auth/react";
+import { redirect } from "next/navigation";
 export default function ProgressPage() {
   const rehearsals = api.rehearsal.getUserRehearsals.useQuery({
     includeSubjects: true,
   });
+  
+  const session = useSession(); // is this a good way to do this?
+
+  if (!session?.data?.user) {
+    console.log("Not logged in, redirecting");
+    redirect("/api/auth/signin");
+  }
 
   return (
     <div className="flex flex-col space-y-7 h-full">

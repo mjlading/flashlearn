@@ -5,6 +5,8 @@ import { Plus } from "lucide-react";
 import { Metadata } from "next";
 import Link from "next/link";
 import { Locale } from "@/../i18n-config";
+import { auth } from "@/auth";
+import { redirect } from "next/navigation";
 
 export const metadata: Metadata = {
   title: "Flashlearn - Samlinger",
@@ -25,7 +27,13 @@ function NewCollectionButton({
 }
 
 export default async function CollectionsPage({params:{lang}}:{params:{lang:Locale}}) {
-
+  
+  const session = await auth();
+  
+  if (!session?.user) {
+    console.log("Not logged in, redirecting");
+    redirect("/api/auth/signin");
+  }
   const dict = await getDictionary(lang);
 
   return (

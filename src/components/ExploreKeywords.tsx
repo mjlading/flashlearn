@@ -22,7 +22,7 @@ export default async function ExploreKeywords({
           href={`/explore/${subject}?keyword=${tag}`}
           className={buttonVariants({
             variant: activeKeyword === tag ? "default" : "secondary",
-            className: "tracking-wide",
+            className: "tracking-wide rounded-xl",
           })}
         >
           {tag}

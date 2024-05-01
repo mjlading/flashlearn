@@ -1,6 +1,9 @@
 import NextAuth, { NextAuthConfig } from "next-auth";
+
 import GitHub from "next-auth/providers/github";
 import Google from "next-auth/providers/google";
+import Credentials from "next-auth/providers/credentials";
+
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import prisma from "./lib/prisma";
 import { User } from "next-auth";
@@ -11,8 +14,63 @@ interface ExtendedUserProperties {
   nickname?: string;
 }
 
+declare module "next-auth" {
+  /**
+   * The shape of the user object returned in the OAuth providers' `profile` callback,
+   * or the second parameter of the `session` callback, when using a database.
+   */
+  interface User {
+    id?: string
+    name?: string | null
+    email?: string | null
+    image?: string | null
+    preferencesSet?: boolean|null,
+    nickname?: string|null,
+  }
+}
+
+function getProviders(){
+  if (!process.env.ENABLE_CYPRESS_LOGIN) return [Google, GitHub]; else {
+
+  return [Google, GitHub,
+    Credentials({
+      credentials: {
+        email: {},
+        password: {},
+      },
+      authorize: async (credentials:any, req:any) => {
+        let user = null
+        if (credentials.password !== "flashlearn") throw new Error("User not found.");
+        // logic to verify if user exists
+        user = await prisma.user.findUnique({
+            where: { id: "clvld1mj70003qrh9ggwfjif2" },
+            select: {
+              id: true,
+              name: true,
+              email: true,
+              image: true,
+              preferencesSet: true,
+              nickname: true,
+            },
+        })
+        console.log(user)
+        if (!user) {
+          // No user found, so this is their first attempt to login
+          // meaning this is also the place you could do registration
+          throw new Error("Eggbert was not in the database (or the id needs to be updated).")
+        }
+ 
+        // return user object with the their profile data
+        return user
+      },
+
+    })]
+  }
+}
+    
+
 export const authConfig = {
-  providers: [GitHub, Google],
+  providers: getProviders(),
   adapter: PrismaAdapter(prisma),
   session: { strategy: "jwt" },
   callbacks: {
@@ -31,7 +89,7 @@ export const authConfig = {
       if (account && user) {
         token.accessToken = account.access_token;
         token.id = user.id;
-        const extendedUser = user as User & ExtendedUserProperties;
+        const extendedUser = user as User;
 
         // Directly fetch preferences from the database if not available in session
         if (!extendedUser.preferencesSet) {
@@ -110,5 +168,6 @@ export const authConfig = {
 
 export const {
   handlers: { GET, POST },
+  signIn,
   auth,
 } = NextAuth(authConfig);

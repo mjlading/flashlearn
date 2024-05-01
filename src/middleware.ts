@@ -46,8 +46,8 @@ export async function middleware(request: NextRequest) {
 
   const { pathname } = request.nextUrl;
 
-  console.log("\n", pathname);
-
+  console.log("\npath:", pathname);
+  console.log("session token cookie:", request.cookies.get('authjs.session-token'), "\n")
   if (skipLangForApi(pathname)) {
     console.log("pathname led to api");
     return NextResponse.next();

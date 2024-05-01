@@ -43,4 +43,11 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 
 Before deployment to vercel, tests are run through github actions. 
 
-for local testing, use 'npm run test-dev', this can be slow because integration tests require an existing build before testing. 
+for local testing, use 'npm run test', this runs tests that use the testdatabase. 
+Vitest is used for integration tests that check if trpc endpoints work the way we expect.
+
+# Cypress
+
+Most of our pages require some form of authentication, this is handled through using google OAuth playground.
+
+https://docs.cypress.io/guides/end-to-end-testing/google-authentication

@@ -45,7 +45,6 @@ export default async function SubjectPage({
       </h3>
       <ExploreKeywords subject={subject} activeKeyword={searchParams.keyword} />
       <DeckList
-        dict={dict}
         initialDecks={initialDecks}
         subject={subject}
         keyword={searchParams.keyword}

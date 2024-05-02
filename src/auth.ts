@@ -30,7 +30,7 @@ declare module "next-auth" {
 }
 
 function getProviders(){
-  if (!process.env.ENABLE_CYPRESS_LOGIN) return [Google, GitHub]; else {
+  if (!process.env.ENABLE_CYPRESS_LOGIN || !process.env.CYPRESS_TEST_AC_ID ) return [Google, GitHub]; else {
 
   return [Google, GitHub,
     Credentials({
@@ -43,7 +43,7 @@ function getProviders(){
         if (credentials.password !== "flashlearn") throw new Error("User not found.");
         // logic to verify if user exists
         user = await prisma.user.findUnique({
-            where: { id: "clvld1mj70003qrh9ggwfjif2" },
+            where: { id: process.env.CYPRESS_TEST_AC_ID }, //THIS REQUIRES A REAL USER
             select: {
               id: true,
               name: true,

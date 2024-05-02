@@ -99,7 +99,7 @@ function ProfileDropdownMenu({ dict, user }: { dict:Awaited<ReturnType<typeof ge
             <DropDownMenuItemThemeToggle />
             <DropdownMenuItem>
               <DialogTrigger className="flex cursor-default items-center">
-                <UserCog data-cy="userSettings" className="mr-2 h-4 w-4" />
+                <UserCog data-cy="userSettingsButton" className="mr-2 h-4 w-4" />
                 <span>{dict.userDropDown.userSettings}</span>
               </DialogTrigger>
             </DropdownMenuItem>

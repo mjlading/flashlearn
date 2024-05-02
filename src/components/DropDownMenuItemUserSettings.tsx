@@ -86,7 +86,7 @@ export default function DialogContentUserSettings({
   }
 
   return (
-    <DialogContent>
+    <DialogContent data-cy="userSettings">
       <DialogHeader>
         <div className="flex items-center gap-2 leading-loose mb-4">
           <UserCog />
@@ -99,11 +99,11 @@ export default function DialogContentUserSettings({
           <AvatarImage src={session.data?.user.image ?? ""} alt="profil" />
           <AvatarFallback>meg</AvatarFallback>
         </Avatar>
-        <span className="font-semibold">{session.data?.user.nickname}</span>
+        <span data-cy="userSettingsNickname" className="font-semibold">{session.data?.user.nickname}</span>
       </div>
 
       {/* Change academic level section */}
-      <div className="mb-8 mt-2 space-y-1">
+      <div data-cy="academicLevel" className="mb-8 mt-2 space-y-1">
         <Label>Akademisk nivå</Label>
         <Select
           onValueChange={handleAcademicLevelChanged}
@@ -113,9 +113,9 @@ export default function DialogContentUserSettings({
             <SelectValue />
           </SelectTrigger>
 
-          <SelectContent>
+          <SelectContent >
             {Object.keys(academicLevelMap).map((academicLevelOption) => (
-              <SelectItem value={academicLevelOption} key={academicLevelOption}>
+              <SelectItem data-cy="academicLevelSelector" value={academicLevelOption} key={academicLevelOption}>
                 {academicLevelMap[academicLevelOption]}
               </SelectItem>
             ))}
@@ -138,7 +138,7 @@ export default function DialogContentUserSettings({
         {/* Delete user data confirmation dialog */}
         <Dialog>
           <DialogTrigger className="float-end">
-            <Button variant="destructive" size="sm">
+            <Button data-cy="deleteUserButton" variant="destructive" size="sm">
               Slett brukerdata
             </Button>
           </DialogTrigger>

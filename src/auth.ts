@@ -8,7 +8,7 @@ import { PrismaAdapter } from "@auth/prisma-adapter";
 import prisma from "./lib/prisma";
 import { User } from "next-auth";
 import { i18n } from "../i18n-config";
-
+import { isProtected } from "@/routes";
 interface ExtendedUserProperties {
   preferencesSet?: boolean;
   nickname?: string;
@@ -53,7 +53,7 @@ function getProviders(){
               nickname: true,
             },
         })
-        console.log(user)
+        //console.log(user)
         if (!user) {
           // No user found, so this is their first attempt to login
           // meaning this is also the place you could do registration
@@ -67,7 +67,7 @@ function getProviders(){
     })]
   }
 }
-    
+
 
 export const authConfig = {
   providers: getProviders(),
@@ -129,17 +129,16 @@ export const authConfig = {
     },
     // Middleware function for authorization
     authorized({ auth, request: { nextUrl } }) {
+      
       const isLoggedIn = !!auth?.user;
 
       // Define the paths that require authentication
-      const protectedPaths = ["/dashboard", "/decks/create"];
-
       let path = nextUrl.pathname;
       // Remove localization prefix url string
       const locales = i18n.locales
       console.log("path before cleaning", path)
       const pathnameHasLocale = locales.some(
-        (locale) => path.startsWith(`/${locale}/`) || path === `/${locale}`
+        (locale) => (path.split("/")[1]) == locale
       );
       let pathWithoutLang;
 
@@ -148,11 +147,12 @@ export const authConfig = {
       } else {
         pathWithoutLang = path.slice(3);
       }
-      const isProtected = protectedPaths.some((path) =>
-        pathWithoutLang.startsWith(path) 
-      );
-
-      if (isProtected && !isLoggedIn) {
+      console.log("path after cleaning", pathWithoutLang)
+      const pathIsProtected = isProtected(path);
+      console.log("route protected by auth mdw: ", pathIsProtected)
+      if (pathIsProtected && !isLoggedIn) {
+        
+        console.log("redirecting to signin from: ", pathWithoutLang)
         const redirectUrl = new URL("/api/auth/signin", nextUrl.origin);
         redirectUrl.searchParams.append("callbackUrl", nextUrl.href);
         return Response.redirect(redirectUrl);

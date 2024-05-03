@@ -20,17 +20,17 @@ describe("auth flow tests", () => {
             cy.visit("/dashboard/decks").wait(2000).url().should("include", "/auth/signIn");
         });
         
-        //it("should redirect to login page when accessing deck creation page without being signed in", () => {
-         //   cy.visit("/decks/create").wait(2000).url().should("include", "/auth/signIn");
-       // });
+        it("should redirect to login page when accessing deck creation page without being signed in", () => {
+            cy.visit("/decks/create").wait(2000).url().should("include", "/auth/signIn");
+        });
 
         it("should redirect to login page when accessing collections page without being signed in", () => {
             cy.visit("/dashboard/collections").wait(2000).url().should("include", "/auth/signIn");
         });
 
-        //it("should redirect to login page when accessing progress page without being signed in", () => {
-        //    cy.visit("/dashboard/progress").wait(2000).url().should("include", "/auth/signIn");
-        //});
+        it("should redirect to login page when accessing progress page without being signed in", () => {
+            cy.visit("/dashboard/progress").wait(2000).url().should("include", "/auth/signIn");
+        });
     })
 
     describe("", () => {

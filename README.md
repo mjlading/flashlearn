@@ -51,3 +51,8 @@ Vitest is used for integration tests that check if trpc endpoints work the way w
 Most of our pages require some form of authentication, this is handled through using google OAuth playground.
 
 https://docs.cypress.io/guides/end-to-end-testing/google-authentication
+
+during testing we use the dev. database with an account that we own to run authentication tests
+
+Add 'CYPRESS_TEST_AC_ID' with the id of the user you wish to test, and set 'ENABLE_CYPRESS_LOGIN' to 'true' within your local environment variables ('.env.local')
+Add your user credentials to the variables 'GOOGLE_TEST_ACCOUNT_PWD' and 'GOOGLE_TEST_ACCOUNT_EMAIL' to the cypress environment variables ('Cypress.env.json)

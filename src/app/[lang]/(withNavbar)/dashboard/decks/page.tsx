@@ -20,12 +20,12 @@ export default async function DecksPage({
   };
   params:{lang:Locale}
 }) {
-  const session = await auth();
+  /*const session = await auth();
   
   if (!session?.user) {
     console.log("Not logged in, redirecting");
     redirect("/api/auth/signin");
-  }
+  }*/
   
   const dict = await getDictionary(lang);
   return (

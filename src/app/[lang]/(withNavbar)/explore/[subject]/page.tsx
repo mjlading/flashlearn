@@ -41,7 +41,7 @@ export default async function SubjectPage({
         <h1 className="text-4xl font-bold">{norwegianSubjectName}</h1>
       </div>
       <h3 className="text-muted-foreground mb-12">
-        Trykk på et stikkord for å se mere spesifikke sett
+        {dict.explore.tag}
       </h3>
       <ExploreKeywords subject={subject} activeKeyword={searchParams.keyword} />
       <DeckList

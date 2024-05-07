@@ -52,7 +52,7 @@ export default async function SearchPage({
           </p>
         </div>
 
-        <DeckList dict={dict} initialDecks={decks} query={q} />
+        <DeckList initialDecks={decks} query={q} />
       </main>
     </div>
   );

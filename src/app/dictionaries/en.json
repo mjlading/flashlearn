@@ -35,7 +35,9 @@
         "progress":"Progress"
     },
     "explore":{
-        "explore":"Explore"
+        "explore":"Explore",
+        "tag":"Select a keyword to find more specific sets"
+    
     },
     "decks":{
         "studyCards":"Flashcards",

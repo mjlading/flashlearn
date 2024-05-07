@@ -87,7 +87,6 @@ export default function CreateCollecionTabs({
           <TabsContent value="created">
             <ScrollArea className="h-[calc(100vh-200px)] pr-3">
               <DeckList
-                dict={dict}
                 category="created"
                 addable={true}
                 onAddClicked={(deck) => handleAddClicked(deck)}

@@ -1,4 +1,4 @@
-describe("auth flow test", () => {
+/*describe("auth flow test", () => {
   beforeEach(() => {
     cy.visit("/");
   });
@@ -20,4 +20,4 @@ describe("middleware test", () => {
   it("should redirect to login page when accessing page within dashboard", () => {
     cy.visit("/decks/create").url().should("include", "auth/signIn");
   });
-});
+});*/

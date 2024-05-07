@@ -74,7 +74,7 @@ function ProfileDropdownMenu({ dict, user }: { dict:Awaited<ReturnType<typeof ge
     <Dialog>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <button className="rounded-full">
+          <button data-cy="userDropdown" id="profileDropdownButton" className="rounded-full">
             <Avatar className="h-9 w-9">
               <AvatarImage src={user.image ?? ""} alt="profil" />
               <AvatarFallback>{userInitials}</AvatarFallback>
@@ -82,10 +82,10 @@ function ProfileDropdownMenu({ dict, user }: { dict:Awaited<ReturnType<typeof ge
           </button>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-56 mr-8">
-          <DropdownMenuLabel className="truncate mb-[-5px]">
+          <DropdownMenuLabel data-cy="nameInDropDown" className="truncate mb-[-5px]">
             {user.nickname}
           </DropdownMenuLabel>
-          <span className="ml-2 text-muted-foreground text-sm truncate">
+          <span data-cy="emailInDropDown" className="ml-2 text-muted-foreground text-sm truncate">
             {user.email}
           </span>
           <DropdownMenuSeparator className="mt-2" />
@@ -99,7 +99,7 @@ function ProfileDropdownMenu({ dict, user }: { dict:Awaited<ReturnType<typeof ge
             <DropDownMenuItemThemeToggle />
             <DropdownMenuItem>
               <DialogTrigger className="flex cursor-default items-center">
-                <UserCog className="mr-2 h-4 w-4" />
+                <UserCog data-cy="userSettingsButton" className="mr-2 h-4 w-4" />
                 <span>{dict.userDropDown.userSettings}</span>
               </DialogTrigger>
             </DropdownMenuItem>
@@ -115,7 +115,7 @@ function ProfileDropdownMenu({ dict, user }: { dict:Awaited<ReturnType<typeof ge
 }
 
 async function ProfileButton({ dict, user }: { dict:Awaited<ReturnType<typeof getDictionary>>, user: User | undefined }) {
-  return <>{user ? <ProfileDropdownMenu dict={dict} user={user} /> : <SignInButton />}</>;
+  return <>{user ? <ProfileDropdownMenu dict={dict} user={user} /> : <SignInButton dict={dict}/>}</>;
 }
 
 const LINK_STYLE = cn(

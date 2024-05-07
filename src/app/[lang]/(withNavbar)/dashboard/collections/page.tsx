@@ -28,12 +28,12 @@ function NewCollectionButton({
 
 export default async function CollectionsPage({params:{lang}}:{params:{lang:Locale}}) {
   
-  const session = await auth();
+  /*const session = await auth();
   
   if (!session?.user) {
     console.log("Not logged in, redirecting");
     redirect("/api/auth/signin");
-  }
+  }*/
   const dict = await getDictionary(lang);
 
   return (

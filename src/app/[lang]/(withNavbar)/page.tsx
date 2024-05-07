@@ -1,4 +1,3 @@
-import AuthButton from "@/components/AuthButton";
 import { getDictionary } from "../../dictionaries/dictionaries";
 import { AuroraBackground } from "@/components/AuroraBackground";
 import HomePageContent from "@/components/HomePageContent";

@@ -121,5 +121,8 @@
     "starRating":{
         "avgStars":"Gjennomsnittlig vurdering",
         "noRatings":"Ingen vurderinger"
+    },
+    "explore":{
+        "tag":"Trykk på et stikkord for å se mere spesifikke sett"
     }
 }

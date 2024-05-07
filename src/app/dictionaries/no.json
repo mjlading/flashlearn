@@ -1,128 +1,126 @@
 {
-    "lang":"no",
-    "home": {
-        "title": "Flashlearn",
-        "slogan": "Oppdag noe nytt å lære - la nysgjerrigheten lede veien!",
-        "signIn": "Logg inn",
-        "signOut": "Logg ut",
-        "getStarted": "Kom i gang!",
-        "dashboard":"Dashboard"
+  "lang": "no",
+  "home": {
+    "title": "Flashlearn",
+    "slogan": "Oppdag noe nytt å lære - la nysgjerrigheten lede veien!",
+    "signIn": "Logg inn",
+    "signOut": "Logg ut",
+    "getStarted": "Kom i gang!",
+    "dashboard": "Dashboard"
+  },
+  "signInPage": {
+    "signIn": "Logg inn",
+    "thirdPartyLogin": "Velg en tredjeparts autentisering for rask og sikker innlogging",
+    "termsAndConditions": "Vilkår",
+    "privacy": "Personvern",
+    "chooseProvider": "Fortsett med"
+  },
+  "profileSetupPage": {
+    "beforeYouContinue": "Før du fortsetter",
+    "nickname": "Kallenavn",
+    "yourNickname": "Ditt kallenavn",
+    "nicknameTaken": "Kallenavnet er allerede tatt. Vennligst velg et annet",
+    "me": "Meg",
+    "yourPublicNickname": "Ditt offentlige visningsnavn",
+    "academicLevel": "Akademisk nivå",
+    "updateSuccess": "Profilen din har blitt oppdattert!",
+    "save": "Lagre",
+    "nicknameMinimum": "Kallenavn må være minst 2 tegn",
+    "nicknameMaximum": "Kallenavn kan være max 50 tegn"
+  },
+  "dashboard": {
+    "dashboard": "dashbord"
+  },
+  "progress": {
+    "progress": "Fremgang"
+  },
+  "decks": {
+    "studyCards": "Studiekort",
+    "newDeck": "Nytt dekk",
+    "recent": "Nylige",
+    "created": "Laget",
+    "bookmarked": "Bokmerkede",
+    "noDecks": {
+      "noSets": "Ingen sett funnet 🤷‍♂️",
+      "noRecentSets": "Du har ingen nylige sett",
+      "noRecentSetsEx": "Dine nylige øvde sett vil vises her",
+      "noCreatedSets": "Du har ingen studiekort 😔",
+      "noCreatedSetsEx": "Lag et sett for å komme i gang med læringen din!",
+      "noBookmakedSets": "Du har ingen bokmerkede sett",
+      "noBookmakedSetsEx": "Dine bokmerkede sett vil vises her"
     },
-    "signInPage": {
-        "signIn": "Logg inn",
-        "thirdPartyLogin": "Velg en tredjeparts autentisering for rask og sikker innlogging",
-        "termsAndConditions": "Vilkår",
-        "privacy": "Personvern",
-        "chooseProvider": "Fortsett med"
+    "startPractice": {
+      "visual": "Visuell",
+      "written": "Skriftlig",
+      "oral": "Muntlig",
+      "start": "Start",
+      "created": "Opprettet ",
+      "lastEdited": "Sist endret "
     },
-    "profileSetupPage": {
-        "beforeYouContinue": "Før du fortsetter",
-        "nickname": "Kallenavn",
-        "yourNickname": "Ditt kallenavn",
-        "nicknameTaken": "Kallenavnet er allerede tatt. Vennligst velg et annet",
-        "me": "Meg",
-        "yourPublicNickname": "Ditt offentlige visningsnavn",
-        "academicLevel": "Akademisk nivå",
-        "updateSuccess": "Profilen din har blitt oppdattert!",
-        "save": "Lagre",
-        "nicknameMinimum": "Kallenavn må være minst 2 tegn",
-        "nicknameMaximum": "Kallenavn kan være max 50 tegn"
-    },
-    "dashboard": {
-        "dashboard": "dashbord"
-    },
-    "progress":{
-        "progress":"Fremgang"
-    },
-    "explore":{
-        "explore":"Utforsk"
-    },
-    "decks":{
-        "studyCards":"Studiekort",
-        "newDeck":"Nytt dekk",
-        "recent":"Nylige",
-        "created":"Laget",
-        "bookmarked":"Bokmerkede",
-        "noDecks":{
-            "noSets":"Ingen sett funnet 🤷‍♂️",
-            "noRecentSets":"Du har ingen nylige sett",
-            "noRecentSetsEx":"Dine nylige øvde sett vil vises her",
-            "noCreatedSets":"Du har ingen studiekort 😔",
-            "noCreatedSetsEx":"Lag et sett for å komme i gang med læringen din!",
-            "noBookmakedSets":"Du har ingen bokmerkede sett",
-            "noBookmakedSetsEx":"Dine bokmerkede sett vil vises her"
-        },
-        "startPractice":{
-            "visual":"Visuell",
-            "written":"Skriftlig",
-            "oral":"Muntlig",
-            "start":"Start",
-            "created":"Opprettet ",
-            "lastEdited":"Sist endret "
-        },
-        "practiceMode":"Øvingsmodus",
-        "editDeck":"Rediger sett",
-        "createDeck":{
-            "added":"La til ",
-            "flashcards":" studiekort",
-            "giveSetName":"Gi settet ditt et navn",
-            "name":"Navn",
-            "field":"Fagfelt",
-            "private":"Privat",
-            "privateDescription":"Private sett er kun synlige for deg.",
-            "academicLevel":"Academic level",
-            "addFlashcard":"Add flashcard",
-            "addFlashcardDescription":"Hvert kort har en fremside og en bakside. Fremsiden kan ha et begrep eller spørsmål, og baksiden kan ha et svar eller en forklaring.",
-            "placeholderFront":"Fremside",
-            "placeholderBack":"Bakside"
-        }
-    },
-    "collections":{
-        "collections":"Samlinger",
-        "newCollection":"Ny samling",
-        "noCollections":"Du har ingen samlinger",
-        "noCollectionDescription":"Lag en samling for å organisere og øve flere sett sammen",
-        "createCollection":{
-            "aboutCollection":"Om samlingen",
-            "addToCollection":"Legg til sett",
-            "placeholderName":"Gi samlingen din et navn",
-            "placeholderDescription":"Gi samlingen din en beskrivelse",
-            "name":"Navn",
-            "description":"Beskrivelse (valgfri)",
-            "saveCollection":"Lagre samling",
-            "toasts":{
-                "yourCollection":"Samlingen  ",
-                "isStored":" har blitt lagret",
-                "saveFailed":"Samlingen kunne ikke lagres",
-                "tryAgain":"Vennligst prøv igjen",
-                "editWorked":"Redigeringen av  ",
-                "editFailed":"Endringene dine kunne ikke lagres"
-            },
-            "addedSets":"Lagt til sett"
-        },
-        "addDeck":"Legg til",
-        "removeDeck":"Fjern"
-    },
-    "courses":{
-        "courses":"Emner"
-    },
-    "sidebar":{
-        "dashboard": "Dashbord",
-        "progress":"Fremgang",
-        "flashcards":"Flashkort",
-        "collections":"Samlinger",
-        "courses":"Emner"
-    },
-    "userDropDown":{
-        "dashboard":"Dashbord",
-        "userSettings":"Brukerinstillinger",
-        "switchTheme":"Bytt tema"
-    },
-    "starRating":{
-        "avgStars":"Gjennomsnittlig vurdering",
-        "noRatings":"Ingen vurderinger"
-    },
-    "explore":{
-        "tag":"Trykk på et stikkord for å se mere spesifikke sett"
+    "practiceMode": "Øvingsmodus",
+    "editDeck": "Rediger sett",
+    "createDeck": {
+      "added": "La til ",
+      "flashcards": " studiekort",
+      "giveSetName": "Gi settet ditt et navn",
+      "name": "Navn",
+      "field": "Fagfelt",
+      "private": "Privat",
+      "privateDescription": "Private sett er kun synlige for deg.",
+      "academicLevel": "Academic level",
+      "addFlashcard": "Add flashcard",
+      "addFlashcardDescription": "Hvert kort har en fremside og en bakside. Fremsiden kan ha et begrep eller spørsmål, og baksiden kan ha et svar eller en forklaring.",
+      "placeholderFront": "Fremside",
+      "placeholderBack": "Bakside"
     }
+  },
+  "collections": {
+    "collections": "Samlinger",
+    "newCollection": "Ny samling",
+    "noCollections": "Du har ingen samlinger",
+    "noCollectionDescription": "Lag en samling for å organisere og øve flere sett sammen",
+    "createCollection": {
+      "aboutCollection": "Om samlingen",
+      "addToCollection": "Legg til sett",
+      "placeholderName": "Gi samlingen din et navn",
+      "placeholderDescription": "Gi samlingen din en beskrivelse",
+      "name": "Navn",
+      "description": "Beskrivelse (valgfri)",
+      "saveCollection": "Lagre samling",
+      "toasts": {
+        "yourCollection": "Samlingen  ",
+        "isStored": " har blitt lagret",
+        "saveFailed": "Samlingen kunne ikke lagres",
+        "tryAgain": "Vennligst prøv igjen",
+        "editWorked": "Redigeringen av  ",
+        "editFailed": "Endringene dine kunne ikke lagres"
+      },
+      "addedSets": "Lagt til sett"
+    },
+    "addDeck": "Legg til",
+    "removeDeck": "Fjern"
+  },
+  "courses": {
+    "courses": "Emner"
+  },
+  "sidebar": {
+    "dashboard": "Dashbord",
+    "progress": "Fremgang",
+    "flashcards": "Flashkort",
+    "collections": "Samlinger",
+    "courses": "Emner"
+  },
+  "userDropDown": {
+    "dashboard": "Dashbord",
+    "userSettings": "Brukerinstillinger",
+    "switchTheme": "Bytt tema"
+  },
+  "starRating": {
+    "avgStars": "Gjennomsnittlig vurdering",
+    "noRatings": "Ingen vurderinger"
+  },
+  "explore": {
+    "explore": "Utforsk",
+    "tag": "Trykk på et stikkord for å se mere spesifikke sett"
+  }
 }

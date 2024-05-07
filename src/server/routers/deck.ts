@@ -5,6 +5,8 @@ import z from "zod";
 import { protectedProcedure, publicProcedure, router } from "../trpc";
 import { count } from "console";
 import { generateEmbedding } from "@/lib/ai";
+import pgvector from "pgvector";
+import type { Deck } from "@prisma/client";
 
 const createDeck = z.object({
   name: z.string(),
@@ -79,61 +81,96 @@ export const deckRouter = router({
         });
       }
 
-      // spread operator is used to conditinally apply "where" filters given input params
-      const decks = await ctx.prisma.deck.findMany({
-        take: limit + 1,
-        where: {
-          ...(subject && { subjectName: subject, isPublic: true }),
-          ...(category === "bookmarked" && {
-            bookmarkedDecks: {
-              some: {
-                userId: userId,
-              },
-            },
-          }),
-          ...(category === "created" && {
-            userId: userId,
-          }),
-          ...(category === "recent" && {
-            deckRehearsals: {
-              some: {
-                rehearsal: {
+      let decks = [];
+
+      if (query) {
+        // Semantic search
+        const queryEmbedding = await generateEmbedding(query);
+
+        //TODO: cursor
+
+        const queryEmbeddingSql = pgvector.toSql(queryEmbedding);
+
+        decks = await ctx.prisma.$queryRaw<
+          (Deck & {
+            cosineSimilarity: number;
+          })[]
+        >`
+        SELECT * FROM (
+            SELECT id,
+            name,
+            "isPublic",
+            "averageRating",
+            "academicLevel",
+            "dateCreated",
+            "dateChanged",
+            "numFlashcards",
+            "userId",
+            "subjectName", 
+            1 - (embedding <=> ${queryEmbeddingSql}::vector) AS "cosineSimilarity"
+            FROM "Deck"
+        ) AS subquery
+        WHERE "cosineSimilarity" > 0.3
+        ORDER BY "cosineSimilarity" DESC
+        LIMIT ${limit + 1}
+`;
+      } else {
+        // Not using query
+        // spread operator is used to conditinally apply "where" filters given input params
+        decks = await ctx.prisma.deck.findMany({
+          take: limit + 1,
+          where: {
+            ...(subject && { subjectName: subject, isPublic: true }),
+            ...(category === "bookmarked" && {
+              bookmarkedDecks: {
+                some: {
                   userId: userId,
                 },
               },
-            },
-          }),
-          ...(query && {
-            name: {
-              contains: query,
-              mode: "insensitive",
-            },
-            isPublic: true,
-          }),
-          ...(keyword && {
-            flashcards: {
-              some: {
-                tag: {
-                  contains: keyword,
-                  mode: "insensitive",
+            }),
+            ...(category === "created" && {
+              userId: userId,
+            }),
+            ...(category === "recent" && {
+              deckRehearsals: {
+                some: {
+                  rehearsal: {
+                    userId: userId,
+                  },
                 },
               },
-            },
-          }),
-        },
-        cursor: cursor ? { id: cursor } : undefined,
-        orderBy:
-          category === "recent"
-            ? [{ dateChanged: "desc" }, { id: "desc" }]
-            : [{ id: "desc" }],
-      });
+            }),
+            ...(query && {
+              name: {
+                contains: query,
+                mode: "insensitive",
+              },
+              isPublic: true,
+            }),
+            ...(keyword && {
+              flashcards: {
+                some: {
+                  tag: {
+                    contains: keyword,
+                    mode: "insensitive",
+                  },
+                },
+              },
+            }),
+          },
+          cursor: cursor ? { id: cursor } : undefined,
+          orderBy:
+            category === "recent"
+              ? [{ dateChanged: "desc" }, { id: "desc" }]
+              : [{ id: "desc" }],
+        });
+      }
+
       let nextCursor: typeof cursor | undefined = undefined;
       if (decks.length > limit) {
         const nextItem = decks.pop();
         nextCursor = nextItem!.id;
       }
-
-      console.log("found ", decks.length, " decks with keyword: ", keyword);
 
       return {
         decks,

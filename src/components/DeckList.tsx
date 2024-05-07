@@ -12,17 +12,6 @@ import { Skeleton } from "./ui/skeleton";
 import { getDictionary } from "@/app/dictionaries/dictionaries";
 import { useDictionary } from "@/lib/DictProvider";
 
-/**
- * DeckList component displays a list of Decks.
- * It uses infinite scrolling to load and display more decks as the user scrolls down.
- *
- * Props:
- * - subject (optional): A string to filter decks by their subject.
- * - category (optional): A category to filter decks, can be "recent", "created", or "bookmarked".
- * - query (optional): A search query that searches for deck names
- * - initialDecks (optional): Initial decks can be fetched on the server and be displayed on initial page load.
- */
-
 export interface DeckListProps {
   initialDecks?: SerializedStateDates<Deck, "dateCreated" | "dateChanged">[];
   subject?: string;
@@ -35,6 +24,16 @@ export interface DeckListProps {
   ) => void;
 }
 
+/**
+ * DeckList component displays a list of Decks.
+ * It uses infinite scrolling to load and display more decks as the user scrolls down.
+ *
+ * Props:
+ * - subject (optional): A string to filter decks by their subject.
+ * - category (optional): A category to filter decks, can be "recent", "created", or "bookmarked".
+ * - query (optional): A search query that searches for deck names
+ * - initialDecks (optional): Initial decks can be fetched on the server and be displayed on initial page load.
+ */
 export default function DeckList(props: DeckListProps) {
   const infiniteQuery = api.deck.infiniteDecks.useInfiniteQuery(
     {

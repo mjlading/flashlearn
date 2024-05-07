@@ -15,9 +15,9 @@ export default async function SearchPage({
   params,
   searchParams,
 }: {
-  params:{
-    lang:Locale
-  }
+  params: {
+    lang: Locale;
+  };
   searchParams: {
     q: string;
   };
@@ -48,7 +48,10 @@ export default async function SearchPage({
             <span className="font-semibold">{q}</span>&quot;
           </p>
           <p>
-            Treff: <span className="font-semibold">{hits}</span>
+            Treff:{" "}
+            <span className="font-semibold">
+              {hits != decks.length ? decks.length : hits}
+            </span>
           </p>
         </div>
 

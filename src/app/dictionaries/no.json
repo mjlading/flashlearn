@@ -35,7 +35,9 @@
         "progress":"Fremgang"
     },
     "explore":{
-        "explore":"Utforsk"
+        "explore":"Utforsk",
+        "tag":"Trykk på et stikkord for å se mere spesifikke sett"
+    
     },
     "decks":{
         "studyCards":"Studiekort",
@@ -121,8 +123,5 @@
     "starRating":{
         "avgStars":"Gjennomsnittlig vurdering",
         "noRatings":"Ingen vurderinger"
-    },
-    "explore":{
-        "tag":"Trykk på et stikkord for å se mere spesifikke sett"
     }
 }

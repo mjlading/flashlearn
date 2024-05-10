@@ -18,17 +18,21 @@ function CollectionListSkeleton() {
   );
 }
 
-function NoCollections(
-  {dict}:{dict:Awaited<ReturnType<typeof getDictionary>>, // fancy unwrap
-  }) {
+function NoCollections({
+  dict,
+}: {
+  dict: Awaited<ReturnType<typeof getDictionary>>; // fancy unwrap
+}) {
   return (
     <div className="h-full text-center flex flex-col items-center justify-center gap-4">
-      <h2 className="font-semibold text-lg">{dict.collections.noCollections}</h2>
+      <h2 className="font-semibold text-lg">
+        {dict.collections.noCollections}
+      </h2>
       <p className="text-muted-foreground">
         {dict.collections.noCollectionDescription}
       </p>
       <Link
-        href="/collections/create"
+        href={`/${dict.lang}/collections/create`}
         className={buttonVariants({
           size: "lg",
           className: "mt-8",
@@ -45,10 +49,11 @@ function NoCollections(
   );
 }
 
-export default function CollectionList(
-  {dict}:{
-    dict:Awaited<ReturnType<typeof getDictionary>>, // fancy unwrap
-  }) {
+export default function CollectionList({
+  dict,
+}: {
+  dict: Awaited<ReturnType<typeof getDictionary>>; // fancy unwrap
+}) {
   const collections = api.collection.getUserCollections.useQuery();
 
   if (collections.isLoading) {
@@ -56,7 +61,7 @@ export default function CollectionList(
   }
 
   if (collections.data?.length === 0) {
-    return <NoCollections dict={dict}/>;
+    return <NoCollections dict={dict} />;
   }
 
   return (

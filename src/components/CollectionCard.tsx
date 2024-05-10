@@ -42,7 +42,7 @@ import {
 import { getDictionary } from "@/app/dictionaries/dictionaries";
 
 export interface CollectionCardProps {
-  dict:Awaited<ReturnType<typeof getDictionary>>, // fancy unwrap
+  dict: Awaited<ReturnType<typeof getDictionary>>; // fancy unwrap
   collection: {
     id: string;
     name: string;
@@ -56,7 +56,10 @@ export interface CollectionCardProps {
   };
 }
 
-export default function CollectionCard({ dict, collection }: CollectionCardProps) {
+export default function CollectionCard({
+  dict,
+  collection,
+}: CollectionCardProps) {
   const [showDecks, setShowDecks] = useState(false);
   const [modeSelected, setModeSelected] = useState("write");
   const router = useRouter();
@@ -141,7 +144,7 @@ export default function CollectionCard({ dict, collection }: CollectionCardProps
 
             <DialogFooter className="mt-2">
               <Link
-                href={`/collections/${collection.id}/rehearsal?mode=${modeSelected}`}
+                href={`/${dict.lang}/collections/${collection.id}/rehearsal?mode=${modeSelected}`}
                 className={buttonVariants({
                   size: "lg",
                   className: "w-full",
@@ -158,7 +161,7 @@ export default function CollectionCard({ dict, collection }: CollectionCardProps
             <Tooltip>
               <TooltipTrigger asChild>
                 <Link
-                  href={`/collections/${collection.id}/edit`}
+                  href={`/${dict.lang}/collections/${collection.id}/edit`}
                   className={buttonVariants({
                     size: "icon",
                     variant: "ghost",

@@ -1,15 +1,23 @@
-export default function TermsPage() {
+import { Locale } from "@/../i18n-config";
+import { getDictionary } from "@/app/dictionaries/dictionaries";
+
+export default async function TermsPage({
+  params: { lang },
+}: {
+  params: { lang: Locale };
+}) {
+  const dict = await getDictionary(lang)
   return (
     <>
-      <h1>Flashlearn terms of service, Effective 09.05.2024</h1>
+      <h1>{dict.legal.ToS1}</h1>
 
-      <h1>This document contains Flashlearn's policy on how you can use the services provided on the site 'Flashlearn.no'</h1>
+      <h1>{dict.legal.ToS2}</h1>
 
-      <h1>We reserve the right to remove any users that abuse our services, example given:</h1>
+      <h1>{dict.legal.ToS3}</h1>
 
-      <h1>- Use of the card generation feature for purposes other than using the generated flashcards</h1>
+      <h1>{dict.legal.ToS4}</h1>
 
-      <h1>- Explicit language on manually created cards</h1>
+      <h1>{dict.legal.ToS5}</h1>
     </>
   );
 }

@@ -69,9 +69,15 @@ export default function DeckCardDialogContent({ deck }: Props) {
           <div className="flex gap-2 items-center text-muted-foreground text-sm">
             <History size={18} />
             {deck.dateChanged.valueOf() === deck.dateCreated.valueOf() ? (
-              <p>{dict.decks.startPractice.created} {dateDifferenceFromNow(dict.lang,deck.dateCreated)}</p>
+              <p>
+                {dict.decks.startPractice.created}{" "}
+                {dateDifferenceFromNow(dict.lang, deck.dateCreated)}
+              </p>
             ) : (
-              <p>{dict.decks.startPractice.lastEdited} {dateDifferenceFromNow(dict.lang, deck.dateChanged)}</p>
+              <p>
+                {dict.decks.startPractice.lastEdited}{" "}
+                {dateDifferenceFromNow(dict.lang, deck.dateChanged)}
+              </p>
             )}
           </div>
         </div>
@@ -94,26 +100,38 @@ export default function DeckCardDialogContent({ deck }: Props) {
           value={modeSelected}
           onValueChange={(newValue) => setModeSelected(newValue)}
         >
-        {session.data?.user && (
-          <TabsList className="grid w-full grid-cols-3">
-            <TabsTrigger value="visual">{dict.decks.startPractice.visual}</TabsTrigger>
-            <TabsTrigger value="write">{dict.decks.startPractice.written}</TabsTrigger>
-            <TabsTrigger value="oral">{dict.decks.startPractice.oral}</TabsTrigger>
-          </TabsList>
-        )}
-        {!session.data?.user && (
-          <TabsList className="grid w-full grid-cols-3">
-            <TabsTrigger value="visual">{dict.decks.startPractice.visual}</TabsTrigger>
-            <TabsTrigger disabled={true} value="write">{dict.decks.startPractice.written}</TabsTrigger>
-            <TabsTrigger disabled={true} value="oral">{dict.decks.startPractice.oral}</TabsTrigger>
-          </TabsList>
-        )}
+          {session.data?.user && (
+            <TabsList className="grid w-full grid-cols-3">
+              <TabsTrigger value="visual">
+                {dict.decks.startPractice.visual}
+              </TabsTrigger>
+              <TabsTrigger value="write">
+                {dict.decks.startPractice.written}
+              </TabsTrigger>
+              <TabsTrigger value="oral">
+                {dict.decks.startPractice.oral}
+              </TabsTrigger>
+            </TabsList>
+          )}
+          {!session.data?.user && (
+            <TabsList className="grid w-full grid-cols-3">
+              <TabsTrigger value="visual">
+                {dict.decks.startPractice.visual}
+              </TabsTrigger>
+              <TabsTrigger disabled={true} value="write">
+                {dict.decks.startPractice.written}
+              </TabsTrigger>
+              <TabsTrigger disabled={true} value="oral">
+                {dict.decks.startPractice.oral}
+              </TabsTrigger>
+            </TabsList>
+          )}
         </Tabs>
       </div>
 
       <DialogFooter className="mt-2">
         <Link
-          href={`/decks/${deck.id}/rehearsal?mode=${modeSelected}`}
+          href={`/${dict.lang}/decks/${deck.id}/rehearsal?mode=${modeSelected}`}
           className={buttonVariants({
             size: "lg",
             className: "w-full",
@@ -122,7 +140,6 @@ export default function DeckCardDialogContent({ deck }: Props) {
           {dict.decks.startPractice.start}
         </Link>
       </DialogFooter>
-      
     </DialogContent>
   );
 }

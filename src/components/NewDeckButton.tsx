@@ -4,13 +4,13 @@ import { ButtonProps, buttonVariants } from "./ui/button";
 import { getDictionary } from "@/app/dictionaries/dictionaries";
 
 interface dictAndButtonProps extends ButtonProps {
-  dict:Awaited<ReturnType<typeof getDictionary>> // fancy unwrap
+  dict: Awaited<ReturnType<typeof getDictionary>>; // fancy unwrap
 }
 
 export default function NewDeckButton({ dict, ...props }: dictAndButtonProps) {
   return (
     <Link
-      href={"/decks/create"}
+      href={`/${dict.lang}/decks/create`}
       className={buttonVariants({
         size: props.size,
         variant: props.variant,

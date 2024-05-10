@@ -32,18 +32,22 @@ export default async function SubjectPage({
     })
   ).decks;
 
+  const subjectName = dict.lang === "no" ? norwegianSubjectName : subject;
+
   return (
     <>
       <div className={`flex items-center mb-4 gap-2`}>
         <div className={`rounded-full p-1 ${style.color}`}>
           {React.createElement(style.icon, { size: 32 })}
         </div>
-        <h1 className="text-4xl font-bold">{norwegianSubjectName}</h1>
+        <h1 className="text-4xl font-bold">{subjectName}</h1>
       </div>
-      <h3 className="text-muted-foreground mb-12">
-        {dict.explore.tag}
-      </h3>
-      <ExploreKeywords subject={subject} activeKeyword={searchParams.keyword} />
+      <h3 className="text-muted-foreground mb-12">{dict.explore.tag}</h3>
+      <ExploreKeywords
+        dict={dict}
+        subject={subject}
+        activeKeyword={searchParams.keyword}
+      />
       <DeckList
         initialDecks={initialDecks}
         subject={subject}

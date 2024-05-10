@@ -7,9 +7,9 @@ import Link from "next/link";
 import React from "react";
 
 export default async function SubjectList({
-  dict
-}:{
-  dict:Awaited<ReturnType<typeof getDictionary>> // fancy unwrap
+  dict,
+}: {
+  dict: Awaited<ReturnType<typeof getDictionary>>; // fancy unwrap
 }) {
   unstable_noStore();
   const subjects = await api.subject.getSubjects.query();
@@ -24,17 +24,20 @@ export default async function SubjectList({
         };
         const norwegianSubjectName = subjectNameMap[subject.name];
 
+        const subjectName =
+          dict.lang === "no" ? norwegianSubjectName : subject.name;
+
         return (
           <div
             key={subject.name}
             className={`${style.color} border rounded-2xl bg-opacity-80`}
           >
             <Link
-              href={`/explore/${subject.name}`}
+              href={`/${dict.lang}/explore/${subject.name}`}
               className="flex flex-col items-center justify-center gap-5 p-7"
             >
               {React.createElement(style.icon, { size: 32 })}
-              <h3 className="text-xl font-semibold">{norwegianSubjectName}</h3>
+              <h3 className="text-xl font-semibold">{subjectName}</h3>
             </Link>
           </div>
         );

@@ -40,10 +40,12 @@ export default async function SubjectPage({
         </div>
         <h1 className="text-4xl font-bold">{norwegianSubjectName}</h1>
       </div>
-      <h3 className="text-muted-foreground mb-12">
-        {dict.explore.tag}
-      </h3>
-      <ExploreKeywords subject={subject} activeKeyword={searchParams.keyword} />
+      <h3 className="text-muted-foreground mb-12">{dict.explore.tag}</h3>
+      <ExploreKeywords
+        dict={dict}
+        subject={subject}
+        activeKeyword={searchParams.keyword}
+      />
       <DeckList
         initialDecks={initialDecks}
         subject={subject}

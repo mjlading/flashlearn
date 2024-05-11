@@ -37,11 +37,16 @@
     "explore":{
         "explore":"Explore",
         "tag":"Select a keyword to find more specific sets"
-    
     },
     "decks":{
         "studyCards":"Flashcards",
         "newDeck":"New deck",
+        "saveDecks":"Save set",
+        "savingDecks":"Saving",
+        "determiningSubject":"Determining subject",
+        "generatingKeywords":"Generating keywords",
+        "newSet":"New set",
+        "createNewSet":"Create a new set of flashcards",
         "recent":"Recent",
         "created":"Created",
         "bookmarked":"Bookmarked",

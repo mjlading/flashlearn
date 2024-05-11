@@ -168,9 +168,9 @@ export default function CreateDeckTopbar({
       <div className="flex justify-between items-center gap-4 px-6 text-sm font-medium text-gray-700 dark:text-gray-300">
         <div className="flex items-center gap-4">
           <BackButton />
-          <p>{form.watch("name") || "Nytt sett"}</p>
+          <p>{form.watch("name") || dict.decks.newSet}</p>
         </div>
-        <p>{form.watch("flashcards").length - 1} Studiekort</p>
+        <p>{form.watch("flashcards").length - 1} {dict.decks.studyCards}</p>
         <Button
           onClick={form.handleSubmit(onSubmit)}
           disabled={
@@ -181,13 +181,13 @@ export default function CreateDeckTopbar({
           {form.formState.isSubmitting || form.formState.isSubmitSuccessful ? (
             <>
               <LoadingSpinner size={20} className="mr-2" />
-              {classifySubjectMutation.isLoading && "Bestemmer fagområde"}
-              {generateTagsMutation.isLoading && "Genererer nøkkelord"}
+              {classifySubjectMutation.isLoading && dict.decks.determiningSubject}
+              {generateTagsMutation.isLoading && dict.decks.generatingKeywords}
               {(createDeckMutation.isLoading || editDeckMutation.isLoading) &&
-                "Lagrer"}
+                dict.decks.savingDecks}
             </>
           ) : (
-            "Lagre sett"
+            dict.decks.saveDecks
           )}
         </Button>
       </div>

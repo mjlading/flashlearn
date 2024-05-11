@@ -51,7 +51,7 @@ export default function DeleteDeckButton({ deck }: Props) {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button
+        <Button data-cy="deleteSetButton"
           size="icon"
           variant="ghost"
           className="text-destructive hover:text-destructive h-7"

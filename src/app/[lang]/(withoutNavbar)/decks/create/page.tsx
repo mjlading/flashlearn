@@ -7,8 +7,10 @@ import { FormProvider, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import SuggestedFlashcards from "./SuggestedFlashcards";
+import { useDictionary } from "@/lib/DictProvider";
 
 export default function CreateDeckPage() {
+  const dict = useDictionary();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -27,10 +29,10 @@ export default function CreateDeckPage() {
         <div className="flex flex-col space-y-8">
           <div className="flex gap-4 items-center">
             <Layers3 size={32} />
-            <h1 className="font-bold text-4xl">Nytt sett</h1>
+            <h1 className="font-bold text-4xl">{dict.decks.newDeck}</h1>
           </div>
           <p className="text-muted-foreground">
-            Opprett et nytt sett med studiekort
+          {dict.decks.createNewSet}
           </p>
           <CreateDeckForm />
           <SuggestedFlashcards />

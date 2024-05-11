@@ -35,8 +35,6 @@ const handler = (req: NextRequest) =>
   });
 
 // All trpc functions can be run max for 30 seconds
-export const config = {
-  maxDuration: 30,
-};
+export const maxDuration = 30;
 
 export { handler as GET, handler as POST };

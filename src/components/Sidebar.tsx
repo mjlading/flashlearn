@@ -47,10 +47,10 @@ export default function Sidebar() {
   ];
 
   return (
-    <aside className="sticky top-[61px] height-minus-navbar overflow-none border-r min-w-[10rem] lg:min-w-[15rem]">
+    <aside data-cy="dashboardSidebar" className="sticky top-[61px] height-minus-navbar overflow-none border-r min-w-[10rem] lg:min-w-[15rem]">
       <nav className="pt-5 px-3 lg:px-5 flex flex-col gap-2">
         {links.map((link) => (
-          <Link
+          <Link data-cy="dashboardlinks"
             key={link.href}
             href={link.href + (link.query ? link.query : "")}
             className={cn(

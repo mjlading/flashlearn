@@ -41,6 +41,12 @@
   "decks": {
     "studyCards": "Studiekort",
     "newDeck": "Nytt dekk",
+    "saveDecks":"Lagre Sett",
+    "savingDecks":"Lagrer",
+    "determiningSubject":"Bestemmer fagområde",
+    "generatingKeywords":"Genererer nøkkelord",
+    "newSet":"Nytt sett",
+    "createNewSet":"Opprett et nytt sett med studiekort",
     "recent": "Nylige",
     "created": "Laget",
     "bookmarked": "Bokmerkede",

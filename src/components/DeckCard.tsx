@@ -100,6 +100,7 @@ export default function DeckCard({
               {deck.userId === session?.data?.user.id && (
                 <div className="flex items-center gap-2">
                   <Link
+                    data-cy="editDeckButton"
                     href={`/${dict.lang}/decks/${deck.id}/edit`}
                     className={buttonVariants({
                       variant: "ghost",

@@ -4,10 +4,5 @@
       "path": "/api/every-day",
       "schedule": "0 6 * * *"
     }
-  ],
-  "functions": {
-    "src/server/routers/**": {
-      "maxDuration": 30
-    }
-  }
+  ]
 }

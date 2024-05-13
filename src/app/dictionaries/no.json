@@ -224,5 +224,8 @@
     "error": "Kunne ikke slette brukeren",
     "errorDescription": "Vennligst prøv igjen. Hvis problemet vedvarer, ta kontakt med oss via mail.",
     "academicLevelChangedTo": "Akademisk nivå er endret til"
+  },
+  "signInButton": {
+    "signIn": "Logg inn"
   }
 }

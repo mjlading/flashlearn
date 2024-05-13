@@ -225,5 +225,8 @@
     "error": "Could not delete the user",
     "errorDescription": "Please try again. If the problem persists, contact us via email.",
     "academicLevelChangedTo": "Academic level was changed to"
+  },
+  "signInButton": {
+    "signIn": "Log in"
   }
 }

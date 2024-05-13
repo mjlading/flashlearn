@@ -9,7 +9,7 @@ import { DropDownMenuItemThemeToggle } from "./DropDownMenuItemThemeToggle";
 import DialogContentUserSettings from "./DropDownMenuItemUserSettings";
 import LanguageDropdownMenu from "./LanguageDropdownMenu";
 import SearchInput from "./SearchInput";
-import SignInButton from "./SignInButton";
+import SignInLink from "./SignInButton";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Button, buttonVariants } from "./ui/button";
 import { Dialog, DialogTrigger } from "./ui/dialog";
@@ -138,7 +138,7 @@ async function ProfileButton({
       {user ? (
         <ProfileDropdownMenu dict={dict} user={user} />
       ) : (
-        <SignInButton dict={dict} />
+        <SignInLink dict={dict} />
       )}
     </>
   );

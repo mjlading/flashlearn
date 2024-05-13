@@ -2,12 +2,14 @@ import Link from "next/link";
 import { buttonVariants } from "./ui/button";
 import { getDictionary } from "@/app/dictionaries/dictionaries";
 
-export default function SignInButton(
-  {dict}
-  :{dict:Awaited<ReturnType<typeof getDictionary>>}) {
+export default function SignInLink({
+  dict,
+}: {
+  dict: Awaited<ReturnType<typeof getDictionary>>;
+}) {
   return (
-    <Link href="/api/auth/signin" className={buttonVariants()}>
-      Logg inn
+    <Link href={`/${dict.lang}/auth/signIn`} className={buttonVariants()}>
+      {dict.signInButton.signIn}
     </Link>
   );
 }

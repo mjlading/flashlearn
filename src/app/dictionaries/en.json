@@ -279,5 +279,8 @@
     "finishedDescription": "Fantastic job! You have answered all the questions in this session.",
     "timeSpent": "Time spent",
     "rate": "Rate the set"
+  },
+  "xpDisplay": {
+    "knowledgePoints": "Knowledge points"
   }
 }

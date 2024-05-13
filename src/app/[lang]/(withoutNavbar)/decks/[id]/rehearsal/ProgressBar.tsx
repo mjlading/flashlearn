@@ -48,7 +48,6 @@ export default function ProgressBar({
         onClick={() => previousFlashcard()}
         disabled={currentIndex === 0}
         size="icon"
-        variant="ghost"
       >
         <ChevronLeft />
       </Button>
@@ -58,7 +57,6 @@ export default function ProgressBar({
         onClick={() => nextFlashcard()}
         disabled={currentIndex === numFlashcards - 1}
         size="icon"
-        variant="ghost"
       >
         <ChevronRight />
       </Button>

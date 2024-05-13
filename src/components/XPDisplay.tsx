@@ -8,8 +8,10 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "./ui/tooltip";
+import { useDictionary } from "@/lib/DictProvider";
 
 export default function XPDisplay() {
+  const dict = useDictionary();
   const xp = api.user.getXP.useQuery();
 
   return (
@@ -21,7 +23,7 @@ export default function XPDisplay() {
             <span className="cursor-default">{xp.data}</span>
           </div>
         </TooltipTrigger>
-        <TooltipContent>Kunnskapspoeng</TooltipContent>
+        <TooltipContent>{dict.xpDisplay.knowledgePoints}</TooltipContent>
       </Tooltip>
     </TooltipProvider>
   );

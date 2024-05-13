@@ -278,5 +278,8 @@
     "finishedDescription": "Fantastisk jobb! Du har svart på alle spørsmålene i denne økten.",
     "timeSpent": "Tid brukt",
     "rate": "Vurder settet"
+  },
+  "xpDisplay": {
+    "knowledgePoints": "Kunnskapspoeng"
   }
 }

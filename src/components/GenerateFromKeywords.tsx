@@ -19,6 +19,7 @@ import {
 import { Input } from "./ui/input";
 import { Separator } from "./ui/separator";
 import { toast } from "sonner";
+import { useDictionary } from "@/lib/DictProvider";
 
 export default function GenerateFromKeywords({
   onGeneratedFlashcards,
@@ -27,6 +28,7 @@ export default function GenerateFromKeywords({
   onGeneratedFlashcards: (flashcards: GeneratedFlashcard[]) => void;
   onLoadingStateChanged: (newState: boolean) => void;
 }) {
+  const dict = useDictionary();
   const [keywords, setKeywords] = useState<string[]>([]);
   const [inputValue, setInputValue] = useState("");
   const [generationType, setGenerationType] = useState("mixed");
@@ -77,14 +79,16 @@ export default function GenerateFromKeywords({
       <DialogTrigger asChild>
         <Button variant="secondary">
           <Tag size={18} className="mr-2" />
-          Stikkord
+          {dict.generateFromKeywords.keywords}
         </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Generer fra stikkord</DialogTitle>
+          <DialogTitle>
+            {dict.generateFromKeywords.generateFromKeywords}
+          </DialogTitle>
           <DialogDescription>
-            Skriv inn en liste med stikkord, så genereres studiekort etter den.
+            {dict.generateFromKeywords.dialogDescription}
           </DialogDescription>
         </DialogHeader>
         <div className="my-4 space-y-6">
@@ -92,14 +96,15 @@ export default function GenerateFromKeywords({
             <Input
               type="text"
               autoFocus
-              placeholder="Skriv inn stikkord"
+              placeholder={dict.generateFromKeywords.enterKeywords}
               value={inputValue}
               maxLength={40}
               onChange={(e) => setInputValue(e.target.value)}
               onKeyDown={handleKeyDown}
             />
             <Button onClick={handleAddKeyword}>
-              Legg til <CornerDownLeft size={18} className="ml-2" />
+              {dict.generateFromKeywords.add}{" "}
+              <CornerDownLeft size={18} className="ml-2" />
             </Button>
           </div>
 
@@ -130,7 +135,7 @@ export default function GenerateFromKeywords({
           {generateFlashcardsMutation.isLoading ? (
             <LoadingSpinner />
           ) : (
-            "Generer studiekort"
+            dict.generateFromKeywords.generateFlashcards
           )}
         </Button>
       </DialogContent>

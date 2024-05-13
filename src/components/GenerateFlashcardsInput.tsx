@@ -14,6 +14,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "./ui/tooltip";
+import { useDictionary } from "@/lib/DictProvider";
 
 export type GeneratedFlashcard = {
   front: string;
@@ -26,6 +27,7 @@ export default function GenerateFlashcardsInput({
 }: {
   onAddFlashcards: (generatedFlashcards: GeneratedFlashcard[]) => void;
 }) {
+  const dict = useDictionary();
   const [generatedFlashcards, setGeneratedFlashcards] = useState<
     GeneratedFlashcard[]
   >([]);
@@ -44,11 +46,11 @@ export default function GenerateFlashcardsInput({
 
   function statusText() {
     if (isLoading && !generatedFlashcards.length) {
-      return "Genererer...";
+      return dict.generateFlashcardsInput.generating;
     } else if (!isLoading && !generatedFlashcards.length) {
-      return "Generer fra";
+      return dict.generateFlashcardsInput.generateFrom;
     } else if (!isLoading && generatedFlashcards.length) {
-      return `Genererte ${generatedFlashcards.length} studiekort`;
+      return `${dict.generateFlashcardsInput.generated} ${generatedFlashcards.length} ${dict.generateFlashcardsInput.flashcards}`;
     }
   }
 
@@ -111,13 +113,13 @@ export default function GenerateFlashcardsInput({
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent>
-                  <p>Forkast</p>
+                  {dict.generateFlashcardsInput.discard}
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>
             <Button type="button" onClick={handleInsertClicked}>
               <BetweenHorizonalStart size={18} className="mr-2" />
-              Sett inn
+              {dict.generateFlashcardsInput.insert}
             </Button>
           </div>
         </div>

@@ -17,6 +17,7 @@ import { GeneratedFlashcard } from "./GenerateFlashcardsInput";
 import { toast } from "sonner";
 import { api } from "@/app/api/trpc/client";
 import GenerationTypeTabs from "./GenerationTypeTabs";
+import { useDictionary } from "@/lib/DictProvider";
 
 export default function GenerateFromFile({
   onGeneratedFlashcards,
@@ -25,6 +26,8 @@ export default function GenerateFromFile({
   onGeneratedFlashcards: (flashcards: GeneratedFlashcard[]) => void;
   onLoadingStateChanged: (newState: boolean) => void;
 }) {
+  const dict = useDictionary();
+
   const [file, setFile] = useState<File | null>(null);
   const [generationType, setGenerationType] = useState("mixed");
   const generateFlashcardsMutation =
@@ -73,20 +76,19 @@ export default function GenerateFromFile({
       <DialogTrigger asChild>
         <Button variant="secondary">
           <File size={18} className="mr-2" />
-          Fil
+          {dict.generateFromFile.file}
         </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Generer fra fil</DialogTitle>
+          <DialogTitle>{dict.generateFromFile.generateFromFile}</DialogTitle>
           <DialogDescription>
-            Last opp en fil (.txt eller .pdf), så genereres studiekort etter
-            den.
+            {dict.generateFromFile.dialogDescription}
           </DialogDescription>
         </DialogHeader>
         <div className="space-y-6">
           <div className="grid gap-2">
-            <Label htmlFor="file">Fil</Label>
+            <Label htmlFor="file">{dict.generateFromFile.file}</Label>
             <Input
               id="file"
               type="file"
@@ -107,7 +109,7 @@ export default function GenerateFromFile({
                 disabled={!file}
                 onClick={handleGenerateClicked}
               >
-                Generer
+                {dict.generateFromFile.generateFlashcards}
               </Button>
             </>
           )}

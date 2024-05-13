@@ -9,15 +9,15 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "./ui/tooltip";
+import { useDictionary } from "@/lib/DictProvider";
 
 interface BackButtonProps extends ButtonProps {
   tooltipText?: string;
 }
 
-export default function BackButton({
-  tooltipText = "Gå tilbake",
-  ...props
-}: BackButtonProps) {
+export default function BackButton({ tooltipText, ...props }: BackButtonProps) {
+  const dict = useDictionary();
+
   const router = useRouter();
   return (
     <TooltipProvider>
@@ -33,7 +33,7 @@ export default function BackButton({
           </Button>
         </TooltipTrigger>
         <TooltipContent>
-          <p>{tooltipText}</p>
+          <p>{tooltipText || dict.backButton.goBack}</p>
         </TooltipContent>
       </Tooltip>
     </TooltipProvider>

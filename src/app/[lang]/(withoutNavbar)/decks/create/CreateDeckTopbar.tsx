@@ -170,18 +170,20 @@ export default function CreateDeckTopbar({
           <BackButton />
           <p>{form.watch("name") || dict.decks.newSet}</p>
         </div>
-        <p>{form.watch("flashcards").length - 1} {dict.decks.studyCards}</p>
+        <p>
+          {form.watch("flashcards").length - 1} {dict.decks.studyCards}
+        </p>
         <Button
           onClick={form.handleSubmit(onSubmit)}
           disabled={
             form.formState.isSubmitting || form.formState.isSubmitSuccessful
           }
-          className="bg-blue-600 hover:bg-blue-700 text-white"
         >
           {form.formState.isSubmitting || form.formState.isSubmitSuccessful ? (
             <>
               <LoadingSpinner size={20} className="mr-2" />
-              {classifySubjectMutation.isLoading && dict.decks.determiningSubject}
+              {classifySubjectMutation.isLoading &&
+                dict.decks.determiningSubject}
               {generateTagsMutation.isLoading && dict.decks.generatingKeywords}
               {(createDeckMutation.isLoading || editDeckMutation.isLoading) &&
                 dict.decks.savingDecks}

@@ -11,12 +11,15 @@ import { useFormContext } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 import { formSchema } from "./CreateDeckForm";
+import { useDictionary } from "@/lib/DictProvider";
 
 type SimilarFlashcard = Pick<Flashcard, "front" | "back" | "tag"> & {
   cosineSimilarity: number;
 };
 
 export default function SuggestedFlashcards() {
+  const dict = useDictionary();
+
   const { getValues, setValue } = useFormContext<z.infer<typeof formSchema>>();
 
   const [similarFlashcards, setSimilarFlashcards] = useState<
@@ -97,7 +100,9 @@ export default function SuggestedFlashcards() {
   return (
     <section>
       <div className="flex flex-col p-4 gap-12 rounded border">
-        <h2 className="font-semibold">Lignende studiekort</h2>
+        <h2 className="font-semibold">
+          {dict.suggestedFlashcards.similarFlashcards}
+        </h2>
         {similarFlashcards.map((flashcard, index) => (
           <div key={index} className="bg-accent rounded-lg p-4 relative">
             <div className="absolute top-0 mt-[-16px] flex justify-between items-center w-full pr-8">

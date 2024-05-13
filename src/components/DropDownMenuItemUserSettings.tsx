@@ -26,12 +26,15 @@ import { academicLevelMap } from "@/lib/academicLevel";
 import { useEffect, useState } from "react";
 import { type AcademicLevel } from "@prisma/client";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+import { useDictionary } from "@/lib/DictProvider";
 
 export default function DialogContentUserSettings({
   userName,
 }: {
   userName: string | null | undefined;
 }) {
+  const dict = useDictionary();
+
   const deleteUserMutation = api.user.deleteUser.useMutation();
   const academicLevelQuery = api.user.getAcademicLevel.useQuery();
   const setAcademicLevelMutation = api.user.setAcademicLevel.useMutation();
@@ -56,12 +59,11 @@ export default function DialogContentUserSettings({
       .then(async () => {
         router.push("/");
         await signOut(); // Deletes Auth.js cookies from browser
-        toast("Brukeren ble slettet");
+        toast(dict.userSettings.wasDeleted);
       })
       .catch((error) => {
-        toast.error("Kunne ikke slette brukeren", {
-          description:
-            "Vennligst prøv igjen. Hvis problemet vedvarer, ta kontakt med oss via mail.",
+        toast.error(dict.userSettings.error, {
+          description: dict.userSettings.errorDescription,
         });
         console.error("Could not delete user: ", error);
       });
@@ -78,7 +80,7 @@ export default function DialogContentUserSettings({
       })
       .then((data) => {
         toast.success(
-          `Akademisk nivå er endret til ${
+          `${dict.userSettings.academicLevelChangedTo} ${
             academicLevelMap[data.academicLevel!]
           }`
         );
@@ -90,7 +92,7 @@ export default function DialogContentUserSettings({
       <DialogHeader>
         <div className="flex items-center gap-2 leading-loose mb-4">
           <UserCog />
-          <h2 className="text-lg">BrukerInstillinger</h2>
+          <h2 className="text-lg">{dict.userSettings.userSettings}</h2>
         </div>
       </DialogHeader>
       {/* User profile info */}
@@ -99,12 +101,14 @@ export default function DialogContentUserSettings({
           <AvatarImage src={session.data?.user.image ?? ""} alt="profil" />
           <AvatarFallback>meg</AvatarFallback>
         </Avatar>
-        <span data-cy="userSettingsNickname" className="font-semibold">{session.data?.user.nickname}</span>
+        <span data-cy="userSettingsNickname" className="font-semibold">
+          {session.data?.user.nickname}
+        </span>
       </div>
 
       {/* Change academic level section */}
       <div data-cy="academicLevel" className="mb-8 mt-2 space-y-1">
-        <Label>Akademisk nivå</Label>
+        <Label>{dict.userSettings.academicLevel}</Label>
         <Select
           onValueChange={handleAcademicLevelChanged}
           value={academicLevel}
@@ -113,44 +117,49 @@ export default function DialogContentUserSettings({
             <SelectValue />
           </SelectTrigger>
 
-          <SelectContent >
+          <SelectContent>
             {Object.keys(academicLevelMap).map((academicLevelOption) => (
-              <SelectItem data-cy="academicLevelSelector" value={academicLevelOption} key={academicLevelOption}>
+              <SelectItem
+                data-cy="academicLevelSelector"
+                value={academicLevelOption}
+                key={academicLevelOption}
+              >
                 {academicLevelMap[academicLevelOption]}
               </SelectItem>
             ))}
           </SelectContent>
         </Select>
         <p className="text-muted-foreground text-sm">
-          Akademisk nivå brukes bl.a. for å tilpasse øvinger
+          {dict.userSettings.academicLevelDescription}
         </p>
       </div>
 
       {/* Delete user data section */}
       <div className="bg-warning/10 rounded p-4 border border-warning">
-        <p className="font-semibold leading-loose mb-1">Slett brukerdata</p>
+        <p className="font-semibold leading-loose mb-1">
+          {dict.userSettings.deleteUserData}
+        </p>
         <p className="text-muted-foreground text-sm mb-4">
-          Vil slette all data tilknyttet deg fra databasen vår, dvs. personlig
-          data (navn, epost, bilde), din fremgang, dine studiekort, samlinger
-          osv.
+          {dict.userSettings.deleteUserDataInfo}
         </p>
 
         {/* Delete user data confirmation dialog */}
         <Dialog>
           <DialogTrigger className="float-end">
             <Button data-cy="deleteUserButton" variant="destructive" size="sm">
-              Slett brukerdata
+              {dict.userSettings.deleteUserData}
             </Button>
           </DialogTrigger>
           <DialogContent>
             <DialogHeader>
               <h2 className="font-semibold text-lg leading-loose mb-2">
-                Er du sikker?
+                {dict.userSettings.areYouSure}
               </h2>
               <p>
                 <AlertTriangle className="text-warning" />
-                Brukeren <span className="font-bold">{userName}</span> og all
-                tilknyttet data vil bli slettet
+                {dict.userSettings.user}{" "}
+                <span className="font-bold">{userName}</span>{" "}
+                {dict.userSettings.andRelated}
               </p>
             </DialogHeader>
             <DialogFooter>
@@ -161,10 +170,10 @@ export default function DialogContentUserSettings({
                   size="sm"
                   className="w-fit"
                 >
-                  Slett brukerdata
+                  {dict.userSettings.deleteUserData}
                 </Button>
                 <DialogClose asChild>
-                  <Button size="sm">Avbryt</Button>
+                  <Button size="sm">{dict.userSettings.cancel}</Button>
                 </DialogClose>
               </div>
             </DialogFooter>

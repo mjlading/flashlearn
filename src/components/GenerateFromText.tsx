@@ -18,15 +18,7 @@ import { useState } from "react";
 import { GeneratedFlashcard } from "./GenerateFlashcardsInput";
 import { api } from "@/app/api/trpc/client";
 import { toast } from "sonner";
-
-const FormSchema = z.object({
-  textInput: z
-    .string()
-    .min(10, { message: "Må være minst 10 tegn." })
-    .max(1000, {
-      message: "Kan ikke overstige 1000 tegn.",
-    }),
-});
+import { useDictionary } from "@/lib/DictProvider";
 
 export default function GenerateFromText({
   onGeneratedFlashcards,
@@ -35,6 +27,17 @@ export default function GenerateFromText({
   onGeneratedFlashcards: (flashcards: GeneratedFlashcard[]) => void;
   onLoadingStateChanged: (newState: boolean) => void;
 }) {
+  const dict = useDictionary();
+
+  const FormSchema = z.object({
+    textInput: z
+      .string()
+      .min(10, { message: dict.generateFromText.textInputMin })
+      .max(1000, {
+        message: dict.generateFromText.textInputMax,
+      }),
+  });
+
   const [generationType, setGenerationType] = useState("mixed");
   const generateFlashcardsMutation =
     api.ai.generateFlashcardsFromText.useMutation({
@@ -47,8 +50,8 @@ export default function GenerateFromText({
       },
       onError: () => {
         onLoadingStateChanged(false);
-        toast.error("Kunne ikke generere studiekort", {
-          description: "Vennligst prøv igjen",
+        toast.error(dict.generateFromText.error, {
+          description: dict.generateFromText.pleaseTryAgain,
         });
       },
     });
@@ -71,14 +74,14 @@ export default function GenerateFromText({
       <DialogTrigger asChild>
         <Button variant="secondary">
           <Text size={18} className="mr-2" />
-          Tekst
+          {dict.generateFromText.text}
         </Button>
       </DialogTrigger>
       <DialogContent className="md:min-w-[45rem] min-w-full">
         <DialogHeader>
-          <DialogTitle>Generer fra tekst</DialogTitle>
+          <DialogTitle>{dict.generateFromText.generateFromText}</DialogTitle>
           <DialogDescription>
-            Skriv inn din tekst, så genereres studiekort etter den.
+            {dict.generateFromText.dialogDescription}
           </DialogDescription>
         </DialogHeader>
 
@@ -96,7 +99,7 @@ export default function GenerateFromText({
                 <FormItem>
                   <FormControl>
                     <Textarea
-                      placeholder="Skriv inn tekst her"
+                      placeholder={dict.generateFromText.enterTextHere}
                       {...field}
                       rows={15}
                     />
@@ -110,7 +113,7 @@ export default function GenerateFromText({
               onValueChange={(value) => setGenerationType(value)}
             />
             <Button type="submit" size="lg" className="w-full">
-              Generer
+              {dict.generateFromText.generateFlashcards}
             </Button>
           </form>
         </Form>

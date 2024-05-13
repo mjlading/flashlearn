@@ -77,8 +77,8 @@
       "field": "Fagfelt",
       "private": "Privat",
       "privateDescription": "Private sett er kun synlige for deg.",
-      "academicLevel": "Academic level",
-      "addFlashcard": "Add flashcard",
+      "academicLevel": "Akademisk nivå",
+      "addFlashcard": "Legg til studiekort",
       "addFlashcardDescription": "Hvert kort har en fremside og en bakside. Fremsiden kan ha et begrep eller spørsmål, og baksiden kan ha et svar eller en forklaring.",
       "placeholderFront": "Fremside",
       "placeholderBack": "Bakside"
@@ -143,5 +143,86 @@
     "showingResults": "Viser resultater for",
     "hits": "Treff",
     "search": "Søk"
+  },
+  "generateFromKeywords": {
+    "keywords": "Stikkord",
+    "generateFromKeywords": "Generer fra stikkord",
+    "dialogDescription": "Skriv inn en liste med stikkord, så genereres studiekort etter den.",
+    "add": "Legg til",
+    "enterKeywords": "Skriv inn stikkord",
+    "generateFlashcards": "Generer studiekort"
+  },
+  "generationType": {
+    "moreTheoretical": "Mer teoretisk",
+    "mixed": "Blanding",
+    "morePractical": "Mer praktisk",
+    "moreTheoreticalTooltip": "Genererer studiekort med definisjoner og teoretiske spørsmål.",
+    "mixedTooltip": "Inneholder både teoretiske definisjoner og praktiske spørsmål.",
+    "morePracticalTooltip": "Fokuserer på praktiske oppgaver og direkte anvendelse."
+  },
+  "suggestedFlashcards": {
+    "similarFlashcards": "Lignende studiekort"
+  },
+  "generateFlashcardsInput": {
+    "discard": "Forkast",
+    "insert": "Sett inn",
+    "generateFrom": "Generer fra",
+    "generating": "Genererer...",
+    "generated": "Genererte",
+    "flashcards": "Studiekort"
+  },
+  "generateFromCourse": {
+    "course": "Emne",
+    "generateFromCourse": "Generer fra emne",
+    "dialogDescription": "Generer kort fra et emne ved NTNU.",
+    "fetchCourseInfo": "Hent emneinfo",
+    "subjectAreas": "Fagområder",
+    "languages": "Språk",
+    "level": "Nivå",
+    "courseContent": "Faglig innhold",
+    "learningOutcomes": "Læringsutbytte",
+    "learningMethods": "Læringsformer",
+    "generateFlashcards": "Generer studiekort",
+    "courseCode": "Emnekode"
+  },
+  "generateFromFile": {
+    "file": "Fil",
+    "generateFromFile": "Generer fra fil",
+    "dialogDescription": "Last opp en fil (.txt eller .pdf), så genereres studiekort etter den.",
+    "generateFlashcards": "Generer studiekort"
+  },
+  "generateFromText": {
+    "text": "Tekst",
+    "generateFromText": "Generer fra tekst",
+    "dialogDescription": "Skriv inn din tekst, så genereres studiekort etter den.",
+    "enterTextHere": "Skriv inn tekst her",
+    "generateFlashcards": "Generer studiekort",
+    "textInputMin": "Må være minst 10 tegn.",
+    "textInputMax": "Kan ikke overstige 1000 tegn.",
+    "error": "Kunne ikke generere studiekort",
+    "pleaseTryAgain": "Vennligst prøv igjen"
+  },
+  "backButton": {
+    "goBack": "Gå tilbake"
+  },
+  "deleteDeckButton": {
+    "delete": "Slett",
+    "cannotUndo": "Denne handlingen kan ikke angres.",
+    "deleteDeck": "Slett sett"
+  },
+  "userSettings": {
+    "userSettings": "Brukerinstillinger",
+    "academicLevel": "Akademisk nivå",
+    "academicLevelDescription": "Akademisk nivå brukes bl.a. for å tilpasse øvinger",
+    "deleteUserData": "Slett brukerdata",
+    "deleteUserDataInfo": "Vil slette all data tilknyttet deg fra databasen vår, dvs. personlig data (navn, epost, bilde), din fremgang, dine studiekort, samlinger osv.",
+    "areYouSure": "Er du sikker?",
+    "cancel": "Avbryt",
+    "user": "Brukeren",
+    "andRelated": "og all tilknyttet data vil bli slettet",
+    "wasDeleted": "Brukeren ble slettet",
+    "error": "Kunne ikke slette brukeren",
+    "errorDescription": "Vennligst prøv igjen. Hvis problemet vedvarer, ta kontakt med oss via mail.",
+    "academicLevelChangedTo": "Akademisk nivå er endret til"
   }
 }

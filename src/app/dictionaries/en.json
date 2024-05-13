@@ -36,28 +36,28 @@
   },
   "explore": {
     "explore": "Explore",
-    "tag": "Select a keyword to find more specific sets"
+    "tag": "Select a keyword to find more specific decks"
   },
   "decks": {
     "studyCards": "Flashcards",
     "newDeck": "New deck",
-    "saveDecks": "Save set",
+    "saveDecks": "Save deck",
     "savingDecks": "Saving",
     "determiningSubject": "Determining subject",
     "generatingKeywords": "Generating keywords",
-    "newSet": "New set",
-    "createNewSet": "Create a new set of flashcards",
+    "newSet": "New deck",
+    "createNewSet": "Create a new deck of flashcards",
     "recent": "Recent",
     "created": "Created",
     "bookmarked": "Bookmarked",
     "noDecks": {
-      "noSets": "No sets found 🤷‍♂️",
-      "noRecentSets": "You have no recent sets",
-      "noRecentSetsEx": "Your recently practiced sets will appear here",
+      "noSets": "No decks found 🤷‍♂️",
+      "noRecentSets": "You have no recent decks",
+      "noRecentSetsEx": "Your recently practiced decks will appear here",
       "noCreatedSets": "You don't have any flashcards 😔",
-      "noCreatedSetsEx": "Create a set to start learning!",
-      "noBookmakedSets": "You have no bookmarked sets",
-      "noBookmakedSetsEx": "Your bookmarked sets will appear here"
+      "noCreatedSetsEx": "Create a deck to start learning!",
+      "noBookmakedSets": "You have no bookmarked decks",
+      "noBookmakedSetsEx": "Your bookmarked decks will appear here"
     },
     "startPractice": {
       "visual": "Visual",
@@ -72,11 +72,11 @@
     "createDeck": {
       "added": "Added ",
       "flashcards": " flashcards",
-      "giveSetName": "Give your set a name",
+      "giveSetName": "Give your deck a name",
       "name": "Name",
       "field": "Field of study",
       "private": "Private",
-      "privateDescription": "Private sets are only visible to you.",
+      "privateDescription": "Private decks are only visible to you.",
       "academicLevel": "Academic level",
       "addFlashcard": "Add flashcard",
       "addFlashcardDescription": "Every flashcard has a front and back. The front has a term or question, and the back side can contain an answer or explanation.",
@@ -88,10 +88,10 @@
     "collections": "Collections",
     "newCollection": "New collection",
     "noCollections": "You have no collections",
-    "noCollectionDescription": "Create a collection to organize and practice multiple sets at once",
+    "noCollectionDescription": "Create a collection to organize and practice multiple decks at once",
     "createCollection": {
       "aboutCollection": "About",
-      "addToCollection": "Add sets",
+      "addToCollection": "Add decks",
       "placeholderName": "Give your collection a name",
       "placeholderDescription": "Describe your collection",
       "name": "Name",
@@ -105,7 +105,7 @@
         "editWorked": "Your edit of ",
         "editFailed": "Your changes could not be stored"
       },
-      "addedSets": "Added sets"
+      "addedSets": "Added decks"
     },
     "addDeck": "Add to collection",
     "removeDeck": "Remove from collection"
@@ -144,5 +144,86 @@
     "showingResults": "Showing results for",
     "hits": "Hits",
     "search": "Search"
+  },
+  "generateFromKeywords": {
+    "keywords": "Keywords",
+    "generateFromKeywords": "Generate from keywords",
+    "dialogDescription": "Enter a list of keywords to generate flashcards from",
+    "add": "Add",
+    "enterKeywords": "Enter keywords",
+    "generateFlashcards": "Generate flashcards"
+  },
+  "generationType": {
+    "moreTheoretical": "More theoretical",
+    "mixed": "Mixed",
+    "morePractical": "More practical",
+    "moreTheoreticalTooltip": "Generates study cards with definitions and theoretical questions.",
+    "mixedTooltip": "Contains both theoretical definitions and practical questions.",
+    "morePracticalTooltip": "Focuses on practical tasks and direct application."
+  },
+  "suggestedFlashcards": {
+    "similarFlashcards": "Similar flashcards"
+  },
+  "generateFlashcardsInput": {
+    "discard": "Discard",
+    "insert": "Insert",
+    "generateFrom": "Generate from",
+    "generating": "Generating...",
+    "generated": "Generated",
+    "flashcards": "Flashcards"
+  },
+  "generateFromCourse": {
+    "course": "Course",
+    "generateFromCourse": "Generate from course",
+    "dialogDescription": "Generate cards from a course at NTNU.",
+    "fetchCourseInfo": "Fetch course info",
+    "subjectAreas": "Subject areas",
+    "languages": "Languages",
+    "level": "Level",
+    "courseContent": "Course content",
+    "learningOutcomes": "Learning outcomes",
+    "learningMethods": "Learning methods",
+    "generateFlashcards": "Generate flashcards",
+    "courseCode": "Course code"
+  },
+  "generateFromFile": {
+    "file": "File",
+    "generateFromFile": "Generate from file",
+    "dialogDescription": "Upload a file (.txt or .pdf), and study cards will be generated from it.",
+    "generateFlashcards": "Generate flashcards"
+  },
+  "generateFromText": {
+    "text": "Text",
+    "generateFromText": "Generate from text",
+    "dialogDescription": "Enter your text, and study cards will be generated from it.",
+    "enterTextHere": "Enter your text here",
+    "generateFlashcards": "Generate flashcards",
+    "textInputMin": "Must be at least 10 characters.",
+    "textInputMax": "Cannot exceed 1000 characters.",
+    "error": "Could not generate study cards",
+    "pleaseTryAgain": "Please try again"
+  },
+  "backButton": {
+    "goBack": "Go back"
+  },
+  "deleteDeckButton": {
+    "delete": "Delete",
+    "cannotUndo": "This action cannot be undone.",
+    "deleteDeck": "Delete deck"
+  },
+  "userSettings": {
+    "userSettings": "User settings",
+    "academicLevel": "Akademic level",
+    "academicLevelDescription": "Academic level is used, among other things, to tailor exercises",
+    "deleteUserData": "Delete user data",
+    "deleteUserDataInfo": "Will delete all data associated with you from our database, i.e., personal data (name, email, picture), your progress, your study cards, collections, etc.",
+    "areYouSure": "Are you sure?",
+    "cancel": "Cancel",
+    "user": "The user",
+    "andRelated": "and all related data will be deleted",
+    "wasDeleted": "The user was deleted",
+    "error": "Could not delete the user",
+    "errorDescription": "Please try again. If the problem persists, contact us via email.",
+    "academicLevelChangedTo": "Academic level was changed to"
   }
 }

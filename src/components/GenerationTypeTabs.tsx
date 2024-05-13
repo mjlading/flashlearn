@@ -1,6 +1,6 @@
 "use client";
 
-import { Label } from "./ui/label";
+import { useDictionary } from "@/lib/DictProvider";
 import { Tabs, TabsList, TabsTrigger } from "./ui/tabs";
 import {
   Tooltip,
@@ -16,6 +16,8 @@ export default function GenerationTypeTabs({
   value: string;
   onValueChange: (value: string) => void;
 }) {
+  const dict = useDictionary();
+
   return (
     <Tabs value={value} onValueChange={onValueChange}>
       <TabsList className="grid w-[25rem] grid-cols-3 mx-auto">
@@ -23,35 +25,29 @@ export default function GenerationTypeTabs({
           <Tooltip>
             <TooltipTrigger>
               <TabsTrigger value="theoretical" className="w-full">
-                Mer teoretisk
+                {dict.generationType.moreTheoretical}
               </TabsTrigger>
             </TooltipTrigger>
             <TooltipContent>
-              <p>
-                Genererer studiekort med definisjoner og teoretiske spørsmål.
-              </p>
+              {dict.generationType.moreTheoreticalTooltip}
             </TooltipContent>
           </Tooltip>
           <Tooltip>
             <TooltipTrigger>
               <TabsTrigger value="mixed" className="w-full">
-                Blanding
+                {dict.generationType.mixed}
               </TabsTrigger>
             </TooltipTrigger>
-            <TooltipContent>
-              <p>
-                Inneholder både teoretiske definisjoner og praktiske spørsmål.
-              </p>
-            </TooltipContent>
+            <TooltipContent>{dict.generationType.mixedTooltip}</TooltipContent>
           </Tooltip>
           <Tooltip>
             <TooltipTrigger>
               <TabsTrigger value="practical" className="w-full">
-                Mer praktisk
+                {dict.generationType.morePractical}
               </TabsTrigger>
             </TooltipTrigger>
             <TooltipContent>
-              <p>Fokuserer på praktiske oppgaver og direkte anvendelse.</p>
+              {dict.generationType.morePracticalTooltip}
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>

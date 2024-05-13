@@ -1,9 +1,10 @@
 "use client";
 
 import { api } from "@/app/api/trpc/client";
+import { SerializedStateDates } from "@/lib/utils";
+import type { Deck } from "@prisma/client";
 import { AlertCircle, Trash } from "lucide-react";
 import { toast } from "sonner";
-import { DeckCardProps } from "./DeckCard";
 import { LoadingSpinner } from "./LoadingSpinner";
 import { Button } from "./ui/button";
 import {
@@ -16,8 +17,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "./ui/dialog";
-import { SerializedStateDates } from "@/lib/utils";
-import type { Deck } from "@prisma/client";
+import { useDictionary } from "@/lib/DictProvider";
 
 interface Props {
   // Convert types dateCreated and dateChanged from Date to string
@@ -25,6 +25,8 @@ interface Props {
 }
 
 export default function DeleteDeckButton({ deck }: Props) {
+  const dict = useDictionary();
+
   const utils = api.useUtils();
 
   const deleteDeckMutation = api.deck.deleteDeckById.useMutation({
@@ -51,7 +53,8 @@ export default function DeleteDeckButton({ deck }: Props) {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button data-cy="deleteSetButton"
+        <Button
+          data-cy="deleteSetButton"
           size="icon"
           variant="ghost"
           className="text-destructive hover:text-destructive h-7"
@@ -65,19 +68,20 @@ export default function DeleteDeckButton({ deck }: Props) {
       <DialogContent>
         <DialogHeader>
           <DialogTitle>
-            Slett <span className="font-bold">{deck.name}</span>?
+            {dict.deleteDeckButton.delete}{" "}
+            <span className="font-bold">{deck.name}</span>?
           </DialogTitle>
           <DialogDescription>
             <div className="flex items-center gap-2 text-orange-500">
               <AlertCircle size={18} />
-              Denne handlingen kan ikke angres.
+              {dict.deleteDeckButton.cannotUndo}
             </div>
           </DialogDescription>
         </DialogHeader>
         <DialogFooter>
           <DialogClose asChild>
             <Button onClick={handleDeleteDeck} variant="destructive">
-              Slett sett
+              {dict.deleteDeckButton.deleteDeck}
             </Button>
           </DialogClose>
         </DialogFooter>

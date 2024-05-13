@@ -20,6 +20,7 @@ import { toast } from "sonner";
 import GenerationTypeTabs from "./GenerationTypeTabs";
 import { GeneratedFlashcard } from "./GenerateFlashcardsInput";
 import { api } from "@/app/api/trpc/client";
+import { useDictionary } from "@/lib/DictProvider";
 
 export default function GenerateFromCourse({
   onGeneratedFlashcards,
@@ -28,6 +29,8 @@ export default function GenerateFromCourse({
   onGeneratedFlashcards: (flashcards: GeneratedFlashcard[]) => void;
   onLoadingStateChanged: (newState: boolean) => void;
 }) {
+  const dict = useDictionary();
+
   const [courseCode, setCourseCode] = useState("");
   const [isLoadingCourseCode, setIsLoadingCourseCode] = useState(false);
   const [courseInfo, setCourseInfo] = useState<CourseInfo | null>(null);
@@ -52,7 +55,6 @@ export default function GenerateFromCourse({
   async function handleGetCourseInfo() {
     setIsLoadingCourseCode(true);
     const courseCodePrepared = courseCode.trim().toUpperCase();
-    //TODO: CATCH ERRORS
     const courseInfo = await getCourseInfo(courseCodePrepared);
 
     if (!courseInfo) {
@@ -87,21 +89,23 @@ export default function GenerateFromCourse({
       <DialogTrigger asChild>
         <Button variant="secondary">
           <GraduationCap size={18} className="mr-2" />
-          Emne
+          {dict.generateFromCourse.course}
         </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <GraduationCap />
-            Generer fra emne
+            {dict.generateFromCourse.generateFromCourse}
           </DialogTitle>
           <DialogDescription>
-            Generer kort fra et emne ved NTNU.
+            {dict.generateFromCourse.dialogDescription}
           </DialogDescription>
         </DialogHeader>
         <div className="grid w-full max-w-md items-center gap-2">
-          <Label htmlFor="courseCode">Emnekode</Label>
+          <Label htmlFor="courseCode">
+            {dict.generateFromCourse.courseCode}
+          </Label>
           <div className="flex gap-2">
             <Input
               type="text"
@@ -120,7 +124,7 @@ export default function GenerateFromCourse({
               {isLoadingCourseCode ? (
                 <LoadingSpinner className="mx-9" />
               ) : (
-                "Hent emneinfo"
+                dict.generateFromCourse.fetchCourseInfo
               )}
             </Button>
           </div>
@@ -131,22 +135,26 @@ export default function GenerateFromCourse({
               <h2 className="font-semibold text-lg mb-1">{courseInfo.name}</h2>
               <div className="flex gap-2 items-center">
                 <CheckCircle2 size={20} className="text-success" />
-                <h3>Fagområder: </h3>
+                <h3>{dict.generateFromCourse.subjectAreas}: </h3>
                 {courseInfo.subjects?.map((subject) => (
                   <div key={subject}>{subject}</div>
                 ))}
               </div>
               <div className="flex gap-2 items-center">
                 <CheckCircle2 size={20} className="text-success" />
-                <h3>Språk: {courseInfo.language}</h3>
+                <h3>
+                  {dict.generateFromCourse.languages}: {courseInfo.language}
+                </h3>
               </div>
               <div className="flex gap-2 items-center">
                 <CheckCircle2 size={20} className="text-success" />
-                <h3>Nivå: {courseInfo.studyLevel}</h3>
+                <h3>
+                  {dict.generateFromCourse.level}: {courseInfo.studyLevel}
+                </h3>
               </div>
               <div className="flex gap-2 items-center">
                 <CheckCircle2 size={20} className="text-success" />
-                <h3>Faglig innhold:</h3>
+                <h3>{dict.generateFromCourse.courseContent}:</h3>
               </div>
               <p className="text-muted-foreground text-sm ml-7">
                 {courseInfo.courseContent}
@@ -154,7 +162,7 @@ export default function GenerateFromCourse({
 
               <div className="flex gap-2 items-center">
                 <CheckCircle2 size={20} className="text-success" />
-                <h3>Læringsutbytte:</h3>
+                <h3>{dict.generateFromCourse.learningOutcomes}:</h3>
               </div>
               <p className="text-muted-foreground text-sm ml-7">
                 {courseInfo.learningGoal}
@@ -162,7 +170,7 @@ export default function GenerateFromCourse({
 
               <div className="flex gap-2 items-center">
                 <CheckCircle2 size={20} className="text-success" />
-                <h3>Læringsformer:</h3>
+                <h3>{dict.generateFromCourse.learningMethods}:</h3>
               </div>
 
               <p className="text-muted-foreground text-sm ml-7">
@@ -178,7 +186,7 @@ export default function GenerateFromCourse({
               className="w-full"
               onClick={handleGenerateClicked}
             >
-              Generer studiekort
+              {dict.generateFromCourse.generateFlashcards}
             </Button>
           </div>
         )}

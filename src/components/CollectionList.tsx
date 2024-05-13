@@ -68,7 +68,7 @@ export default function CollectionList({
     <div className="space-y-3 pb-7">
       {collections.data?.map((collection) => (
         <div key={collection.id}>
-          <CollectionCard dict={dict} collection={collection} />
+          <CollectionCard collection={collection} />
         </div>
       ))}
     </div>

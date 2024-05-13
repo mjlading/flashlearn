@@ -1,14 +1,16 @@
 "use client";
 
+import useLocale from "@/hooks/useLocale";
+import { useDictionary } from "@/lib/DictProvider";
+import { Search } from "lucide-react";
 import React from "react";
 import { Input } from "./ui/input";
-import { Search } from "lucide-react";
-import useLocale from "@/hooks/useLocale";
 
 export default function SearchInput(
   props: React.InputHTMLAttributes<HTMLInputElement>
 ) {
   const locale = useLocale();
+  const { search } = useDictionary();
 
   return (
     <form action={`/${locale}/search`}>
@@ -19,7 +21,7 @@ export default function SearchInput(
           name="q"
           aria-label="Søk etter studiekort sett"
           autoComplete="off"
-          placeholder="Søk"
+          placeholder={search.search}
           maxLength={50}
           minLength={2}
           required

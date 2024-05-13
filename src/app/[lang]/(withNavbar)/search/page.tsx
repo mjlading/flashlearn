@@ -44,11 +44,11 @@ export default async function SearchPage({
         />
         <div className="my-6 space-y-1">
           <p>
-            Viser resultater for &quot;
+            {dict.search.showingResults} &quot;
             <span className="font-semibold">{q}</span>&quot;
           </p>
           <p>
-            Treff:{" "}
+            {dict.search.hits}:{" "}
             <span className="font-semibold">
               {hits != decks.length ? decks.length : hits}
             </span>

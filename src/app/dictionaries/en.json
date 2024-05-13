@@ -139,5 +139,10 @@
     "ToS3": "We reserve the right to remove any users that abuse our services, example given:",
     "ToS4": "- Use of the card generation feature for purposes other than using the generated flashcards",
     "ToS5": "- Explicit language on manually created cards"
+  },
+  "search": {
+    "showingResults": "Showing results for",
+    "hits": "Hits",
+    "search": "Search"
   }
 }

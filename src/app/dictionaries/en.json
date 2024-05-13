@@ -32,7 +32,12 @@
     "dashboard": "dashboard"
   },
   "progress": {
-    "progress": "Progress"
+    "progress": "Progress",
+    "rehearsals": "Rehearsals",
+    "leaderboard": "Leaderboard",
+    "user": "User",
+    "mySubjects": "My subjects",
+    "favoriteMode": "Favorite mode"
   },
   "explore": {
     "explore": "Explore",

@@ -14,6 +14,7 @@ import {
 import { Line } from "react-chartjs-2";
 import type { Rehearsal } from "@prisma/client";
 import { useEffect, useState } from "react";
+import { useDictionary } from "@/lib/DictProvider";
 
 ChartJS.register(
   CategoryScale,
@@ -30,6 +31,8 @@ export default function StreakLineChart({
 }: {
   rehearsals: SerializedStateDates<Rehearsal, "dateStart">[] | undefined;
 }) {
+  const dict = useDictionary();
+
   const [chartData, setChartData] = useState<undefined | any>(undefined);
 
   useEffect(() => {
@@ -63,12 +66,16 @@ export default function StreakLineChart({
   }, [rehearsals]);
 
   const norwegianLabels = ["Søn", "Man", "Tir", "Ons", "Tor", "Fre", "Lør"];
+  const englishLabels = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+
   const todayDayIndex = new Date().getDay();
   const labels = new Array(7)
     .fill(null)
     .map((_, i) => {
       const labelIndex = (todayDayIndex - i + 7) % 7;
-      return norwegianLabels[labelIndex];
+      return dict.lang === "no"
+        ? norwegianLabels[labelIndex]
+        : englishLabels[labelIndex];
     })
     .reverse();
 
@@ -85,7 +92,7 @@ export default function StreakLineChart({
     labels,
     datasets: [
       {
-        label: "Øvinger",
+        label: dict.progress.rehearsals,
         data: chartData,
         borderColor: "rgb(255, 99, 132)",
         backgroundColor: "rgba(255, 99, 132, 0.5)",

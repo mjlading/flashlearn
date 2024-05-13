@@ -1,6 +1,7 @@
 "use client";
 
 import { Skeleton } from "@/components/ui/skeleton";
+import { useDictionary } from "@/lib/DictProvider";
 import { SerializedStateDates } from "@/lib/utils";
 import type { Rehearsal } from "@prisma/client";
 import { Mode } from "@prisma/client";
@@ -22,6 +23,8 @@ export default function FavoriteMode({
 }: {
   rehearsals: SerializedStateDates<Rehearsal, "dateStart">[] | undefined;
 }) {
+  const dict = useDictionary();
+
   const [favoriteModeObj, setFavoriteModeObj] = useState<
     FavoriteModeInfo | undefined
   >(undefined);
@@ -55,7 +58,10 @@ export default function FavoriteMode({
     });
 
     const pieData = {
-      labels: ["Visuell", "Skriftlig", "Muntlig"],
+      labels:
+        dict.lang === "no"
+          ? ["Visuell", "Skriftlig", "Muntlig"]
+          : ["Visual", "Written", "Oral"],
       datasets: [
         {
           label: "# av Øvinger",
@@ -87,7 +93,8 @@ export default function FavoriteMode({
       ORAL: "👂",
     };
 
-    const favoriteMode = modeToNorwegianMap[maxMode];
+    const favoriteMode =
+      dict.lang === "no" ? modeToNorwegianMap[maxMode] : maxMode.toLowerCase();
     const emoji = modeToEmojiMap[maxMode];
 
     return {
@@ -100,12 +107,16 @@ export default function FavoriteMode({
 
   return (
     <section className="col-span-1 bg-blue-100 dark:bg-blue-900/50 p-4 rounded-2xl">
-      <h2 className="font-semibold text-xl leading-loose">Favorittmodus</h2>
+      <h2 className="font-semibold text-xl leading-loose">
+        {dict.progress.favoriteMode}
+      </h2>
       {favoriteModeObj ? (
         <div>
           <span>{favoriteModeObj.favoriteMode}</span>
           <span>{favoriteModeObj.emoji}</span>
-          <span>{favoriteModeObj.frequency} øvinger</span>
+          <span>
+            {favoriteModeObj.frequency} {dict.progress.rehearsals.toLowerCase()}
+          </span>
           <Pie data={favoriteModeObj.pieData} />
         </div>
       ) : (

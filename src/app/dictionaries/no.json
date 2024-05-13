@@ -32,7 +32,12 @@
     "dashboard": "dashbord"
   },
   "progress": {
-    "progress": "Fremgang"
+    "progress": "Fremgang",
+    "rehearsals": "Øvinger",
+    "leaderboard": "Toppliste",
+    "user": "Bruker",
+    "mySubjects": "Mine fagfelt",
+    "favoriteMode": "Favorittmodus"
   },
   "explore": {
     "explore": "Utforsk",

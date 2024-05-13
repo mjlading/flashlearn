@@ -1,3 +1,4 @@
+import { useDictionary } from "@/lib/DictProvider";
 import { subjectStyles } from "@/lib/subject";
 import * as d3 from "d3-force";
 import React, { useEffect, useRef, useState } from "react";
@@ -12,6 +13,8 @@ export default function SubjectWordCloud({
 }: {
   subjects: string[] | undefined;
 }) {
+  const dict = useDictionary();
+
   const [nodes, setNodes] = useState<Node[]>([]);
   const svgRef = useRef(null);
 
@@ -61,7 +64,9 @@ export default function SubjectWordCloud({
 
   return (
     <section className="col-span-1 p-4 bg-green-100 dark:bg-green-900/50 rounded-2xl">
-      <h2 className="font-semibold text-xl leading-loose">Mine fagområder</h2>
+      <h2 className="font-semibold text-xl leading-loose">
+        {dict.progress.mySubjects}
+      </h2>
       <svg ref={svgRef} height="250" width="250" className="mx-auto">
         {nodes.map((node, index) => (
           <g key={index} transform={`translate(${node.x}, ${node.y})`}>

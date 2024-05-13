@@ -1,10 +1,10 @@
 "use client";
 
+import { useDictionary } from "@/lib/DictProvider";
 import { SerializedStateDates } from "@/lib/utils";
 import type { Deck } from "@prisma/client";
 import { ChevronDown, ChevronUp, Pencil } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 import DeleteCollectionButton from "./DeleteCollectionButton";
 import { Button, buttonVariants } from "./ui/button";
@@ -39,7 +39,6 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "./ui/tooltip";
-import { useDictionary } from "@/lib/DictProvider";
 
 export interface CollectionCardProps {
   collection: {
@@ -60,11 +59,6 @@ export default function CollectionCard({ collection }: CollectionCardProps) {
 
   const [showDecks, setShowDecks] = useState(false);
   const [modeSelected, setModeSelected] = useState("write");
-  const router = useRouter();
-
-  function handleRehearseClicked() {
-    router.push(`/collections/${collection.id}/rehearsal`);
-  }
 
   return (
     <Card>

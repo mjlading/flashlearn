@@ -21,17 +21,19 @@ import { Feedback } from "./AnswerForm";
 import PreOralRehearsal from "./PreOralRehearsal";
 import ProgressBar from "./ProgressBar";
 import MicInput from "./MicInput";
+import { useDictionary } from "@/lib/DictProvider";
 
 export default function OralRehearsal({
   flashcards,
 }: {
   flashcards: FlashcardType[];
 }) {
+  const dict = useDictionary();
+
   const [currentIndex, setCurrentIndex] = useState(0);
   const [userAnswers, setUserAnswers] = useState<string[]>([]);
   const [isRecording, setIsRecording] = useState(false);
   const [feedbacks, setFeedbacks] = useState<Feedback[]>([]);
-  const [handsfreeMode, setHandsfreeMode] = useState<boolean>(true);
 
   const isSpeaking = useRef(false);
   const questionAudio = useRef(new Audio());
@@ -114,7 +116,7 @@ export default function OralRehearsal({
         });
     } catch (error) {
       console.error(error);
-      toast.error("Kunne ikke hente feedback, vennligst prøv igjen.");
+      toast.error(dict.rehearsal.feedbackError);
     }
   }
 
@@ -234,22 +236,16 @@ export default function OralRehearsal({
         })
         .catch((error) => {
           console.error(error);
-          toast.error("Kunne ikke hente mikrofonen din: ", error);
+          toast.error(`${dict.rehearsal.couldNotFetchMic}: `, error);
         });
     } else {
       console.info("Audio devices not supported");
-      toast.info("Kunne ikke hente media");
+      toast.info(dict.rehearsal.couldNotFetchMedia);
     }
   }
 
   if (showPreRehearsalScreen) {
-    return (
-      <PreOralRehearsal
-        handsfreeMode={handsfreeMode}
-        setHandsfreeMode={setHandsfreeMode}
-        onStartClicked={startRehearsal}
-      />
-    );
+    return <PreOralRehearsal onStartClicked={startRehearsal} />;
   }
 
   return (
@@ -274,7 +270,7 @@ export default function OralRehearsal({
                 <Ear />
               </Button>
             </TooltipTrigger>
-            <TooltipContent>Hør igjen</TooltipContent>
+            <TooltipContent>{dict.rehearsal.listenAgain}</TooltipContent>
           </Tooltip>
         </TooltipProvider>
       )}
@@ -342,7 +338,7 @@ export default function OralRehearsal({
       </div>
       {feedbacks[currentIndex] && currentIndex !== flashcards.length - 1 && (
         <Button onClick={() => setCurrentIndex(currentIndex + 1)}>
-          Fortsett
+          {dict.rehearsal.continue}
         </Button>
       )}
     </main>

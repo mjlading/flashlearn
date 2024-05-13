@@ -39,10 +39,9 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "./ui/tooltip";
-import { getDictionary } from "@/app/dictionaries/dictionaries";
+import { useDictionary } from "@/lib/DictProvider";
 
 export interface CollectionCardProps {
-  dict: Awaited<ReturnType<typeof getDictionary>>; // fancy unwrap
   collection: {
     id: string;
     name: string;
@@ -56,10 +55,9 @@ export interface CollectionCardProps {
   };
 }
 
-export default function CollectionCard({
-  dict,
-  collection,
-}: CollectionCardProps) {
+export default function CollectionCard({ collection }: CollectionCardProps) {
+  const dict = useDictionary();
+
   const [showDecks, setShowDecks] = useState(false);
   const [modeSelected, setModeSelected] = useState("write");
   const router = useRouter();
@@ -75,7 +73,9 @@ export default function CollectionCard({
       </CardHeader>
       <CardContent>
         <div className="flex items-center gap-2">
-          <h3>{collection.collectionDecks.length} Sett</h3>
+          <h3>
+            {collection.collectionDecks.length} {dict.collections.decks}
+          </h3>
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
@@ -89,7 +89,9 @@ export default function CollectionCard({
                 </Button>
               </TooltipTrigger>
               <TooltipContent>
-                {showDecks ? "Gjem sett" : "Vis sett"}
+                {showDecks
+                  ? dict.collections.hideDecks
+                  : dict.collections.showDecks}
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>
@@ -99,8 +101,10 @@ export default function CollectionCard({
         {showDecks && (
           <Table>
             <TableHeader>
-              <TableHead>Navn</TableHead>
-              <TableHead className="text-right">Antall studiekort</TableHead>
+              <TableHead>{dict.collections.name}</TableHead>
+              <TableHead className="text-right">
+                {dict.collections.numFlashcards}
+              </TableHead>
             </TableHeader>
             <TableBody>
               {collection.collectionDecks.map(({ deck }) => (
@@ -119,7 +123,7 @@ export default function CollectionCard({
         <Dialog>
           <DialogTrigger asChild>
             {/* Rehearse button */}
-            <Button>Øving</Button>
+            <Button>{dict.collections.rehearse}</Button>
           </DialogTrigger>
           <DialogContent>
             <DialogHeader>{collection.name}</DialogHeader>
@@ -127,7 +131,7 @@ export default function CollectionCard({
             {/* Rehearsal Mode Selection */}
             <div className="flex flex-col">
               <Label htmlFor="select-mode" className="text-center mb-4">
-                Øvemodus
+                {dict.decks.practiceMode}
               </Label>
               <Tabs
                 id="select-mode"
@@ -135,9 +139,15 @@ export default function CollectionCard({
                 onValueChange={(newValue) => setModeSelected(newValue)}
               >
                 <TabsList className="grid w-full grid-cols-3">
-                  <TabsTrigger value="visual">Visuell</TabsTrigger>
-                  <TabsTrigger value="write">Skriftlig</TabsTrigger>
-                  <TabsTrigger value="oral">Muntlig</TabsTrigger>
+                  <TabsTrigger value="visual">
+                    {dict.decks.startPractice.visual}
+                  </TabsTrigger>
+                  <TabsTrigger value="write">
+                    {dict.decks.startPractice.written}
+                  </TabsTrigger>
+                  <TabsTrigger value="oral">
+                    {dict.decks.startPractice.oral}
+                  </TabsTrigger>
                 </TabsList>
               </Tabs>
             </div>
@@ -170,11 +180,11 @@ export default function CollectionCard({
                   <Pencil size={16} />
                 </Link>
               </TooltipTrigger>
-              <TooltipContent>Rediger samling</TooltipContent>
+              <TooltipContent>{dict.collections.edit}</TooltipContent>
             </Tooltip>
           </TooltipProvider>
 
-          <DeleteCollectionButton dict={dict} collection={collection} />
+          <DeleteCollectionButton collection={collection} />
         </div>
       </CardFooter>
     </Card>

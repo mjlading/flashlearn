@@ -1,6 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { useDictionary } from "@/lib/DictProvider";
 import { MessageCircleQuestion, Mic, Square } from "lucide-react";
 
 export default function MicInput({
@@ -10,6 +11,8 @@ export default function MicInput({
   isRecording: boolean;
   stopMicRecording: () => void;
 }) {
+  const dict = useDictionary();
+
   return (
     <div className="flex flex-col items-center gap-8">
       <h2
@@ -17,7 +20,7 @@ export default function MicInput({
           isRecording ? "text-default" : "text-gray-400"
         }`}
       >
-        {isRecording ? "Si svaret ditt" : "Hør oppgaven"}
+        {isRecording ? dict.rehearsal.sayYourAnswer : dict.rehearsal.listen}
       </h2>
       <div
         className={`
@@ -38,7 +41,7 @@ export default function MicInput({
           size="lg"
           variant="outline"
         >
-          Stopp lydopptak
+          {dict.rehearsal.stopRecording}
           <Square className="ml-2 fill-destructive" strokeWidth={0} />
         </Button>
       )}

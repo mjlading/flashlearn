@@ -70,7 +70,6 @@ export default function CreateCollecionTabs({
           {dict.collections.createCollection.aboutCollection}
         </TabsTrigger>
         <TabsTrigger value="addDecks" className="w-full text-md font-semibold">
-         
           {dict.collections.createCollection.addToCollection}
         </TabsTrigger>
       </TabsList>
@@ -81,8 +80,12 @@ export default function CreateCollecionTabs({
         {/* Deck type tabs */}
         <Tabs defaultValue="created" className="mb-2">
           <TabsList>
-            <TabsTrigger value="created">Laget</TabsTrigger>
-            <TabsTrigger value="suggested">Lignende</TabsTrigger>
+            <TabsTrigger value="created">
+              {dict.collections.created}
+            </TabsTrigger>
+            <TabsTrigger value="suggested">
+              {dict.collections.similar}
+            </TabsTrigger>
           </TabsList>
           <TabsContent value="created">
             <ScrollArea className="h-[calc(100vh-200px)] pr-3">

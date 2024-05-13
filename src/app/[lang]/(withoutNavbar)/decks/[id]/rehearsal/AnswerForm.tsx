@@ -15,6 +15,7 @@ import { Button } from "@/components/ui/button";
 import { SendHorizonal } from "lucide-react";
 import { toast } from "sonner";
 import useStreamedFeedback from "@/hooks/useStreamedFeedback";
+import { useDictionary } from "@/lib/DictProvider";
 
 export type Feedback = {
   score: number;
@@ -36,6 +37,8 @@ export function AnswerForm({
   setFeedback: (feedback: Partial<Feedback>) => void;
   disabled: boolean;
 }) {
+  const dict = useDictionary();
+
   const form = useFormContext<z.infer<typeof FormSchema>>();
   const [answers, setAnswers] = useState<string[]>([]);
   const { feedback, generateFeedback } = useStreamedFeedback();
@@ -70,7 +73,7 @@ export function AnswerForm({
         answer: data.answer,
       });
     } catch (error) {
-      toast.error("Kunne ikke hente feedback, vennligst prøv igjen");
+      toast.error(dict.rehearsal.feedbackError);
     }
   }
 

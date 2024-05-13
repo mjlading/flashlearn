@@ -76,10 +76,10 @@ export default function RehearsalFinishedDialog({
       <DialogContent>
         <DialogHeader>
           <DialogTitle className="text-center text-2xl font-semibold">
-            Øving fullført! 👏
+            {dict.rehearsal.finished} 👏
           </DialogTitle>
           <DialogDescription className="text-center">
-            Fantastisk jobb! Du har svart på alle spørsmålene i denne økten.
+            {dict.rehearsal.finishedDescription}
           </DialogDescription>
         </DialogHeader>
 
@@ -87,7 +87,7 @@ export default function RehearsalFinishedDialog({
         <div className="my-8 flex gap-10 justify-center w-full sm:w-[80%] mx-auto">
           <div className="flex flex-1 flex-col items-center p-4 rounded-xl shadow-md border">
             <p className="font-medium text-gray-700 dark:text-white">
-              Tid brukt
+              {dict.rehearsal.timeSpent}
             </p>
             <span className="mt-1 text-lg font-semibold text-blue-600">
               {timeSpent && msToTimeString(timeSpent)}
@@ -109,7 +109,7 @@ export default function RehearsalFinishedDialog({
         {session.data?.user.id !== creatorUserId && (
           <div className="my-4">
             <p className="text-center font-medium text-gray-800">
-              Vurder settet
+              {dict.rehearsal.rate}
             </p>
             <StarRatingInput value={stars} onChange={(val) => setStars(val)} />
           </div>
@@ -117,7 +117,7 @@ export default function RehearsalFinishedDialog({
 
         <DialogFooter>
           <Button onClick={handleContinueClicked} className="w-full">
-            Videre
+            {dict.rehearsal.continue}
           </Button>
         </DialogFooter>
       </DialogContent>

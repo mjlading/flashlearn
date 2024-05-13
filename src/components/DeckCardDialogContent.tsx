@@ -1,13 +1,15 @@
 "use client";
 
+import { academicLevelMap } from "@/lib/academicLevel";
+import { useDictionary } from "@/lib/DictProvider";
 import { subjectNameMap, subjectStyles } from "@/lib/subject";
 import { cn, dateDifferenceFromNow, SerializedStateDates } from "@/lib/utils";
+import type { Deck } from "@prisma/client";
 import { GraduationCap, History } from "lucide-react";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import React, { useState } from "react";
 import BookmarkButton from "./BookmarkButton";
-import { DeckCardProps } from "./DeckCard";
 import NumFlashcards from "./NumFlashcards";
 import StarRating from "./StarRating";
 import { buttonVariants } from "./ui/button";
@@ -21,9 +23,6 @@ import {
 import { Label } from "./ui/label";
 import { Separator } from "./ui/separator";
 import { Tabs, TabsList, TabsTrigger } from "./ui/tabs";
-import { academicLevelMap } from "@/lib/academicLevel";
-import type { Deck } from "@prisma/client";
-import { useDictionary } from "@/lib/DictProvider";
 
 interface Props {
   // Convert types dateCreated and dateChanged from Date to string
@@ -36,6 +35,9 @@ export default function DeckCardDialogContent({ deck }: Props) {
   const isUsersDeck = deck.userId === session?.data?.user.id;
   const style = subjectStyles[deck.subjectName];
   const dict = useDictionary();
+
+  const subjectName =
+    dict.lang === "en" ? deck.subjectName : subjectNameMap[deck.subjectName];
   return (
     <DialogContent>
       <DialogHeader>
@@ -45,7 +47,7 @@ export default function DeckCardDialogContent({ deck }: Props) {
             <div className={cn(style.color, "rounded-full p-1 text-black")}>
               {React.createElement(style.icon, { size: 20 })}
             </div>
-            {subjectNameMap[deck.subjectName]}
+            {subjectName}
           </div>
 
           <Separator orientation="vertical" />

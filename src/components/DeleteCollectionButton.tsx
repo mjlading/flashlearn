@@ -16,10 +16,13 @@ import {
 import { api } from "@/app/api/trpc/client";
 import { toast } from "sonner";
 import { LoadingSpinner } from "./LoadingSpinner";
+import { useDictionary } from "@/lib/DictProvider";
 
 export default function DeleteCollectionButton({
   collection,
 }: CollectionCardProps) {
+  const dict = useDictionary();
+
   const utils = api.useUtils();
 
   const deleteCollectionMutation = api.collection.deleteCollection.useMutation({
@@ -28,14 +31,15 @@ export default function DeleteCollectionButton({
 
       toast(
         <span>
-          Samlingen <span className="font-semibold">{collection.name}</span> er
-          slettet
+          {dict.collections.theCollection}{" "}
+          <span className="font-semibold">{collection.name}</span>{" "}
+          {dict.collections.isDeleted}
         </span>
       );
     },
     onError() {
-      toast.error("Noe gikk galt", {
-        description: "Samlingen ble ikke slettet. Vennligst prøv igjen.",
+      toast.error(dict.collections.deleteError, {
+        description: dict.collections.deleteErrorDescription,
       });
     },
   });
@@ -62,19 +66,20 @@ export default function DeleteCollectionButton({
       <DialogContent>
         <DialogHeader>
           <DialogTitle>
-            Slett <span className="font-bold">{collection.name}</span>?
+            {dict.collections.delete}{" "}
+            <span className="font-bold">{collection.name}</span>?
           </DialogTitle>
           <DialogDescription>
             <div className="flex items-center gap-2">
               <AlertCircle size={18} />
-              Settene i samlingen vil ikke bli slettet.
+              {dict.collections.deleteInfo}
             </div>
           </DialogDescription>
         </DialogHeader>
         <DialogFooter>
           <DialogClose asChild>
             <Button onClick={handleDeleteCollection} variant="destructive">
-              Slett samling
+              {dict.collections.deleteCollection}
             </Button>
           </DialogClose>
         </DialogFooter>

@@ -22,18 +22,11 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { useDictionary } from "@/lib/DictProvider";
 import { HelpCircle } from "lucide-react";
-import { useSearchParams } from "next/navigation";
 
 export default function HelpButton() {
-  const searchParams = useSearchParams();
-  const mode = searchParams.get("mode");
-
-  const shortcuts = [
-    { name: "Snu kort", shortcut: "⌘Space | trykk på kortet" },
-    { name: "Neste kort", shortcut: "⌘→" },
-    { name: "Forrige kort", shortcut: "⌘←" },
-  ];
+  const dict = useDictionary();
 
   return (
     <Dialog>
@@ -50,34 +43,38 @@ export default function HelpButton() {
                   <HelpCircle />
                 </Button>
               </TooltipTrigger>
-              <TooltipContent>
-                <p>Hjelp</p>
-              </TooltipContent>
+              <TooltipContent>{dict.rehearsal.help}</TooltipContent>
             </Tooltip>
           </TooltipProvider>
         </div>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Hjelp</DialogTitle>
+          <DialogTitle>{dict.rehearsal.help}</DialogTitle>
           <DialogDescription>
-            Her er noen nyttige snarveider for å navigere i øvingen.
+            {dict.rehearsal.helpDescription}
           </DialogDescription>
         </DialogHeader>
         <Command>
           <CommandList>
             <CommandGroup heading="Snarveier">
               <CommandItem>
-                <span>Snu kort</span>
-                <CommandShortcut>Space | trykk på kortet</CommandShortcut>
+                <span>{dict.rehearsal.turnCard}</span>
+                <CommandShortcut>
+                  {dict.rehearsal.turnCardShortcut}
+                </CommandShortcut>
               </CommandItem>
               <CommandItem>
-                <span>Neste kort</span>
-                <CommandShortcut>pil høyre →</CommandShortcut>
+                <span>{dict.rehearsal.nextCard}</span>
+                <CommandShortcut>
+                  {dict.rehearsal.nextCardShortcut}
+                </CommandShortcut>
               </CommandItem>
               <CommandItem>
-                <span>Forrige kort</span>
-                <CommandShortcut>pil venstre ←</CommandShortcut>
+                <span>{dict.rehearsal.previousCard}</span>
+                <CommandShortcut>
+                  {dict.rehearsal.previousCardShortcut}
+                </CommandShortcut>
               </CommandItem>
             </CommandGroup>
           </CommandList>

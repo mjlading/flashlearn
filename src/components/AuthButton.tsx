@@ -20,7 +20,10 @@ export default function AuthButton() {
   return (
     <>
       {session.status === "authenticated" ? (
-        <Link href={`/${dict.lang}/dashboard`} className={buttonVariants({ size: "lg" })}>
+        <Link
+          href={`/${dict.lang}/dashboard/decks?category=recent`}
+          className={buttonVariants({ size: "lg" })}
+        >
           <span>{dict.home.dashboard}</span>
         </Link>
       ) : (

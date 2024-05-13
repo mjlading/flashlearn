@@ -61,7 +61,7 @@ export default function RehearsalFinishedDialog({
   }
 
   function handleContinueClicked() {
-    push(`/${dict.lang}/dashboard`);
+    push(`/${dict.lang}/dashboard/decks?category=recent`);
 
     // Save or update star rating
     if (stars === 0 || deckRating?.stars === stars) return;

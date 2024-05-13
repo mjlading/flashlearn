@@ -8,14 +8,16 @@ import Image from "next/image";
 export default function ProviderButton({
   provider,
   logo,
-  dict
+  dict,
 }: {
   provider: string;
   logo: any;
-  dict:Awaited<ReturnType<typeof getDictionary>> // fancy unwrap
+  dict: Awaited<ReturnType<typeof getDictionary>>; // fancy unwrap
 }) {
   function handleSignIn() {
-    signIn(provider, { callbackUrl: `/${dict.lang}/dashboard` });
+    signIn(provider, {
+      callbackUrl: `/${dict.lang}/dashboard/decks?category=recent`,
+    });
   }
 
   function capitalizeFirstLetter(s: string) {

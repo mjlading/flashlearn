@@ -99,7 +99,7 @@ function ProfileDropdownMenu({
           </span>
           <DropdownMenuSeparator className="mt-2" />
           <DropdownMenuGroup>
-            <Link href={`/${dict.lang}/dashboard`}>
+            <Link href={`/${dict.lang}/dashboard/decks?category=recent`}>
               <DropdownMenuItem>
                 <LayoutDashboard className="mr-2 h-4 w-4" />
                 <span>{dict.userDropDown.dashboard}</span>

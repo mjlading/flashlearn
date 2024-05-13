@@ -19,11 +19,6 @@ export default function Sidebar() {
   const dict = useDictionary();
   const links = [
     {
-      text: dict.sidebar.dashboard,
-      href: `/${locale}/dashboard`,
-      icon: <LayoutDashboard size={20} />,
-    },
-    {
       text: dict.sidebar.flashcards,
       href: `/${locale}/dashboard/decks`,
       icon: <Layers3 size={20} />,
@@ -35,11 +30,6 @@ export default function Sidebar() {
       icon: <SquareStack size={20} />,
     },
     {
-      text: dict.sidebar.courses,
-      href: `/${locale}/dashboard/courses`,
-      icon: <GraduationCap size={20} />,
-    },
-    {
       text: dict.sidebar.progress,
       href: `/${locale}/dashboard/progress`,
       icon: <TrendingUp size={20} />,
@@ -47,10 +37,14 @@ export default function Sidebar() {
   ];
 
   return (
-    <aside data-cy="dashboardSidebar" className="sticky top-[61px] height-minus-navbar overflow-none border-r min-w-[10rem] lg:min-w-[15rem]">
+    <aside
+      data-cy="dashboardSidebar"
+      className="sticky top-[61px] height-minus-navbar overflow-none border-r min-w-[10rem] lg:min-w-[15rem]"
+    >
       <nav className="pt-5 px-3 lg:px-5 flex flex-col gap-2">
         {links.map((link) => (
-          <Link data-cy="dashboardlinks"
+          <Link
+            data-cy="dashboardlinks"
             key={link.href}
             href={link.href + (link.query ? link.query : "")}
             className={cn(

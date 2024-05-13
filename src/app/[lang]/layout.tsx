@@ -12,24 +12,22 @@ const inter = Inter({ subsets: ["latin"] });
 export const metadata: Metadata = {
   title: "Flashlearn: Utforsk og lær noe nytt hver dag",
   description:
-    "Bli med i Flashlearn for å oppdage nye læringsmuligheter med våre interaktive flashkort. Perfekt for studenter som ønsker å utvide kunnskapen på en morsom og engasjerende måte.",
+    "Bli med i Flashlearn for å oppdage nye læringsmuligheter med våre interaktive studiekort. Perfekt for studenter som ønsker å utvide kunnskapen på en morsom og engasjerende måte.",
 };
 
 export default async function RootLayout({
   children,
-  params
+  params,
 }: Readonly<{
   children: React.ReactNode;
-  params:{lang:Locale}
+  params: { lang: Locale };
 }>) {
-  
-  const dict = await getDictionary(params.lang)
-  
+  const dict = await getDictionary(params.lang);
 
   return (
     <html lang="en">
       <body className={cn("min-h-screen antialiased", inter.className)}>
-        <Providers dict={dict /* drilling time */}> 
+        <Providers dict={dict /* drilling time */}>
           {children}
           <Toaster richColors={true} />
         </Providers>

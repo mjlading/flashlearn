@@ -30,12 +30,11 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 
-export default function ProfileSetupForm(
-  {
-    dict
-  }:{  
-    dict:Awaited<ReturnType<typeof getDictionary>> // fancy unwrap
-  }) {
+export default function ProfileSetupForm({
+  dict,
+}: {
+  dict: Awaited<ReturnType<typeof getDictionary>>; // fancy unwrap
+}) {
   const formSchema = z.object({
     nickname: z
       .string()
@@ -45,7 +44,9 @@ export default function ProfileSetupForm(
       .max(50, {
         message: dict.profileSetupPage.nicknameMaximum,
       }),
-    academicLevel: z.enum(Object.keys(academicLevelMap) as [string, ...string[]]),
+    academicLevel: z.enum(
+      Object.keys(academicLevelMap) as [string, ...string[]]
+    ),
   });
   const setNicknameMutation = api.user.setNickname.useMutation();
   const setAcademicLevelMutation = api.user.setAcademicLevel.useMutation();
@@ -78,7 +79,7 @@ export default function ProfileSetupForm(
 
     toast.success(dict.profileSetupPage.updateSuccess);
 
-    router.push(`/${dict.lang}/dashboard`);
+    router.push(`/${dict.lang}/dashboard/decks?category=recent`);
   }
 
   return (
@@ -100,10 +101,15 @@ export default function ProfileSetupForm(
                     />
                     <AvatarFallback>{dict.profileSetupPage.me}</AvatarFallback>
                   </Avatar>
-                  <Input placeholder={dict.profileSetupPage.yourNickname} {...field} />
+                  <Input
+                    placeholder={dict.profileSetupPage.yourNickname}
+                    {...field}
+                  />
                 </div>
               </FormControl>
-              <FormDescription>{dict.profileSetupPage.yourPublicNickname}</FormDescription>
+              <FormDescription>
+                {dict.profileSetupPage.yourPublicNickname}
+              </FormDescription>
               <FormMessage />
             </FormItem>
           )}

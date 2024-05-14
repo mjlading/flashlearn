@@ -42,6 +42,12 @@ export default async function DeckRehearsalPage({
   }
 
   if (mode === "oral") {
-    return <OralRehearsal flashcards={deck.flashcards} />;
+    return (
+      <OralRehearsal
+        flashcards={deck.flashcards}
+        creatorUserId={deck.userId}
+        deckId={deck.id}
+      />
+    );
   }
 }

@@ -38,6 +38,12 @@ export default async function CollectionRehearsalPage({
   }
 
   if (mode === "oral") {
-    return <OralRehearsal flashcards={allFlashcards} />;
+    return (
+      <OralRehearsal
+        flashcards={allFlashcards}
+        creatorUserId={collection.collectionDecks[0].deck.userId}
+        deckId={collection.collectionDecks[0].deck.id}
+      />
+    );
   }
 }

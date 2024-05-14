@@ -5,7 +5,6 @@ import { LoadingSpinner } from "@/components/LoadingSpinner";
 import { TextGenerateEffect } from "@/components/TextGenerateEffect";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import useRehearsal from "@/hooks/useRehearsal";
-import { useDictionary } from "@/lib/DictProvider";
 import { percentageToHsl } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { type Flashcard as FlashcardType } from "@prisma/client";
@@ -28,8 +27,6 @@ export default function WriteRehearsal({
   deckId: string;
   creatorUserId: string;
 }) {
-  const dict = useDictionary();
-
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
   });
@@ -53,6 +50,7 @@ export default function WriteRehearsal({
 
   useEffect(() => {
     startRehearsal();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Used for animation

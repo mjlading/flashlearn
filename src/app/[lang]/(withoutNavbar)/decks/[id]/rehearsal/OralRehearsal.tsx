@@ -22,18 +22,21 @@ import PreOralRehearsal from "./PreOralRehearsal";
 import ProgressBar from "./ProgressBar";
 import MicInput from "./MicInput";
 import { useDictionary } from "@/lib/DictProvider";
+import useRehearsal from "@/hooks/useRehearsal";
 
 export default function OralRehearsal({
   flashcards,
+  deckId,
+  creatorUserId,
 }: {
   flashcards: FlashcardType[];
+  deckId: string;
+  creatorUserId: string;
 }) {
   const dict = useDictionary();
 
-  const [currentIndex, setCurrentIndex] = useState(0);
   const [userAnswers, setUserAnswers] = useState<string[]>([]);
   const [isRecording, setIsRecording] = useState(false);
-  const [feedbacks, setFeedbacks] = useState<Feedback[]>([]);
 
   const isSpeaking = useRef(false);
   const questionAudio = useRef(new Audio());
@@ -47,11 +50,27 @@ export default function OralRehearsal({
 
   const generateFeedbackMututation = api.ai.generateFeedback.useMutation();
 
+  const {
+    currentIndex,
+    setCurrentIndex,
+    currentFlashcard,
+    startRehearsal: saveStartRehearsal,
+    feedbacks,
+    handleSetFeedback,
+    dialogOpen,
+    setDialogOpen,
+    averageScore,
+    timeSpent,
+    xpGain,
+    isFinished,
+  } = useRehearsal({ flashcards, deckId, creatorUserId });
+
   const session = useSession();
   const { theme } = useTheme();
 
   useEffect(() => {
     getMicAudio();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -59,6 +78,7 @@ export default function OralRehearsal({
 
     const textInput = flashcards[currentIndex].front;
     playAudioFromText(textInput);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentIndex]);
 
   function startRehearsal() {
@@ -66,6 +86,8 @@ export default function OralRehearsal({
 
     const textInput = flashcards[0].front;
     playAudioFromText(textInput);
+
+    saveStartRehearsal();
   }
 
   async function fetchTranscription(blob: Blob) {
@@ -94,12 +116,9 @@ export default function OralRehearsal({
         answer: transcription,
       });
 
-      setFeedbacks((prev) => {
-        const newFeedbacks = [...prev];
-        newFeedbacks[currentIndex] = feedback;
-        return newFeedbacks;
-      });
+      handleSetFeedback(feedback);
 
+      // Play audio of the feedback tips
       feedback.tips &&
         fetch(
           `${process.env.NEXT_PUBLIC_BASE_URL}/api/audio/textToSpeech?key=${currentIndex}`,
@@ -309,7 +328,7 @@ export default function OralRehearsal({
               className="rounded-full mx-auto w-fit p-2 shadow-sm font-semibold"
               style={{
                 backgroundColor: percentageToHsl(
-                  feedbacks[currentIndex].score / 100,
+                  (feedbacks[currentIndex].score || 0) / 100,
                   0,
                   120,
                   theme === "dark" ? 20 : 65
@@ -320,7 +339,6 @@ export default function OralRehearsal({
             </div>
 
             {/* The tips */}
-            {/* TODO: abstract? */}
             <ul className="space-y-4 pr-10">
               {feedbacks[currentIndex].tips?.map((tip) => (
                 <div key={tip} className="flex gap-2">

@@ -277,7 +277,9 @@
     "finished": "Øving fullført!",
     "finishedDescription": "Fantastisk jobb! Du har svart på alle spørsmålene i denne økten.",
     "timeSpent": "Tid brukt",
-    "rate": "Vurder settet"
+    "rate": "Vurder settet",
+    "saveError": "Kunne ikke lagre øvingen",
+    "saveErrorDescription": "Du vil ikke kunne se denne øvingen i din fremgang"
   },
   "xpDisplay": {
     "knowledgePoints": "Kunnskapspoeng"

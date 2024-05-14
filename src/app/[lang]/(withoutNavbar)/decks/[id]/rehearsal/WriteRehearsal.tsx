@@ -18,6 +18,7 @@ import RehearsalFinishedDialog from "./RehearsalFinishedDialog";
 import { motion } from "framer-motion";
 import { TextGenerateEffect } from "@/components/TextGenerateEffect";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { useDictionary } from "@/lib/DictProvider";
 
 export default function WriteRehearsal({
   flashcards,
@@ -28,6 +29,8 @@ export default function WriteRehearsal({
   deckId?: string;
   creatorUserId?: string;
 }) {
+  const dict = useDictionary();
+
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
   });
@@ -35,28 +38,20 @@ export default function WriteRehearsal({
   const [currentIndex, setCurrentIndex] = useState(0);
   const [currentFlashcard, setCurrentFlashcard] = useState(flashcards[0]);
   const [feedbacks, setFeedbacks] = useState<Partial<Feedback>[]>([]);
+  const [dialogOpen, setDialogOpen] = useState(false);
+
   const averageScore = useRef(0);
   const timeSpent = useRef(0);
   const xpGain = useRef(0);
-  const [dialogOpen, setDialogOpen] = useState(false);
+  const isFinished = useRef(false);
 
   const saveRehearsalStartedMutation =
     api.rehearsal.saveRehearsalStarted.useMutation();
   const saveRehearsalFinishedMutation =
     api.rehearsal.saveRehearsalFinished.useMutation();
-  const updateTimeSpentMutation = api.rehearsal.updateTimeSpent.useMutation();
   const addXPMutation = api.user.addXp.useMutation();
   const upsertUserDeckKnowledgeMutation =
     api.deck.upsertUserDeckKnowledge.useMutation();
-
-  const isFinished = useRef(false);
-
-  let recentRehearsal: any = undefined;
-  if (deckId) {
-    recentRehearsal = api.rehearsal.getRecentRehearsal.useQuery({
-      deckId: deckId,
-    });
-  }
 
   const { theme } = useTheme();
 
@@ -65,45 +60,14 @@ export default function WriteRehearsal({
   }, [currentIndex, flashcards]);
 
   useEffect(() => {
-    if (!deckId || !recentRehearsal) return; //TODO: temporary workaround for collections
+    if (!deckId) return;
 
-    const rehearsal = recentRehearsal.data;
-    if (!rehearsal || rehearsal.isFinished) {
-      // Create a new rehearsal
-      saveRehearsalStartedMutation.mutate({
-        mode: "write",
-        deckId: deckId,
-      });
-    } else {
-      // The existing rehearsal is not finished
-      console.log("TODO: unfinished rehearsal");
-      // TODO
-    }
+    // Create a new rehearsal
+    saveRehearsalStartedMutation.mutate({
+      mode: "write",
+      deckId: deckId,
+    });
   }, []);
-
-  const INTERVAL_TIME = 30_000;
-
-  // Update "timeSpent" in db every 30 seconds
-  useEffect(() => {
-    if (!deckId) return; //TODO: temporary workaround for collections
-
-    // If the rehearsal is finished, dont update timeSpent
-    if (isFinished.current) return;
-
-    const interval = setInterval(() => {
-      const rehearsalId = saveRehearsalStartedMutation.data?.id;
-      if (!rehearsalId) {
-        console.warn("Tried to update timeSpent, rehearsalId was undefined");
-        return;
-      }
-      updateTimeSpentMutation.mutate({
-        rehearsalId: rehearsalId,
-        timeToAdd: INTERVAL_TIME,
-      });
-    }, INTERVAL_TIME);
-
-    return () => clearInterval(interval);
-  }, [saveRehearsalStartedMutation.data, isFinished.current]);
 
   // Checks if rehearsal is finished whenever feedbacks change
   useEffect(() => {
@@ -120,51 +84,6 @@ export default function WriteRehearsal({
       const newFeedbacks = [...prev];
       newFeedbacks[currentIndex] = feedback;
       return newFeedbacks;
-    });
-  }
-
-  function handleRehearsalFinished() {
-    if (!deckId) return; //TODO: temporary workaround for collections
-
-    isFinished.current = true;
-
-    // Display finished rehearsal modal
-    averageScore.current =
-      feedbacks.reduce(
-        (previous, current) => previous + (current.score || 0),
-        0
-      ) / feedbacks.length;
-    setDialogOpen(true);
-
-    const rehearsalData = saveRehearsalStartedMutation.data;
-    if (!rehearsalData) {
-      toast.error("Kunne ikke lagre øvingen", {
-        description: "Du vil ikke kunne se denne øvingen i din fremgang",
-      });
-      return;
-    }
-
-    // TODO: if this rehearsal is discontinous timewise, dont set timeSpent here
-    // alternative: add time passed from last interval, which is < 30 seconds
-    timeSpent.current =
-      new Date().getTime() -
-      new Date(saveRehearsalStartedMutation.data.dateStart).getTime();
-
-    xpGain.current = calculateXPGain();
-    addXPMutation.mutate(xpGain.current);
-
-    // Set isFinished to true in db
-    saveRehearsalFinishedMutation.mutate({
-      rehearsalId: rehearsalData.id,
-      timeSpent: timeSpent.current,
-      score: averageScore.current,
-      deckId: deckId as string,
-    });
-
-    // Set user deck knowledge
-    upsertUserDeckKnowledgeMutation.mutate({
-      deckId: deckId,
-      score: averageScore.current,
     });
   }
 
@@ -188,6 +107,53 @@ export default function WriteRehearsal({
     return Number(xp.toFixed(0));
   }
 
+  function handleRehearsalFinished() {
+    if (isFinished.current) return;
+    console.log("Handle finished");
+
+    if (!deckId) return;
+
+    isFinished.current = true;
+
+    // Display finished rehearsal modal
+    averageScore.current =
+      feedbacks.reduce(
+        (previous, current) => previous + (current.score || 0),
+        0
+      ) / feedbacks.length;
+    setDialogOpen(true);
+
+    const rehearsalData = saveRehearsalStartedMutation.data;
+    if (!rehearsalData) {
+      toast.error(dict.rehearsal.saveError, {
+        description: dict.rehearsal.saveErrorDescription,
+      });
+      return;
+    }
+
+    timeSpent.current =
+      new Date().getTime() -
+      new Date(saveRehearsalStartedMutation.data.dateStart).getTime();
+
+    xpGain.current = calculateXPGain();
+    addXPMutation.mutate(xpGain.current);
+
+    // Set isFinished to true in db
+    saveRehearsalFinishedMutation.mutate({
+      rehearsalId: rehearsalData.id,
+      timeSpent: timeSpent.current,
+      score: averageScore.current,
+      deckId: deckId,
+    });
+
+    // Set user deck knowledge
+    upsertUserDeckKnowledgeMutation.mutate({
+      deckId: deckId,
+      score: averageScore.current,
+    });
+  }
+
+  // Used for animation
   const variants = {
     hidden: { opacity: 0, y: 50 },
     visible: (i: number) => ({

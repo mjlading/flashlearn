@@ -278,7 +278,9 @@
     "finished": "Rehearsal finished!",
     "finishedDescription": "Fantastic job! You have answered all the questions in this session.",
     "timeSpent": "Time spent",
-    "rate": "Rate the set"
+    "rate": "Rate the set",
+    "saveError": "Could not save the exercise",
+    "saveErrorDescription": "You will not be able to see this exercise in your progress"
   },
   "xpDisplay": {
     "knowledgePoints": "Knowledge points"

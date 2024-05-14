@@ -1,7 +1,7 @@
-import { z } from "zod";
-import { publicProcedure, protectedProcedure, router } from "../trpc";
 import { Mode } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
+import { z } from "zod";
+import { protectedProcedure, router } from "../trpc";
 
 export const rehearsalRouter = router({
   saveRehearsalStarted: protectedProcedure //test me
@@ -20,29 +20,6 @@ export const rehearsalRouter = router({
           userId: userId,
           deckId: deckId,
           mode: mode.toUpperCase() as Mode,
-        },
-      });
-
-      return rehearsal;
-    }),
-  getRecentRehearsal: protectedProcedure //test me
-    .input(
-      z.object({
-        deckId: z.string(),
-      })
-    )
-    .query(async ({ ctx, input }) => {
-      const { deckId } = input;
-      const userId = ctx.session.user.id;
-
-      const rehearsal = await ctx.prisma.rehearsal.findFirst({
-        where: {
-          userId: userId,
-          deckId: deckId,
-          timeSpent: { not: 0 },
-        },
-        orderBy: {
-          dateStart: "desc",
         },
       });
 
@@ -79,27 +56,6 @@ export const rehearsalRouter = router({
               score: score,
               deckId: deckId,
             },
-          },
-        },
-      });
-    }),
-  updateTimeSpent: protectedProcedure //test me
-    .input(
-      z.object({
-        rehearsalId: z.string(),
-        timeToAdd: z.number(),
-      })
-    )
-    .mutation(async ({ ctx, input }) => {
-      const { rehearsalId, timeToAdd } = input;
-
-      return await ctx.prisma.rehearsal.update({
-        where: {
-          id: rehearsalId,
-        },
-        data: {
-          timeSpent: {
-            increment: timeToAdd,
           },
         },
       });

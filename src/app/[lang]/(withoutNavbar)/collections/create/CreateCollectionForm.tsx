@@ -47,7 +47,9 @@ export default function CreateCollectionForm() {
                 <FormControl>
                   <Input
                     autoFocus
-                    placeholder={dict.collections.createCollection.placeholderName}
+                    placeholder={
+                      dict.collections.createCollection.placeholderName
+                    }
                     {...field}
                     maxLength={50}
                   />
@@ -62,11 +64,14 @@ export default function CreateCollectionForm() {
             name="description"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>{dict.collections.createCollection.description}</FormLabel>
+                <FormLabel>
+                  {dict.collections.createCollection.description}
+                </FormLabel>
                 <FormControl>
                   <Input
-                    autoFocus
-                    placeholder={dict.collections.createCollection.placeholderDescription}
+                    placeholder={
+                      dict.collections.createCollection.placeholderDescription
+                    }
                     {...field}
                     maxLength={500}
                   />

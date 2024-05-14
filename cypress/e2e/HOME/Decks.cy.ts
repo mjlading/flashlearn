@@ -28,33 +28,33 @@ describe("Deck e2e tests", ()=>{
 
     it("creates and deletes a deck", ()=>{
         cy.visit('/decks/create')
-        .get('[placeholder="Give your set a name"]').type("testTitle")
+        .get('[placeholder="Give your deck a name"]').type("testTitle")
         cy.get('[name="flashcards.0.front"]').type("test")
         cy.get('[name="flashcards.0.back"]').type("test")
         cy.get('[name="flashcards.1.front"]').type("test")
         cy.get('[name="flashcards.1.back"]').type("test")
-        cy.contains('Save set').click().wait(2000).then(()=>{
+        cy.contains('Save deck').click().wait(2000).then(()=>{
             cy.visit('/dashboard/decks?category=created').wait(10000)
             .get('[data-cy="deleteSetButton"]').eq(0).click()
             
         }).then(()=>{
-            cy.contains('button', 'Slett sett').click().wait(2000)
+            cy.contains('button', 'Delete deck').click().wait(2000)
         })
     })
     it("edits deck", ()=>{
         // set up deck to edit
         cy.visit('/decks/create')
-        .get('[placeholder="Give your set a name"]').type("testTitle")
+        .get('[placeholder="Give your deck a name"]').type("testTitle")
         cy.get('[name="flashcards.0.front"]').type("test")
         cy.get('[name="flashcards.0.back"]').type("test")
         cy.get('[name="flashcards.1.front"]').type("test")
         cy.get('[name="flashcards.1.back"]').type("test")
-        cy.contains('Save set').click().wait(2000).then(()=>{
+        cy.contains('Save deck').click().wait(2000).then(()=>{
             // act on the deck (edit it)
             cy.visit('/dashboard/decks?category=created').wait(10000)
             .get('[data-cy="editDeckButton"]').eq(0).click()
-            .get('[placeholder="Give your set a name"]').clear().type("editedTestTitle").then(()=>{
-                    cy.contains('Save set').click().wait(2000)
+            .get('[placeholder="Give your deck a name"]').clear().type("editedTestTitle").then(()=>{
+                    cy.contains('Save deck').click().wait(2000)
                 }).visit('/dashboard/decks?category=created').wait(10000)
                 .contains('editedTestTitle')
             
@@ -63,7 +63,7 @@ describe("Deck e2e tests", ()=>{
             cy.visit('/dashboard/decks?category=created').wait(10000)
             .get('[data-cy="deleteSetButton"]').eq(0).click()
         }).then(()=>{
-            cy.contains('button', 'Slett sett').click().wait(2000)
+            cy.contains('button', 'Delete deck').click().wait(2000)
         })
     })
 

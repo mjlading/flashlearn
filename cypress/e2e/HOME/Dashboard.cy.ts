@@ -27,22 +27,16 @@ describe("Dashboard flow tests", () => {
   describe("dropdown", ()=>{
 
     beforeEach(() => {
-      cy.visit("/dashboard");
+      cy.visit("/dashboard/decks?category=recent");
     });
     it("Sidebar is visible", () => {
       cy.get('[data-cy="dashboardlinks"]').should('be.visible');
-    });
-    it("Dashboard button is visible on the sidebar", () => {
-      cy.get('[data-cy="dashboardlinks"]').contains('Dashboard').should('be.visible');
     });
     it("Flashcards button is visible on the sidebar", () => {
       cy.get('[data-cy="dashboardlinks"]').contains('Flashcards').should('be.visible');
     });
     it("Collections button is visible on the sidebar", () => {
       cy.get('[data-cy="dashboardlinks"]').contains('Collections').should('be.visible');
-    });
-    it("Courses button is visible on the sidebar", () => {
-      cy.get('[data-cy="dashboardlinks"]').contains('Courses').should('be.visible');
     });
     it("Progress button is visible on the sidebar", () => {
       cy.get('[data-cy="dashboardlinks"]').contains('Progress').should('be.visible');

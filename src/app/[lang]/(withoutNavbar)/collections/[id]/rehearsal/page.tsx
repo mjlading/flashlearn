@@ -28,7 +28,13 @@ export default async function CollectionRehearsalPage({
   }
 
   if (mode === "write") {
-    return <WriteRehearsal flashcards={allFlashcards} />;
+    return (
+      <WriteRehearsal
+        flashcards={allFlashcards}
+        creatorUserId={collection.collectionDecks[0].deck.userId}
+        deckId={collection.collectionDecks[0].deck.id}
+      />
+    );
   }
 
   if (mode === "oral") {

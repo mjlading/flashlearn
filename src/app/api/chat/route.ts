@@ -35,7 +35,7 @@ export async function POST(request: Request) {
   // console.log(front, back, answer);
 
   const completion = await openai.chat.completions.create({
-    model: "gpt-4-turbo-preview",
+    model: "gpt-4o",
     tools: tools,
     tool_choice: {
       type: "function",

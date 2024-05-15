@@ -23,6 +23,7 @@ import ProgressBar from "./ProgressBar";
 import MicInput from "./MicInput";
 import { useDictionary } from "@/lib/DictProvider";
 import useRehearsal from "@/hooks/useRehearsal";
+import RehearsalFinishedDialog from "./RehearsalFinishedDialog";
 
 export default function OralRehearsal({
   flashcards,
@@ -358,6 +359,19 @@ export default function OralRehearsal({
         <Button onClick={() => setCurrentIndex(currentIndex + 1)}>
           {dict.rehearsal.continue}
         </Button>
+      )}
+
+      {/* Dialog that displays when the rehearsal is finished */}
+      {deckId && creatorUserId && (
+        <RehearsalFinishedDialog
+          open={dialogOpen}
+          onOpenChange={(val) => setDialogOpen(val)}
+          averageScore={averageScore.current}
+          timeSpent={timeSpent.current}
+          creatorUserId={creatorUserId}
+          deckId={deckId}
+          xpGain={xpGain.current}
+        />
       )}
     </main>
   );

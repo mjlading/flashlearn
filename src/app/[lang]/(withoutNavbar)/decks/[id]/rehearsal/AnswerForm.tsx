@@ -119,7 +119,7 @@ export function AnswerForm({
                   disabled={
                     form.formState.isSubmitting ||
                     disabled ||
-                    !form.getValues("answer").length
+                    !(form.getValues("answer")?.length > 0)
                   }
                 >
                   <SendHorizonal />

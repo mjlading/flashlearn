@@ -116,7 +116,11 @@ export function AnswerForm({
                   variant="ghost"
                   size="icon"
                   className="absolute right-[10px] bottom-[10px] rounded-xl"
-                  disabled={form.formState.isSubmitting || disabled}
+                  disabled={
+                    form.formState.isSubmitting ||
+                    disabled ||
+                    !form.getValues("answer").length
+                  }
                 >
                   <SendHorizonal />
                 </Button>

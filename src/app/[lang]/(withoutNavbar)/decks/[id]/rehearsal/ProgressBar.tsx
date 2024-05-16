@@ -34,9 +34,9 @@ export default function ProgressBar({
   }
 
   function handleKeydown(event: KeyboardEvent) {
-    if (event.code === "ArrowRight") {
+    if (event.ctrlKey && event.code === "ArrowRight") {
       nextFlashcard();
-    } else if (event.code === "ArrowLeft") {
+    } else if (event.ctrlKey && event.code === "ArrowLeft") {
       previousFlashcard();
     }
   }

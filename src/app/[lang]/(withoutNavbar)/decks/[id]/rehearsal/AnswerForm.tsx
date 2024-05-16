@@ -77,6 +77,13 @@ export function AnswerForm({
     }
   }
 
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (event.key === "Enter" && !event.shiftKey) {
+      event.preventDefault();
+      form.handleSubmit(onSubmit)();
+    }
+  };
+
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)}>
@@ -94,6 +101,7 @@ export function AnswerForm({
                     className="w-full p-4 pr-16 leading-relaxed text-md rounded-xl resize-none bg-muted dark:bg-muted/40 outline-none focus:bg-gray-200 dark:focus:bg-muted/60 placeholder-gray-500"
                     autoFocus
                     disabled={disabled}
+                    onKeyDown={handleKeyDown}
                     {...field}
                   />
                 </FormControl>
@@ -108,7 +116,7 @@ export function AnswerForm({
                   variant="ghost"
                   size="icon"
                   className="absolute right-[10px] bottom-[10px] rounded-xl"
-                  disabled={disabled}
+                  disabled={form.formState.isSubmitting || disabled}
                 >
                   <SendHorizonal />
                 </Button>

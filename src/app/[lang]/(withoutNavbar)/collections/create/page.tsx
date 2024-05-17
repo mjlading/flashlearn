@@ -7,12 +7,15 @@ import type { Deck } from "@prisma/client";
 import { useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { z } from "zod";
-import { formSchema } from "./CreateCollectionForm";
+import { getFormSchema } from "./CreateCollectionForm";
 import CreateCollecionTabs from "./CreateCollectionTabs";
 import CreateCollectionTopbar from "./CreateCollectionTopbar";
 import AddedCollections from "./AddedCollections";
+import { useDictionary } from "@/lib/DictProvider";
 
 export default function CreateCollectionPage() {
+  const dict = useDictionary();
+  const formSchema = getFormSchema(dict);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {

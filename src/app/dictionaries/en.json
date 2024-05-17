@@ -64,6 +64,13 @@
       "noBookmakedSets": "You have no bookmarked decks",
       "noBookmakedSetsEx": "Your bookmarked decks will appear here"
     },
+    "createDecks":{
+      "nameMinLetters":"The name must contain at least 2 letters",
+      "nameMaxLetters":"The name cannot contain more than 50 letters",
+      "frontMaxLetters":"The front cannot contain more than 500 letters",
+      "backMaxLetters":"The back cannot contain more than 1500 letters",
+      "flashcardsMin":"Your deck must have at least 2 flashcards"
+    },
     "startPractice": {
       "visual": "Visual",
       "written": "Written",
@@ -111,6 +118,9 @@
     "noCollections": "You have no collections",
     "noCollectionDescription": "Create a collection to organize and practice multiple decks at once",
     "createCollection": {
+      "nameMinLetters":"The name must contain at least 2 letters",
+      "nameMaxLetters":"The name cannot contain more than 50 letters",
+      "descriptionMaxLetters":"The description cannot contain more than 500 letters",
       "aboutCollection": "About",
       "addToCollection": "Add decks",
       "placeholderName": "Give your collection a name",

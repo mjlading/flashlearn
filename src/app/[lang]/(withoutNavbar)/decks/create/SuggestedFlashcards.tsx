@@ -10,7 +10,7 @@ import { useEffect, useRef, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
-import { formSchema } from "./CreateDeckForm";
+import { getFormSchema } from "./CreateDeckForm";
 import { useDictionary } from "@/lib/DictProvider";
 
 type SimilarFlashcard = Pick<Flashcard, "front" | "back" | "tag"> & {
@@ -19,7 +19,7 @@ type SimilarFlashcard = Pick<Flashcard, "front" | "back" | "tag"> & {
 
 export default function SuggestedFlashcards() {
   const dict = useDictionary();
-
+  const formSchema = getFormSchema(dict);
   const { getValues, setValue } = useFormContext<z.infer<typeof formSchema>>();
 
   const [similarFlashcards, setSimilarFlashcards] = useState<

@@ -1,5 +1,6 @@
 "use client";
 
+import { dictType } from "@/app/dictionaries/dictionariesClientSide";
 import GenerateFlashcardsInput, {
   GeneratedFlashcard,
 } from "@/components/GenerateFlashcardsInput";
@@ -31,32 +32,36 @@ import { useFieldArray, useFormContext } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 
-export const formSchema = z.object({
-  name: z
-    .string()
-    .min(2, "Navnet må være minst 2 tegn")
-    .max(50, "Navnet kan ikke være mer enn 50 tegn"),
-  private: z.boolean(),
-  subjectName: z.string(),
-  academicLevel: z.enum(Object.keys(academicLevelMap) as [string, ...string[]]),
-  flashcards: z
-    .array(
-      z.object({
-        front: z.string().max(500, "Fremsiden kan være maks 500 tegn"),
-        back: z.string().max(1500, "Baksiden kan være maks 1500 tegn"),
-        tag: z.string(),
-      })
-    )
-    .min(3, "Settet må ha minst 2 studiekort"), // min 3 because last card is always empty
-});
+export function getFormSchema(dict:dictType){
+  return z.object({
+    name: z
+      .string()
+      .min(2, dict.decks.createDecks.nameMinLetters)
+      .max(50, dict.decks.createDecks.nameMaxLetters),
+    private: z.boolean(),
+    subjectName: z.string(),
+    academicLevel: z.enum(Object.keys(academicLevelMap) as [string, ...string[]]),
+    flashcards: z
+      .array(
+        z.object({
+          front: z.string().max(500, dict.decks.createDecks.frontMaxLetters),
+          back: z.string().max(1500, dict.decks.createDecks.backMaxLetters),
+          tag: z.string(),
+        })
+      )
+      .min(3, dict.decks.createDecks.flashcardsMin), // min 3 because last card is always empty
+  });
+}
 
 export default function CreateDeckForm({
   showGenerateFlashcardsInput = true,
 }: {
   showGenerateFlashcardsInput?: boolean;
 }) {
-  const form = useFormContext<z.infer<typeof formSchema>>();
   const dict = useDictionary();
+  const formSchema = getFormSchema(dict);
+  const form = useFormContext<z.infer<typeof formSchema>>();
+  
   const { fields, append, remove } = useFieldArray({
     control: form.control,
     name: "flashcards",

@@ -12,22 +12,27 @@ import { Input } from "@/components/ui/input";
 import { useFormContext } from "react-hook-form";
 import { z } from "zod";
 import { useDictionary } from "@/lib/DictProvider";
+import { dictType } from "@/app/dictionaries/dictionariesClientSide"
 
-export const formSchema = z.object({
-  name: z
-    .string()
-    .min(2, "Navnet må være minst 2 tegn")
-    .max(50, "Navnet kan ikke være mer enn 50 tegn"),
-  description: z
-    .string()
-    .max(500, "Beskrivelsen kan ikke være mer enn 500 tegn")
-    .optional(),
-  deckIds: z.array(z.string()),
-});
+export function getFormSchema(dict:dictType) {
+  return z.object({
+    name: z
+      .string()
+      .min(2, dict.collections.createCollection.nameMinLetters)
+      .max(50, dict.collections.createCollection.nameMaxLetters),
+    description: z
+      .string()
+      .max(500, dict.collections.createCollection.descriptionMaxLetters)
+      .optional(),
+    deckIds: z.array(z.string()),
+  });
+} 
 
 export default function CreateCollectionForm() {
-  const form = useFormContext<z.infer<typeof formSchema>>();
   const dict = useDictionary();
+  const formtype = getFormSchema(dict);
+  const form = useFormContext<z.infer<typeof formtype>>();
+
   return (
     <Form {...form}>
       <form

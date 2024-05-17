@@ -1,7 +1,7 @@
 "use client";
 
 import { Layers3 } from "lucide-react";
-import CreateDeckForm, { formSchema } from "./CreateDeckForm";
+import CreateDeckForm, { getFormSchema } from "./CreateDeckForm";
 import CreateDeckTopbar from "./CreateDeckTopbar";
 import { FormProvider, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -11,6 +11,7 @@ import { useDictionary } from "@/lib/DictProvider";
 
 export default function CreateDeckPage() {
   const dict = useDictionary();
+  const formSchema = getFormSchema(dict);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {

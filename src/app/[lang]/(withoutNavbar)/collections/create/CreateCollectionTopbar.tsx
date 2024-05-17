@@ -3,7 +3,7 @@
 import BackButton from "@/components/BackButton";
 import { Button } from "@/components/ui/button";
 import { useFormContext } from "react-hook-form";
-import { formSchema } from "./CreateCollectionForm";
+import { getFormSchema } from "./CreateCollectionForm";
 import { z } from "zod";
 import { LoadingSpinner } from "@/components/LoadingSpinner";
 import { api } from "@/app/api/trpc/client";
@@ -19,6 +19,7 @@ export default function CreateCollectionTopbar({
   collectionId?: string;
 }) {
   const dict = useDictionary();
+  const formSchema = getFormSchema(dict);
   const form = useFormContext<z.infer<typeof formSchema>>();
   const router = useRouter();
 

@@ -5,7 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Pen } from "lucide-react";
 import { FormProvider, useForm } from "react-hook-form";
 import { z } from "zod";
-import CreateDeckForm, { formSchema } from "../../create/CreateDeckForm";
+import CreateDeckForm, { getFormSchema } from "../../create/CreateDeckForm";
 import CreateDeckTopbar from "../../create/CreateDeckTopbar";
 import { useEffect } from "react";
 import { useDictionary } from "@/lib/DictProvider";
@@ -35,7 +35,7 @@ export default function EditDeckPage({
 
     return formattedFlashcard;
   });
-
+  const formSchema = getFormSchema(dict);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {

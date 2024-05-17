@@ -8,7 +8,7 @@ import { useRouter } from "next/navigation";
 import { useFormContext } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
-import { formSchema } from "./CreateDeckForm";
+import { getFormSchema } from "./CreateDeckForm";
 import { useDictionary } from "@/lib/DictProvider";
 
 // This component handles the form submission logic
@@ -21,9 +21,10 @@ export default function CreateDeckTopbar({
   edit?: boolean;
   deckId?: string;
 }) {
+  const dict = useDictionary();
+  const formSchema = getFormSchema(dict);
   const form = useFormContext<z.infer<typeof formSchema>>();
   const router = useRouter();
-  const dict = useDictionary();
   const createAndSaveEmbeddingsMutation =
     api.flashcard.createAndSaveEmbeddings.useMutation();
   const createAndSaveDeckEmbeddingMutation =

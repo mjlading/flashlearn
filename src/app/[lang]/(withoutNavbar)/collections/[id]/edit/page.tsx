@@ -3,7 +3,7 @@
 import { api } from "@/app/api/trpc/client";
 import { FormProvider, useForm } from "react-hook-form";
 import { z } from "zod";
-import { formSchema } from "../../create/CreateCollectionForm";
+import { getFormSchema } from "../../create/CreateCollectionForm";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
 import { SerializedStateDates } from "@/lib/utils";
@@ -12,6 +12,7 @@ import CreateCollectionTopbar from "../../create/CreateCollectionTopbar";
 import CreateCollecionTabs from "../../create/CreateCollectionTabs";
 import { Separator } from "@/components/ui/separator";
 import AddedCollections from "../../create/AddedCollections";
+import { useDictionary } from "@/lib/DictProvider";
 
 export default function EditCollectionPage({
   params,
@@ -24,7 +25,8 @@ export default function EditCollectionPage({
     id: params.id,
     includeDecks: true,
   });
-
+  const dict = useDictionary();
+  const formSchema = getFormSchema(dict)
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {

@@ -11,12 +11,14 @@ import { type Flashcard as FlashcardType } from "@prisma/client";
 import { motion } from "framer-motion";
 import { Bot } from "lucide-react";
 import { useTheme } from "next-themes";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { z } from "zod";
 import { AnswerForm, FormSchema } from "./AnswerForm";
 import ProgressBar from "./ProgressBar";
 import RehearsalFinishedDialog from "./RehearsalFinishedDialog";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useSession } from "next-auth/react";
 
 export default function WriteRehearsal({
   flashcards,
@@ -49,17 +51,20 @@ export default function WriteRehearsal({
 
   const flashcardRef = useRef<FlashcardRef>(null);
 
-  const { theme } = useTheme();
+  const session = useSession();
+
+  const [userAnswer, setUserAnswer] = useState<string>("");
 
   useEffect(() => {
     startRehearsal();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  function handleAnswerSubmitted() {
+  function handleAnswerSubmitted(answer: string) {
     if (flashcardRef.current) {
       flashcardRef.current.flipCard();
     }
+    setUserAnswer(answer);
   }
 
   // Used for animation
@@ -90,6 +95,22 @@ export default function WriteRehearsal({
           mode="write"
           isFlipEnabled={!!feedbacks[currentIndex]}
         />
+
+        {/* The user's answer section */}
+        {userAnswer && (
+          <div className="flex gap-2 justify-end pl-10 mt-4">
+            <div
+              className="dark:bg-slate-800 bg-slate-200
+          rounded-3xl rounded-tr-md p-4"
+            >
+              <p>{userAnswer}</p>
+            </div>
+            <Avatar className="h-8 w-8 shadow-sm">
+              <AvatarImage src={session.data?.user.image ?? ""} alt="profil" />
+              <AvatarFallback>meg</AvatarFallback>
+            </Avatar>
+          </div>
+        )}
 
         {/* The feedback section */}
         <ScrollArea className="flex-1 space-y-2">

@@ -36,7 +36,7 @@ export function AnswerForm({
   currentIndex: number;
   setFeedback: (feedback: Partial<Feedback>) => void;
   disabled: boolean;
-  onSubmitted: () => void;
+  onSubmitted: (answer: string) => void;
 }) {
   const dict = useDictionary();
 
@@ -67,13 +67,13 @@ export function AnswerForm({
   }, [feedback]);
 
   async function onSubmit(data: z.infer<typeof FormSchema>) {
+    onSubmitted(data.answer);
     try {
       await generateFeedback({
         front: flashcard.front,
         back: flashcard.back,
         answer: data.answer,
       });
-      onSubmitted();
     } catch (error) {
       toast.error(dict.rehearsal.feedbackError);
     }

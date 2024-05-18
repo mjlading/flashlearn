@@ -299,5 +299,8 @@
   },
   "xpDisplay": {
     "knowledgePoints": "Kunnskapspoeng"
+  },
+  "knowledgeLevel": {
+    "mastery": "Mestring"
   }
 }

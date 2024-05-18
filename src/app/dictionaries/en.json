@@ -300,5 +300,8 @@
   },
   "xpDisplay": {
     "knowledgePoints": "Knowledge points"
+  },
+  "knowledgeLevel": {
+    "mastery": "Mastery"
   }
 }

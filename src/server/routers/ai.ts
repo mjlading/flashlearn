@@ -241,6 +241,9 @@ export const aiRouter = router({
           "a mix of theoretical flashcards (terms and definitions) and practical problem-solving questions with direct answers";
       }
 
+      const languageText =
+        language === "auto" ? "Same language as the input text" : language;
+
       // Define tools used for function calling
       const tools: any = [
         {
@@ -284,7 +287,7 @@ export const aiRouter = router({
         messages: [
           {
             role: "user",
-            content: `Generate ${n} specific and concise flashcards for the following ${n} keywords. Flashcards should be highly ${type}, focusing on ${flashcardTypeDescription}. Reply in ${language}.
+            content: `Generate ${n} specific and concise flashcards for the following ${n} keywords. Flashcards should be highly ${type}, focusing on ${flashcardTypeDescription}. Reply in ${languageText}.
               
               ${keywords.join(",")}
               `,
@@ -329,6 +332,9 @@ export const aiRouter = router({
           "a mix of theoretical flashcards (terms and definitions) and practical problem-solving questions with direct answers";
       }
 
+      const languageText =
+        language === "auto" ? "Same language as the input text" : language;
+
       // Define tools used for function calling
       const tools: any = [
         {
@@ -372,7 +378,7 @@ export const aiRouter = router({
         messages: [
           {
             role: "user",
-            content: `Generate ${n} descriptive, detailed flashcards for the following text. Flashcards should be highly ${type}, focusing on ${flashcardTypeDescription}. Reply in ${language}.
+            content: `Generate ${n} descriptive, detailed flashcards for the following text. Flashcards should be highly ${type}, focusing on ${flashcardTypeDescription}. Reply in ${languageText}.
                     
                     ${text}
                     `,

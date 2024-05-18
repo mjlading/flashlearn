@@ -77,8 +77,6 @@ export default function GenerateFromCourse({
       courseInfo.name +
       "\nStudy level: " +
       courseInfo.studyLevel +
-      "\nLanguage:" +
-      courseInfo.language +
       "\n" +
       courseInfo.courseContent +
       "\n" +

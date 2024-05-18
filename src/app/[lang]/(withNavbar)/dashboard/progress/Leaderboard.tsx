@@ -24,7 +24,7 @@ export default function Leaderboard() {
           <>
             <li key={nickname} className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <div className="text-center font-bold text-white rounded-full h-6 w-6 bg-yellow-400">
+                <div className="text-center font-bold text-gray-700 rounded-full h-6 w-6 bg-yellow-400">
                   {index + 1}
                 </div>
                 <span>{nickname}</span>
@@ -41,7 +41,7 @@ export default function Leaderboard() {
         {/* The user's rank */}
         <li className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <div className="text-center font-bold text-white rounded-full h-6 w-6 bg-yellow-400">
+            <div className="text-center font-bold text-gray-700 rounded-full h-6 w-6 bg-yellow-400">
               {top10WithUser.data?.userRank.rank}
             </div>
             <span className="font-semibold">

@@ -108,7 +108,7 @@ export default function CreateDeckForm({
       >
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Name input */}
-          <div className="col-span-2 grid grid-cols-2 gap-6">
+          <div className="col-span-1 md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6">
             <FormField
               control={form.control}
               name="name"
@@ -158,39 +158,37 @@ export default function CreateDeckForm({
           />
 
           {/* Academic level select */}
-          <div className="md:col-span-1">
-            <FormField
-              control={form.control}
-              name="academicLevel"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>{dict.decks.createDeck.academicLevel}</FormLabel>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={session.data?.user.academicLevel}
-                  >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {Object.keys(academicLevelMap).map(
-                        (academicLevelOption) => (
-                          <SelectItem
-                            value={academicLevelOption}
-                            key={academicLevelOption}
-                          >
-                            {academicLevelMap[academicLevelOption]}
-                          </SelectItem>
-                        )
-                      )}
-                    </SelectContent>
-                  </Select>
-                </FormItem>
-              )}
-            />
-          </div>
+          <FormField
+            control={form.control}
+            name="academicLevel"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>{dict.decks.createDeck.academicLevel}</FormLabel>
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={session.data?.user.academicLevel}
+                >
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    {Object.keys(academicLevelMap).map(
+                      (academicLevelOption) => (
+                        <SelectItem
+                          value={academicLevelOption}
+                          key={academicLevelOption}
+                        >
+                          {academicLevelMap[academicLevelOption]}
+                        </SelectItem>
+                      )
+                    )}
+                  </SelectContent>
+                </Select>
+              </FormItem>
+            )}
+          />
         </div>
 
         {/* Privacy switch */}

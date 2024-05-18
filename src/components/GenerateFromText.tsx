@@ -24,9 +24,11 @@ import GenerationLanguageSelect from "./GenerationLangaugeSelect";
 export default function GenerateFromText({
   onGeneratedFlashcards,
   onLoadingStateChanged,
+  academicLevel,
 }: {
   onGeneratedFlashcards: (flashcards: GeneratedFlashcard[]) => void;
   onLoadingStateChanged: (newState: boolean) => void;
+  academicLevel: string;
 }) {
   const dict = useDictionary();
 
@@ -69,6 +71,7 @@ export default function GenerateFromText({
     generateFlashcardsMutation.mutate({
       text: data.textInput,
       language: generationLanguage,
+      academicLevel: academicLevel,
       type: generationType,
     });
   }

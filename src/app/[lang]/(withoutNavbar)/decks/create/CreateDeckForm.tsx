@@ -227,7 +227,10 @@ export default function CreateDeckForm({
 
           {/* Generation input */}
           {showGenerateFlashcardsInput && (
-            <GenerateFlashcardsInput onAddFlashcards={handleAddFlashcards} />
+            <GenerateFlashcardsInput
+              onAddFlashcards={handleAddFlashcards}
+              academicLevel={form.getValues("academicLevel")}
+            />
           )}
 
           {fields.map((field, index) => (

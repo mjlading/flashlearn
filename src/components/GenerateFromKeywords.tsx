@@ -25,9 +25,11 @@ import GenerationLanguageSelect from "./GenerationLangaugeSelect";
 export default function GenerateFromKeywords({
   onGeneratedFlashcards,
   onLoadingStateChanged,
+  academicLevel,
 }: {
   onGeneratedFlashcards: (flashcards: GeneratedFlashcard[]) => void;
   onLoadingStateChanged: (newState: boolean) => void;
+  academicLevel: string;
 }) {
   const dict = useDictionary();
   const [keywords, setKeywords] = useState<string[]>([]);
@@ -72,6 +74,7 @@ export default function GenerateFromKeywords({
   function handleGenerateClicked() {
     generateFlashcardsMutation.mutate({
       keywords: keywords,
+      academicLevel: academicLevel,
       language: generationLanguage,
       type: generationType,
     });

@@ -26,9 +26,11 @@ import { ScrollArea } from "./ui/scroll-area";
 export default function GenerateFromCourse({
   onGeneratedFlashcards,
   onLoadingStateChanged,
+  academicLevel,
 }: {
   onGeneratedFlashcards: (flashcards: GeneratedFlashcard[]) => void;
   onLoadingStateChanged: (newState: boolean) => void;
+  academicLevel: string;
 }) {
   const dict = useDictionary();
 
@@ -85,6 +87,7 @@ export default function GenerateFromCourse({
     generateFlashcardsMutation.mutate({
       text: prompt,
       language: generationLanguage,
+      academicLevel: academicLevel,
       type: generationType,
     });
   }

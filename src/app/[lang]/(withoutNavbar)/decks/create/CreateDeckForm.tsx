@@ -100,6 +100,27 @@ export default function CreateDeckForm({
 
   const subjectOptions = ["Auto", ...Object.keys(subjectNameMap)];
 
+  function subjectName(subject: string) {
+    if (dict.lang === "no") {
+      return subjectNameMap[subject] || "Auto";
+    } else {
+      // lang is "en"
+      return subject;
+    }
+  }
+
+  function academicLevelName(academicLevel: string) {
+    if (dict.lang === "no") {
+      return academicLevelMap[academicLevel];
+    } else {
+      // lang is "en"
+      return academicLevel
+        .replace("_", " ")
+        .toLowerCase()
+        .replace(/^\w/, (c) => c.toUpperCase());
+    }
+  }
+
   return (
     <Form {...form}>
       <form
@@ -150,7 +171,7 @@ export default function CreateDeckForm({
                   <SelectContent>
                     {subjectOptions.map((subjectOption) => (
                       <SelectItem value={subjectOption} key={subjectOption}>
-                        {subjectNameMap[subjectOption] || "Auto"}
+                        {subjectName(subjectOption) || "Auto"}
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -182,7 +203,7 @@ export default function CreateDeckForm({
                           value={academicLevelOption}
                           key={academicLevelOption}
                         >
-                          {academicLevelMap[academicLevelOption]}
+                          {academicLevelName(academicLevelOption)}
                         </SelectItem>
                       )
                     )}

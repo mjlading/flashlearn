@@ -18,6 +18,7 @@ import { toast } from "sonner";
 import { api } from "@/app/api/trpc/client";
 import GenerationTypeTabs from "./GenerationTypeTabs";
 import { useDictionary } from "@/lib/DictProvider";
+import GenerationLanguageSelect from "./GenerationLangaugeSelect";
 
 export default function GenerateFromFile({
   onGeneratedFlashcards,
@@ -30,6 +31,8 @@ export default function GenerateFromFile({
 
   const [file, setFile] = useState<File | null>(null);
   const [generationType, setGenerationType] = useState("mixed");
+  const [generationLanguage, setGenerationLanguage] = useState("auto");
+
   const generateFlashcardsMutation =
     api.ai.generateFlashcardsFromText.useMutation({
       onMutate: () => {
@@ -64,6 +67,7 @@ export default function GenerateFromFile({
 
       generateFlashcardsMutation.mutate({
         text: text,
+        language: generationLanguage,
         type: generationType,
       });
     };
@@ -99,6 +103,10 @@ export default function GenerateFromFile({
 
           {file && (
             <>
+              <GenerationLanguageSelect
+                value={generationLanguage}
+                onValueChange={(value) => setGenerationLanguage(value)}
+              />
               <GenerationTypeTabs
                 value={generationType}
                 onValueChange={(value) => setGenerationType(value)}

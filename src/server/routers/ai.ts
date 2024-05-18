@@ -8,6 +8,7 @@ import path from "path";
 import pgvector from "pgvector";
 import { z } from "zod";
 import { protectedProcedure, publicProcedure, router } from "../trpc";
+import { auth } from "@/auth";
 
 export const aiRouter = router({
   generateEmbedding: publicProcedure //test me
@@ -223,6 +224,7 @@ export const aiRouter = router({
     )
     .mutation(async ({ input }) => {
       const { keywords, language, type } = input;
+      const session = await auth();
 
       console.time("generateFlashcardsFromKeywords time");
 
@@ -287,7 +289,9 @@ export const aiRouter = router({
         messages: [
           {
             role: "user",
-            content: `Generate ${n} specific and concise flashcards for the following ${n} keywords. Flashcards should be highly ${type}, focusing on ${flashcardTypeDescription}. Reply in ${languageText}.
+            content: `Generate ${n} specific and concise flashcards for the following ${n} keywords. Flashcards should be highly ${type}, focusing on ${flashcardTypeDescription}. The academic level of the cards should be: ${
+              session?.user.academicLevel
+            }. Reply in ${languageText}.
               
               ${keywords.join(",")}
               `,
@@ -315,6 +319,7 @@ export const aiRouter = router({
     )
     .mutation(async ({ input }) => {
       const { text, language, type } = input;
+      const session = await auth();
 
       const n = "5-20";
 
@@ -378,7 +383,7 @@ export const aiRouter = router({
         messages: [
           {
             role: "user",
-            content: `Generate ${n} descriptive, detailed flashcards for the following text. Flashcards should be highly ${type}, focusing on ${flashcardTypeDescription}. Reply in ${languageText}.
+            content: `Generate ${n} descriptive, detailed flashcards for the following text. Flashcards should be highly ${type}, focusing on ${flashcardTypeDescription}. The academic level of the cards should be: ${session?.user.academicLevel}. Reply in ${languageText}.
                     
                     ${text}
                     `,

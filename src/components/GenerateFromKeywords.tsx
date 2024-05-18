@@ -20,6 +20,7 @@ import { Input } from "./ui/input";
 import { Separator } from "./ui/separator";
 import { toast } from "sonner";
 import { useDictionary } from "@/lib/DictProvider";
+import GenerationLanguageSelect from "./GenerationLangaugeSelect";
 
 export default function GenerateFromKeywords({
   onGeneratedFlashcards,
@@ -32,6 +33,7 @@ export default function GenerateFromKeywords({
   const [keywords, setKeywords] = useState<string[]>([]);
   const [inputValue, setInputValue] = useState("");
   const [generationType, setGenerationType] = useState("mixed");
+  const [generationLanguage, setGenerationLanguage] = useState("auto");
 
   const generateFlashcardsMutation =
     api.ai.generateFlashcardsFromKeywords.useMutation({
@@ -70,6 +72,7 @@ export default function GenerateFromKeywords({
   function handleGenerateClicked() {
     generateFlashcardsMutation.mutate({
       keywords: keywords,
+      language: generationLanguage,
       type: generationType,
     });
   }
@@ -122,6 +125,10 @@ export default function GenerateFromKeywords({
           </div>
         </div>
         <Separator className="mb-4" />
+        <GenerationLanguageSelect
+          value={generationLanguage}
+          onValueChange={(value) => setGenerationLanguage(value)}
+        />
         <GenerationTypeTabs
           value={generationType}
           onValueChange={(value) => setGenerationType(value)}

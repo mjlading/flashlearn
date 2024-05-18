@@ -4,6 +4,7 @@ import { dictType } from "@/app/dictionaries/dictionariesClientSide";
 import GenerateFlashcardsInput, {
   GeneratedFlashcard,
 } from "@/components/GenerateFlashcardsInput";
+import MarkdownRenderer from "@/components/MarkdownRenderer";
 import {
   Form,
   FormControl,

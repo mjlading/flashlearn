@@ -1,6 +1,6 @@
 "use client";
 
-import Flashcard from "@/components/Flashcard";
+import Flashcard, { FlashcardRef } from "@/components/Flashcard";
 import { LoadingSpinner } from "@/components/LoadingSpinner";
 import { TextGenerateEffect } from "@/components/TextGenerateEffect";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -11,7 +11,7 @@ import { type Flashcard as FlashcardType } from "@prisma/client";
 import { motion } from "framer-motion";
 import { Bot } from "lucide-react";
 import { useTheme } from "next-themes";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { z } from "zod";
 import { AnswerForm, FormSchema } from "./AnswerForm";
@@ -46,12 +46,20 @@ export default function WriteRehearsal({
     isFinished,
   } = useRehearsal({ flashcards, deckId, creatorUserId });
 
+  const flashcardRef = useRef<FlashcardRef>(null);
+
   const { theme } = useTheme();
 
   useEffect(() => {
     startRehearsal();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  function handleAnswerSubmitted() {
+    if (flashcardRef.current) {
+      flashcardRef.current.flipCard();
+    }
+  }
 
   // Used for animation
   const variants = {
@@ -75,6 +83,7 @@ export default function WriteRehearsal({
       />
       <FormProvider {...form}>
         <Flashcard
+          ref={flashcardRef}
           flashcard={currentFlashcard}
           className="h-[10rem] mt-4"
           mode="write"
@@ -136,6 +145,7 @@ export default function WriteRehearsal({
             currentIndex={currentIndex}
             disabled={!!feedbacks[currentIndex]}
             setFeedback={handleSetFeedback}
+            onSubmitted={handleAnswerSubmitted}
           />
         </div>
       </FormProvider>

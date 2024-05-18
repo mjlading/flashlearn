@@ -1,21 +1,29 @@
 "use client";
 
-import { type Flashcard } from "@prisma/client";
-import React, { useEffect, useState } from "react";
+import { type Flashcard as FlashcardType } from "@prisma/client";
+import React, {
+  useEffect,
+  useState,
+  forwardRef,
+  useImperativeHandle,
+} from "react";
 import { ScrollArea } from "./ui/scroll-area";
 import { cn } from "@/lib/utils";
+import MarkdownRenderer from "./MarkdownRenderer";
 
-export default function Flashcard({
-  flashcard,
-  className,
-  mode,
-  isFlipEnabled = true,
-}: {
-  flashcard: Flashcard;
-  className?: string;
-  mode: string;
-  isFlipEnabled?: boolean;
-}) {
+export interface FlashcardRef {
+  flipCard: () => void;
+}
+
+const Flashcard = forwardRef<
+  FlashcardRef,
+  {
+    flashcard: FlashcardType;
+    className?: string;
+    mode: string;
+    isFlipEnabled?: boolean;
+  }
+>(({ flashcard, className, mode, isFlipEnabled = true }, ref) => {
   const [showBack, setShowBack] = useState(false);
 
   useEffect(() => {
@@ -50,6 +58,10 @@ export default function Flashcard({
     if (isFlipEnabled) setShowBack(!showBack);
   }
 
+  useImperativeHandle(ref, () => ({
+    flipCard,
+  }));
+
   // Flip animation
   const flipStyle: React.CSSProperties = {
     transform: showBack ? "rotateX(180deg)" : "rotateX(0deg)",
@@ -83,17 +95,17 @@ export default function Flashcard({
     >
       {/* The front of the flashcard */}
       <ScrollArea style={frontStyle} className="h-full w-full p-5">
-        <p className={dynamicTextSize(flashcard.front.length)}>
-          {flashcard.front}
-        </p>
+        <MarkdownRenderer>{flashcard.front}</MarkdownRenderer>
       </ScrollArea>
 
       {/* The back of the flashcard */}
       <ScrollArea style={backStyle} className="h-full w-full p-5">
-        <p className={dynamicTextSize(flashcard.back.length)}>
-          {flashcard.back}
-        </p>
+        <MarkdownRenderer>{flashcard.back}</MarkdownRenderer>
       </ScrollArea>
     </div>
   );
-}
+});
+
+Flashcard.displayName = "Flashcard";
+
+export default Flashcard;

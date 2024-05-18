@@ -217,11 +217,12 @@ export const aiRouter = router({
     .input(
       z.object({
         keywords: z.array(z.string()),
+        language: z.string(),
         type: z.string(),
       })
     )
     .mutation(async ({ input }) => {
-      const { keywords, type } = input;
+      const { keywords, language, type } = input;
 
       console.time("generateFlashcardsFromKeywords time");
 
@@ -283,7 +284,7 @@ export const aiRouter = router({
         messages: [
           {
             role: "user",
-            content: `Generate ${n} specific and concise flashcards for the following ${n} keywords. Flashcards should be highly ${type}, focusing on ${flashcardTypeDescription}.
+            content: `Generate ${n} specific and concise flashcards for the following ${n} keywords. Flashcards should be highly ${type}, focusing on ${flashcardTypeDescription}. Reply in ${language}.
               
               ${keywords.join(",")}
               `,
@@ -305,11 +306,12 @@ export const aiRouter = router({
     .input(
       z.object({
         text: z.string(),
+        language: z.string(),
         type: z.string(),
       })
     )
     .mutation(async ({ input }) => {
-      const { text, type } = input;
+      const { text, language, type } = input;
 
       const n = "5-20";
 
@@ -370,7 +372,7 @@ export const aiRouter = router({
         messages: [
           {
             role: "user",
-            content: `Generate ${n} descriptive, detailed flashcards for the following text. Flashcards should be highly ${type}, focusing on ${flashcardTypeDescription}.
+            content: `Generate ${n} descriptive, detailed flashcards for the following text. Flashcards should be highly ${type}, focusing on ${flashcardTypeDescription}. Reply in ${language}.
                     
                     ${text}
                     `,

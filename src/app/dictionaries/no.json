@@ -64,12 +64,12 @@
       "noBookmakedSets": "Du har ingen bokmerkede sett",
       "noBookmakedSetsEx": "Dine bokmerkede sett vil vises her"
     },
-    "createDecks":{
-      "nameMinLetters":"Navnet må være minst 2 tegn",
-      "nameMaxLetters":"Navnet kan ikke være mer enn 50 tegn",
-      "frontMaxLetters":"Fremsiden kan være maks 500 tegn",
-      "backMaxLetters":"Baksiden kan være maks 1500 tegn",
-      "flashcardsMin":"Settet må ha minst 2 studiekort"
+    "createDecks": {
+      "nameMinLetters": "Navnet må være minst 2 tegn",
+      "nameMaxLetters": "Navnet kan ikke være mer enn 50 tegn",
+      "frontMaxLetters": "Fremsiden kan være maks 500 tegn",
+      "backMaxLetters": "Baksiden kan være maks 1500 tegn",
+      "flashcardsMin": "Settet må ha minst 2 studiekort"
     },
     "startPractice": {
       "visual": "Visuell",
@@ -118,9 +118,9 @@
     "noCollections": "Du har ingen samlinger",
     "noCollectionDescription": "Lag en samling for å organisere og øve flere sett sammen",
     "createCollection": {
-      "nameMinLetters":"Navnet må være minst 2 tegn",
-      "nameMaxLetters":"Navnet kan ikke være mer enn 50 tegn",
-      "descriptionMaxLetters":"Beskrivelsen kan ikke være mer enn 500 tegn",
+      "nameMinLetters": "Navnet må være minst 2 tegn",
+      "nameMaxLetters": "Navnet kan ikke være mer enn 50 tegn",
+      "descriptionMaxLetters": "Beskrivelsen kan ikke være mer enn 500 tegn",
       "aboutCollection": "Om samlingen",
       "addToCollection": "Legg til sett",
       "placeholderName": "Gi samlingen din et navn",
@@ -214,7 +214,11 @@
     "learningOutcomes": "Læringsutbytte",
     "learningMethods": "Læringsformer",
     "generateFlashcards": "Generer studiekort",
-    "courseCode": "Emnekode"
+    "courseCode": "Emnekode",
+    "sameAsText": "Samme som tekst",
+    "language": "Språk for generering",
+    "norwegian": "Norsk",
+    "english": "Engelsk"
   },
   "generateFromFile": {
     "file": "Fil",

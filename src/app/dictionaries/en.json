@@ -215,7 +215,11 @@
     "learningOutcomes": "Learning outcomes",
     "learningMethods": "Learning methods",
     "generateFlashcards": "Generate flashcards",
-    "courseCode": "Course code"
+    "courseCode": "Course code",
+    "sameAsText": "Same as text",
+    "language": "Generation language",
+    "norwegian": "Norwegian",
+    "english": "English"
   },
   "generateFromFile": {
     "file": "File",

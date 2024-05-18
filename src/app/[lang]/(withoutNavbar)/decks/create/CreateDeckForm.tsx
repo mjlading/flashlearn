@@ -167,7 +167,7 @@ export default function CreateDeckForm({
                 <FormLabel>{dict.decks.createDeck.academicLevel}</FormLabel>
                 <Select
                   onValueChange={field.onChange}
-                  defaultValue={session.data?.user.academicLevel}
+                  defaultValue={session.data?.user.academicLevel || "BACHELOR"}
                 >
                   <FormControl>
                     <SelectTrigger>

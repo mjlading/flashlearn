@@ -13,7 +13,21 @@ pnpm dev
 # or
 bun dev
 ```
+# Environment variables
+To run project locally, add the following environment variables to .env.local:
+- NEXTAUTH_SECRET
+- GITHUB_CLIENT_ID
+- GITHUB_CLIENT_SECRET
 
+OPENAI_API_KEY
+
+AUTH_GOOGLE_ID
+AUTH_GOOGLE_SECRET
+GOOGLE_REFRESH_TOKEN
+
+ENABLE_CYPRESS_LOGIN=false #turn this on to run cypress tests
+CYPRESS_TEST_AC_ID="clvo5f7hy00039ehvjepjy5y8"
+# Run in development mode
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
 ## TESTING

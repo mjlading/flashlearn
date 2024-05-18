@@ -8,6 +8,11 @@ import Negotiator from "negotiator";
 // available localizations TODO: Move this to lang config
 let locales: readonly string[] = ["en", "no"];
 
+/**
+ * Returns language from browser, only use this for getting initial language setting 
+ * @param request 
+ * @returns string with browser language, or default
+ */
 function getLocale(request: NextRequest) {
   let headers = {
     temp: <{ [key: string]: string | string[] | undefined }>{
@@ -60,9 +65,9 @@ export default auth(async (request) => {
     //console.log("pathname led to api");
     return NextResponse.next();
   }
-
-  if (!checkLang(pathname)) {
-    // this will make paths to api fail so they should be excluded in path config
+  const hasLang = checkLang(pathname);
+  let lang;
+  if (!hasLang) { // this will make paths to api fail so they should be excluded in path config
     // Redirect if there is no locale
     const locale = getLocale(request);
     request.nextUrl.pathname = `/${locale}${pathname}`;
@@ -70,6 +75,8 @@ export default auth(async (request) => {
     // The new URL is now /en-US/products
     //console.log("redirecting to locale", request.nextUrl.pathname);
     return NextResponse.redirect(request.nextUrl);
+  } else {
+    lang = pathname.slice(0, 3)
   }
 
   console.log("path:", pathname, "protected?", isProtected(pathname));
@@ -84,13 +91,12 @@ export default auth(async (request) => {
   }
   // if user has not set pref. redirect to user config page
   if (
-    request.nextUrl.pathname !== `/${getLocale(request)}/profileSetup` &&
+    request.nextUrl.pathname !== `${lang}/profileSetup` &&
     !preferencesSet &&
     session?.user
   ) {
     //create redirect link
-    const locale = getLocale(request);
-    request.nextUrl.pathname = `/${locale}/profileSetup`;
+    request.nextUrl.pathname = `${lang}/profileSetup`;
 
     console.log("redirecting bc we are going to profileSetup");
     // Redirect to profile setup page

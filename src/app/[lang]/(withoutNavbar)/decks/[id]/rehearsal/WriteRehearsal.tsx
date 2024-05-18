@@ -5,7 +5,7 @@ import { LoadingSpinner } from "@/components/LoadingSpinner";
 import { TextGenerateEffect } from "@/components/TextGenerateEffect";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import useRehearsal from "@/hooks/useRehearsal";
-import { percentageToHsl } from "@/lib/utils";
+import { cn, percentageToHsl, percentageToTwBgColor } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { type Flashcard as FlashcardType } from "@prisma/client";
 import { motion } from "framer-motion";
@@ -44,6 +44,7 @@ export default function WriteRehearsal({
     timeSpent,
     xpGain,
     isFinished,
+    getRandomEmoji,
   } = useRehearsal({ flashcards, deckId, creatorUserId });
 
   const flashcardRef = useRef<FlashcardRef>(null);
@@ -100,17 +101,18 @@ export default function WriteRehearsal({
               {/* The score */}
               {feedbacks[currentIndex].score !== undefined && (
                 <div
-                  className="rounded-full mx-auto w-fit p-2 shadow-sm font-semibold"
-                  style={{
-                    backgroundColor: percentageToHsl(
-                      (feedbacks[currentIndex]?.score || 0) / 100,
-                      0,
-                      120,
-                      theme === "dark" ? 20 : 65
-                    ),
-                  }}
+                  className={cn(
+                    percentageToTwBgColor(feedbacks[currentIndex]?.score || 0),
+                    "flex gap-1 rounded-full py-2 px-5 mx-auto w-fit shadow-sm font-semibold"
+                  )}
                 >
-                  {feedbacks[currentIndex].score} / 100
+                  <span className="text-lg">
+                    {feedbacks[currentIndex].score}{" "}
+                    <span className="text-muted-foreground text-sm">/ 100</span>
+                  </span>
+                  <span className="text-lg">
+                    {feedbacks[currentIndex].score === 100 && getRandomEmoji()}
+                  </span>
                 </div>
               )}
 

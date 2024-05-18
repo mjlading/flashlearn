@@ -130,6 +130,13 @@ export default function useRehearsal({
     });
   }
 
+  const maxScoreEmojis = ["🎉", "🥳", "🎊", "🙌", "✨", "💫", "🥇", "👏"];
+
+  const getRandomEmoji = () => {
+    const randomIndex = Math.floor(Math.random() * maxScoreEmojis.length);
+    return maxScoreEmojis[randomIndex];
+  };
+
   return {
     currentIndex,
     setCurrentIndex,
@@ -143,5 +150,6 @@ export default function useRehearsal({
     timeSpent,
     xpGain,
     isFinished,
+    getRandomEmoji,
   };
 }

@@ -408,6 +408,7 @@ export const aiRouter = router({
     )
     .mutation(async ({ input }) => {
       const { front, back, answer } = input;
+      const session = await auth();
 
       // Define tools used for function calling
       const tools: any = [
@@ -415,8 +416,7 @@ export const aiRouter = router({
           type: "function",
           function: {
             name: "generate_feedback",
-            description:
-              "Generates descriptive, helpful feedback on a flashcard submission",
+            description: "Generates feedback on a flashcard submission",
             parameters: {
               type: "object",
               properties: {
@@ -449,7 +449,7 @@ export const aiRouter = router({
         messages: [
           {
             role: "user",
-            content: `Given a students answer to a flashcard quiz, give a score (0-100) and optional useful tips for improvement. If score=100 dont give tips.
+            content: `You're a teacher. Given a ${session?.user.academicLevel} students answer to a flashcard quiz, provide a score (0-100) based on the logical correctness of the answer. The answer's details (e.g. variable names, test cases, vocabulary, grammar) does not have to match the flashcard back to be considered 100% correct. Rather than judging such details, you should give 100% if the student shows that they understand the question and the answer is logically correct. Provide optional useful, spesific and detailed tips aimed at the student for improvement if the score is less than 100.
                     flashcard front: ${front}
                     flashcard back: ${back}
                     The students answer: ${answer}

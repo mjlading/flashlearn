@@ -93,7 +93,9 @@
       "addFlashcard": "Legg til studiekort",
       "addFlashcardDescription": "Hvert kort har en fremside og en bakside. Fremsiden kan ha et begrep eller spørsmål, og baksiden kan ha et svar eller en forklaring.",
       "placeholderFront": "Fremside",
-      "placeholderBack": "Bakside"
+      "placeholderBack": "Bakside",
+      "edit": "Rediger",
+      "preview": "Forhåndsvisning"
     }
   },
   "collections": {

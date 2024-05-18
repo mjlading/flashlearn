@@ -93,7 +93,9 @@
       "addFlashcard": "Add flashcards",
       "addFlashcardDescription": "Every flashcard has a front and back. The front has a term or question, and the back side can contain an answer or explanation.",
       "placeholderFront": "Front",
-      "placeholderBack": "Back"
+      "placeholderBack": "Back",
+      "edit": "Edit",
+      "preview": "Preview"
     }
   },
   "collections": {

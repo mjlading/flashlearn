@@ -24,6 +24,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
 import { useDictionary } from "@/lib/DictProvider";
 import { academicLevelMap } from "@/lib/academicLevel";
@@ -234,49 +235,87 @@ export default function CreateDeckForm({
             />
           )}
 
-          {fields.map((field, index) => (
-            <div key={field.id} className="mt-6">
-              <Label className="block text-lg font-medium text-muted-foreground mb-2">
-                {index + 1}.
-              </Label>
-              <div className="flex gap-8">
-                {/* Front side of flashcard */}
-                <FormField
-                  control={form.control}
-                  name={`flashcards.${index}.front`}
-                  render={({ field }) => (
-                    <FormItem className="flex-grow">
-                      <FormControl>
-                        <Textarea
-                          placeholder={dict.decks.createDeck.placeholderFront}
-                          className="h-[12rem] resize-none p-4"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                {/* Back side of flashcard */}
-                <FormField
-                  control={form.control}
-                  name={`flashcards.${index}.back`}
-                  render={({ field }) => (
-                    <FormItem className="flex-grow">
-                      <FormControl>
-                        <Textarea
-                          placeholder={dict.decks.createDeck.placeholderBack}
-                          className="h-[12rem] resize-none p-4"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
-            </div>
-          ))}
+          <Tabs defaultValue="edit">
+            <TabsList>
+              <TabsTrigger value="edit">
+                {dict.decks.createDeck.edit}
+              </TabsTrigger>
+              <TabsTrigger value="preview">
+                {dict.decks.createDeck.preview}
+              </TabsTrigger>
+            </TabsList>
+            <TabsContent value="edit">
+              {/* Section for editing and adding flashcards */}
+              {fields.map((field, index) => (
+                <div key={field.id} className="mt-6">
+                  <Label className="block text-lg font-medium text-muted-foreground mb-2">
+                    {index + 1}.
+                  </Label>
+                  <div className="flex gap-8">
+                    {/* Front side of flashcard */}
+                    <FormField
+                      control={form.control}
+                      name={`flashcards.${index}.front`}
+                      render={({ field }) => (
+                        <FormItem className="flex-grow">
+                          <FormControl>
+                            <Textarea
+                              placeholder={
+                                dict.decks.createDeck.placeholderFront
+                              }
+                              className="h-[12rem] resize-none p-4"
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    {/* Back side of flashcard */}
+                    <FormField
+                      control={form.control}
+                      name={`flashcards.${index}.back`}
+                      render={({ field }) => (
+                        <FormItem className="flex-grow">
+                          <FormControl>
+                            <Textarea
+                              placeholder={
+                                dict.decks.createDeck.placeholderBack
+                              }
+                              className="h-[12rem] resize-none p-4"
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                </div>
+              ))}
+            </TabsContent>
+            {/* The preview of flashcards, with rendered markdown and syntax highlighting */}
+            <TabsContent value="preview">
+              {fields.map((field, index) => (
+                <div key={field.id} className="mt-6">
+                  <Label className="block text-lg font-medium text-muted-foreground mb-2">
+                    {index + 1}.
+                  </Label>
+                  <div className="flex gap-8">
+                    {/* Front side of flashcard preview */}
+                    <div className="w-1/2 h-[12rem] p-4 border rounded-md overflow-auto">
+                      <MarkdownRenderer>{field.front}</MarkdownRenderer>
+                    </div>
+
+                    {/* Back side of flashcard preview */}
+                    <div className="w-1/2 h-[12rem] p-4 border rounded-md overflow-auto">
+                      <MarkdownRenderer>{field.back}</MarkdownRenderer>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </TabsContent>
+          </Tabs>
           {/* Show error message if less than 2 flashcards are filled */}
           <FormMessage className="my-2">
             {form.formState.errors.flashcards?.root?.message}

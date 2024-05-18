@@ -68,6 +68,7 @@ export function AnswerForm({
 
   async function onSubmit(data: z.infer<typeof FormSchema>) {
     onSubmitted(data.answer);
+    form.setValue("answer", "");
     try {
       await generateFeedback({
         front: flashcard.front,
@@ -89,7 +90,7 @@ export function AnswerForm({
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)}>
-        <div className="relative">
+        <div className="relative bg-transparent">
           <FormField
             control={form.control}
             name="answer"

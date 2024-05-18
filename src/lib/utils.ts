@@ -59,7 +59,7 @@ export function percentageToHsl(
   lightness = 50
 ) {
   var hue = percentage * (hue1 - hue0) + hue0;
-  return "hsl(" + hue + `, 60%, ${lightness}%)`;
+  return "hsl(" + hue + `, 100%, ${lightness}%)`;
 }
 
 export function percentageToTwBgColor(percentage: number): string {

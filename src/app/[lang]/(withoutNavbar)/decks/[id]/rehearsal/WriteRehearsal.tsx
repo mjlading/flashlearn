@@ -3,22 +3,21 @@
 import Flashcard, { FlashcardRef } from "@/components/Flashcard";
 import { LoadingSpinner } from "@/components/LoadingSpinner";
 import { TextGenerateEffect } from "@/components/TextGenerateEffect";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import useRehearsal from "@/hooks/useRehearsal";
-import { cn, percentageToHsl, percentageToTwBgColor } from "@/lib/utils";
+import { cn, percentageToTwBgColor } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { type Flashcard as FlashcardType } from "@prisma/client";
 import { motion } from "framer-motion";
 import { Bot } from "lucide-react";
-import { useTheme } from "next-themes";
-import { useEffect, useRef, useState } from "react";
+import { useSession } from "next-auth/react";
+import { useEffect, useRef } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { z } from "zod";
 import { AnswerForm, FormSchema } from "./AnswerForm";
 import ProgressBar from "./ProgressBar";
 import RehearsalFinishedDialog from "./RehearsalFinishedDialog";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { useSession } from "next-auth/react";
 
 export default function WriteRehearsal({
   flashcards,
@@ -46,14 +45,14 @@ export default function WriteRehearsal({
     timeSpent,
     xpGain,
     isFinished,
+    userAnswers,
+    setUserAnswers,
     getRandomEmoji,
   } = useRehearsal({ flashcards, deckId, creatorUserId });
 
   const flashcardRef = useRef<FlashcardRef>(null);
 
   const session = useSession();
-
-  const [userAnswer, setUserAnswer] = useState<string>("");
 
   useEffect(() => {
     startRehearsal();
@@ -64,7 +63,7 @@ export default function WriteRehearsal({
     if (flashcardRef.current) {
       flashcardRef.current.flipCard();
     }
-    setUserAnswer(answer);
+    setUserAnswers((prev) => [...prev, answer]);
   }
 
   // Used for animation
@@ -88,32 +87,35 @@ export default function WriteRehearsal({
         setCurrentIndex={setCurrentIndex}
       />
       <FormProvider {...form}>
-        <Flashcard
-          ref={flashcardRef}
-          flashcard={currentFlashcard}
-          className="h-[10rem] mt-4"
-          mode="write"
-          isFlipEnabled={!!feedbacks[currentIndex]}
-        />
+        <ScrollArea className="flex-1 space-y-2 pb-2">
+          <Flashcard
+            ref={flashcardRef}
+            flashcard={currentFlashcard}
+            className="h-[10rem] mt-4"
+            mode="write"
+            isFlipEnabled={!!feedbacks[currentIndex]}
+          />
 
-        {/* The user's answer section */}
-        {userAnswer && (
-          <div className="flex gap-2 justify-end pl-10 mt-4">
-            <div
-              className="dark:bg-slate-800 bg-slate-200
+          {/* The user's answer section */}
+          {userAnswers[currentIndex] && (
+            <div className="flex gap-2 justify-end pl-10 my-4">
+              <div
+                className="dark:bg-slate-800 bg-slate-200
           rounded-3xl rounded-tr-md p-4"
-            >
-              <p>{userAnswer}</p>
+              >
+                <p>{userAnswers[currentIndex]}</p>
+              </div>
+              <Avatar className="h-8 w-8 shadow-sm">
+                <AvatarImage
+                  src={session.data?.user.image ?? ""}
+                  alt="profil"
+                />
+                <AvatarFallback>meg</AvatarFallback>
+              </Avatar>
             </div>
-            <Avatar className="h-8 w-8 shadow-sm">
-              <AvatarImage src={session.data?.user.image ?? ""} alt="profil" />
-              <AvatarFallback>meg</AvatarFallback>
-            </Avatar>
-          </div>
-        )}
+          )}
 
-        {/* The feedback section */}
-        <ScrollArea className="flex-1 space-y-2">
+          {/* The feedback section */}
           {form.formState.isSubmitting && (
             <LoadingSpinner className="mx-auto" />
           )}
@@ -138,7 +140,7 @@ export default function WriteRehearsal({
               )}
 
               {/* The tips */}
-              <ul className="space-y-4">
+              <ul className="space-y-4 pb-8">
                 {feedbacks[currentIndex].tips?.map((tip, index) => (
                   <motion.div
                     key={index}
@@ -162,7 +164,7 @@ export default function WriteRehearsal({
         </ScrollArea>
 
         {/* The textarea input section */}
-        <div className="pb-4">
+        <div className="pb-4 bg-transparent">
           <AnswerForm
             flashcard={currentFlashcard}
             currentIndex={currentIndex}

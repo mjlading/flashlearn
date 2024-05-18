@@ -20,6 +20,7 @@ export default function useRehearsal({
 
   const [currentIndex, setCurrentIndex] = useState(0);
   const [currentFlashcard, setCurrentFlashcard] = useState(flashcards[0]);
+  const [userAnswers, setUserAnswers] = useState<string[]>([]);
   const [feedbacks, setFeedbacks] = useState<Partial<Feedback>[]>([]);
   const [dialogOpen, setDialogOpen] = useState(false);
 
@@ -150,6 +151,8 @@ export default function useRehearsal({
     timeSpent,
     xpGain,
     isFinished,
+    userAnswers,
+    setUserAnswers,
     getRandomEmoji,
   };
 }

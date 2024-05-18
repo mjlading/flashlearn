@@ -48,7 +48,7 @@ export default function WriteRehearsal({
     userAnswers,
     setUserAnswers,
     getRandomEmoji,
-  } = useRehearsal({ flashcards, deckId, creatorUserId });
+  } = useRehearsal({ flashcards, deckId, creatorUserId, mode: "WRITE" });
 
   const flashcardRef = useRef<FlashcardRef>(null);
 

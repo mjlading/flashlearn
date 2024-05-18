@@ -29,13 +29,14 @@ export const rehearsalRouter = router({
     .input(
       z.object({
         rehearsalId: z.string(),
+        mode: z.enum(["VISUAL", "WRITE", "ORAL"]),
         timeSpent: z.number(),
         deckId: z.string(),
         score: z.number(),
       })
     )
     .mutation(async ({ ctx, input }) => {
-      const { rehearsalId, timeSpent, score, deckId } = input;
+      const { rehearsalId, timeSpent, score, deckId, mode } = input;
 
       if (score < 0 || score > 100) {
         throw new TRPCError({
@@ -51,6 +52,7 @@ export const rehearsalRouter = router({
         data: {
           isFinished: true,
           timeSpent: timeSpent,
+          mode: mode,
           deckRehearsals: {
             create: {
               score: score,

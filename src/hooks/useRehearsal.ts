@@ -6,15 +6,18 @@ import { useEffect, useRef, useState } from "react";
 import { type Flashcard as FlashcardType } from "@prisma/client";
 import { useDictionary } from "@/lib/DictProvider";
 import { toast } from "sonner";
+import type { Mode } from "@prisma/client";
 
 export default function useRehearsal({
   flashcards,
   deckId,
   creatorUserId,
+  mode,
 }: {
   flashcards: FlashcardType[];
   deckId: string;
   creatorUserId: string;
+  mode: Mode;
 }) {
   const dict = useDictionary();
 
@@ -121,6 +124,7 @@ export default function useRehearsal({
       rehearsalId: rehearsalData.id,
       timeSpent: timeSpent.current,
       score: averageScore.current,
+      mode: mode,
       deckId: deckId,
     });
 

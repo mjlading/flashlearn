@@ -10,19 +10,17 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { cn, percentageToHsl, percentageToTwBgColor } from "@/lib/utils";
+import useRehearsal from "@/hooks/useRehearsal";
+import { useDictionary } from "@/lib/DictProvider";
+import { cn, percentageToTwBgColor } from "@/lib/utils";
 import { type Flashcard as FlashcardType } from "@prisma/client";
-import { Bot, Ear, MessageCircleQuestion, Mic } from "lucide-react";
+import { Bot, Ear } from "lucide-react";
 import { useSession } from "next-auth/react";
-import { useTheme } from "next-themes";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
-import { Feedback } from "./AnswerForm";
+import MicInput from "./MicInput";
 import PreOralRehearsal from "./PreOralRehearsal";
 import ProgressBar from "./ProgressBar";
-import MicInput from "./MicInput";
-import { useDictionary } from "@/lib/DictProvider";
-import useRehearsal from "@/hooks/useRehearsal";
 import RehearsalFinishedDialog from "./RehearsalFinishedDialog";
 
 export default function OralRehearsal({
@@ -65,10 +63,9 @@ export default function OralRehearsal({
     xpGain,
     isFinished,
     getRandomEmoji,
-  } = useRehearsal({ flashcards, deckId, creatorUserId });
+  } = useRehearsal({ flashcards, deckId, creatorUserId, mode: "ORAL" });
 
   const session = useSession();
-  const { theme } = useTheme();
 
   useEffect(() => {
     getMicAudio();

@@ -12,6 +12,7 @@ import { isProtected } from "@/routes";
 interface ExtendedUserProperties {
   preferencesSet?: boolean;
   nickname?: string;
+  academicLevel?: string;
 }
 
 declare module "next-auth" {
@@ -20,29 +21,34 @@ declare module "next-auth" {
    * or the second parameter of the `session` callback, when using a database.
    */
   interface User {
-    id?: string
-    name?: string | null
-    email?: string | null
-    image?: string | null
-    preferencesSet?: boolean|null,
-    nickname?: string|null,
+    id?: string;
+    name?: string | null;
+    email?: string | null;
+    image?: string | null;
+    preferencesSet?: boolean | null;
+    nickname?: string | null;
+    academicLevel?: string | null;
   }
 }
 
-function getProviders(){
-  if (!process.env.ENABLE_CYPRESS_LOGIN || !process.env.CYPRESS_TEST_AC_ID ) return [Google, GitHub]; else {
-
-  return [Google, GitHub,
-    Credentials({
-      credentials: {
-        email: {},
-        password: {},
-      },
-      authorize: async (credentials:any, req:any) => {
-        let user = null
-        if (credentials.password !== "flashlearn") throw new Error("User not found.");
-        // logic to verify if user exists
-        user = await prisma.user.findUnique({
+function getProviders() {
+  if (!process.env.ENABLE_CYPRESS_LOGIN || !process.env.CYPRESS_TEST_AC_ID)
+    return [Google, GitHub];
+  else {
+    return [
+      Google,
+      GitHub,
+      Credentials({
+        credentials: {
+          email: {},
+          password: {},
+        },
+        authorize: async (credentials: any, req: any) => {
+          let user = null;
+          if (credentials.password !== "flashlearn")
+            throw new Error("User not found.");
+          // logic to verify if user exists
+          user = await prisma.user.findUnique({
             where: { id: process.env.CYPRESS_TEST_AC_ID }, //THIS REQUIRES A REAL USER
             select: {
               id: true,
@@ -51,23 +57,25 @@ function getProviders(){
               image: true,
               preferencesSet: true,
               nickname: true,
+              academicLevel: true,
             },
-        })
-        //console.log(user)
-        if (!user) {
-          // No user found, so this is their first attempt to login
-          // meaning this is also the place you could do registration
-          throw new Error("Eggbert was not in the database (or the id needs to be updated).")
-        }
- 
-        // return user object with the their profile data
-        return user
-      },
+          });
+          //console.log(user)
+          if (!user) {
+            // No user found, so this is their first attempt to login
+            // meaning this is also the place you could do registration
+            throw new Error(
+              "Eggbert was not in the database (or the id needs to be updated)."
+            );
+          }
 
-    })]
+          // return user object with the their profile data
+          return user;
+        },
+      }),
+    ];
   }
 }
-
 
 export const authConfig = {
   providers: getProviders(),
@@ -80,10 +88,12 @@ export const authConfig = {
       if (
         trigger === "update" &&
         session?.nickname &&
-        session?.preferencesSet
+        session?.preferencesSet &&
+        session?.academicLevel
       ) {
         token.nickname = session.nickname;
         token.preferencesSet = session.preferencesSet;
+        token.academicLevel = session.academicLevel;
       }
 
       if (account && user) {
@@ -99,14 +109,17 @@ export const authConfig = {
             select: {
               preferencesSet: true,
               nickname: true,
+              academicLevel: true,
             },
           });
 
           token.preferencesSet = dbUser?.preferencesSet;
           token.nickname = dbUser?.nickname;
+          token.academicLevel = dbUser?.academicLevel;
         } else {
           token.preferencesSet = extendedUser.preferencesSet;
           token.nickname = extendedUser.nickname;
+          token.academicLevel = extendedUser.academicLevel;
         }
       }
       return token;
@@ -124,21 +137,21 @@ export const authConfig = {
       session.user.preferencesSet = token.preferencesSet;
       console.log("users preferences set to: ", session.user.preferencesSet);
       session.user.nickname = token.nickname;
+      session.user.academicLevel = token.academicLevel;
 
       return session;
     },
     // Middleware function for authorization
     authorized({ auth, request: { nextUrl } }) {
-      
       const isLoggedIn = !!auth?.user;
 
       // Define the paths that require authentication
       let path = nextUrl.pathname;
       // Remove localization prefix url string
-      const locales = i18n.locales
-      console.log("path before cleaning", path)
+      const locales = i18n.locales;
+      // console.log("path before cleaning", path);
       const pathnameHasLocale = locales.some(
-        (locale) => (path.split("/")[1]) == locale
+        (locale) => path.split("/")[1] == locale
       );
       let pathWithoutLang;
 
@@ -147,12 +160,11 @@ export const authConfig = {
       } else {
         pathWithoutLang = path.slice(3);
       }
-      console.log("path after cleaning", pathWithoutLang)
+      // console.log("path after cleaning", pathWithoutLang);
       const pathIsProtected = isProtected(path);
-      console.log("route protected by auth mdw: ", pathIsProtected)
+      console.log("route protected by auth mdw: ", pathIsProtected);
       if (pathIsProtected && !isLoggedIn) {
-        
-        console.log("redirecting to signin from: ", pathWithoutLang)
+        console.log("redirecting to signin from: ", pathWithoutLang);
         const redirectUrl = new URL("/api/auth/signin", nextUrl.origin);
         redirectUrl.searchParams.append("callbackUrl", nextUrl.href);
         return Response.redirect(redirectUrl);

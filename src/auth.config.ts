@@ -9,6 +9,7 @@ declare module "next-auth" {
       id: string;
       preferencesSet?: boolean;
       nickname?: string;
+      academicLevel?: string;
     } & DefaultSession["user"];
   }
 }

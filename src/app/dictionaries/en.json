@@ -64,12 +64,12 @@
       "noBookmakedSets": "You have no bookmarked decks",
       "noBookmakedSetsEx": "Your bookmarked decks will appear here"
     },
-    "createDecks":{
-      "nameMinLetters":"The name must contain at least 2 letters",
-      "nameMaxLetters":"The name cannot contain more than 50 letters",
-      "frontMaxLetters":"The front cannot contain more than 500 letters",
-      "backMaxLetters":"The back cannot contain more than 1500 letters",
-      "flashcardsMin":"Your deck must have at least 2 flashcards"
+    "createDecks": {
+      "nameMinLetters": "The name must contain at least 2 letters",
+      "nameMaxLetters": "The name cannot contain more than 50 letters",
+      "frontMaxLetters": "The front cannot contain more than 500 letters",
+      "backMaxLetters": "The back cannot contain more than 1500 letters",
+      "flashcardsMin": "Your deck must have at least 2 flashcards"
     },
     "startPractice": {
       "visual": "Visual",
@@ -90,7 +90,7 @@
       "private": "Private",
       "privateDescription": "Private decks are only visible to you.",
       "academicLevel": "Academic level",
-      "addFlashcard": "Add flashcard",
+      "addFlashcard": "Add flashcards",
       "addFlashcardDescription": "Every flashcard has a front and back. The front has a term or question, and the back side can contain an answer or explanation.",
       "placeholderFront": "Front",
       "placeholderBack": "Back"
@@ -118,9 +118,9 @@
     "noCollections": "You have no collections",
     "noCollectionDescription": "Create a collection to organize and practice multiple decks at once",
     "createCollection": {
-      "nameMinLetters":"The name must contain at least 2 letters",
-      "nameMaxLetters":"The name cannot contain more than 50 letters",
-      "descriptionMaxLetters":"The description cannot contain more than 500 letters",
+      "nameMinLetters": "The name must contain at least 2 letters",
+      "nameMaxLetters": "The name cannot contain more than 50 letters",
+      "descriptionMaxLetters": "The description cannot contain more than 500 letters",
       "aboutCollection": "About",
       "addToCollection": "Add decks",
       "placeholderName": "Give your collection a name",

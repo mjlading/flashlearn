@@ -1,8 +1,7 @@
-import NextAuth from "next-auth";
-import { auth, authConfig } from "./auth";
 import { NextRequest, NextResponse } from "next/server";
+import { auth } from "./auth";
 
-import { isProtected } from "@/routes"
+import { isProtected } from "@/routes";
 import { match } from "@formatjs/intl-localematcher";
 import Negotiator from "negotiator";
 
@@ -11,29 +10,28 @@ let locales: readonly string[] = ["en", "no"];
 
 function getLocale(request: NextRequest) {
   let headers = {
-    // typescript caused this
     temp: <{ [key: string]: string | string[] | undefined }>{
       "accept-language": request.headers.get("accept-language"),
     },
   }.temp;
 
   let languages: readonly string[] = new Negotiator({ headers }).languages();
-  let defaultLocale: string = "en";
+  const defaultLocale = "en";
 
   return match(languages, locales, defaultLocale);
 }
 
 /**
- * 
+ *
  * @param path
  * @returns boolean true if path includes locale
  */
-function checkLang(path:string){
+function checkLang(path: string) {
   const pathnameHasLocale = locales.some(
     (locale) => path.startsWith(`/${locale}/`) || path === `/${locale}`
   );
   //console.log("\npath includes lang:", pathnameHasLocale, "\n");
-  return pathnameHasLocale
+  return pathnameHasLocale;
 }
 
 function skipLangForApi(pathname: string) {
@@ -47,14 +45,12 @@ function skipLangForApi(pathname: string) {
 }
 
 export default auth(async (request) => {
-
   /*
    * 1. check if url leads to api
    * 2. check if pathname has locale
-   * 3. check if path is protected -> sign in 
+   * 3. check if path is protected -> sign in
    * 4. if on initial sign in, redirect to account setup
    */
-
 
   const { pathname } = request.nextUrl;
 
@@ -65,7 +61,8 @@ export default auth(async (request) => {
     return NextResponse.next();
   }
 
-  if (!checkLang(pathname)) { // this will make paths to api fail so they should be excluded in path config
+  if (!checkLang(pathname)) {
+    // this will make paths to api fail so they should be excluded in path config
     // Redirect if there is no locale
     const locale = getLocale(request);
     request.nextUrl.pathname = `/${locale}${pathname}`;
@@ -75,10 +72,9 @@ export default auth(async (request) => {
     return NextResponse.redirect(request.nextUrl);
   }
 
-  console.log("path:", pathname, "protected?", isProtected(pathname))
-  
+  console.log("path:", pathname, "protected?", isProtected(pathname));
+
   const session = request.auth;
-  // Check if user has preferences set
   // Check if user has preferences set
   // If not, redirect to user config page
 
@@ -99,9 +95,9 @@ export default auth(async (request) => {
     console.log("redirecting bc we are going to profileSetup");
     // Redirect to profile setup page
     return NextResponse.redirect(request.nextUrl);
-  }   
+  }
   return NextResponse.next();
-})
+});
 // Matcher configuration to exclude specific paths
 export const config = {
   matcher: [

@@ -27,12 +27,13 @@ import { Textarea } from "@/components/ui/textarea";
 import { useDictionary } from "@/lib/DictProvider";
 import { academicLevelMap } from "@/lib/academicLevel";
 import { subjectNameMap } from "@/lib/subject";
+import { useSession } from "next-auth/react";
 import { useEffect } from "react";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 
-export function getFormSchema(dict:dictType){
+export function getFormSchema(dict: dictType) {
   return z.object({
     name: z
       .string()
@@ -40,7 +41,9 @@ export function getFormSchema(dict:dictType){
       .max(50, dict.decks.createDecks.nameMaxLetters),
     private: z.boolean(),
     subjectName: z.string(),
-    academicLevel: z.enum(Object.keys(academicLevelMap) as [string, ...string[]]),
+    academicLevel: z.enum(
+      Object.keys(academicLevelMap) as [string, ...string[]]
+    ),
     flashcards: z
       .array(
         z.object({
@@ -61,7 +64,8 @@ export default function CreateDeckForm({
   const dict = useDictionary();
   const formSchema = getFormSchema(dict);
   const form = useFormContext<z.infer<typeof formSchema>>();
-  
+  const session = useSession();
+
   const { fields, append, remove } = useFieldArray({
     control: form.control,
     name: "flashcards",
@@ -80,11 +84,13 @@ export default function CreateDeckForm({
 
   function handleAddFlashcards(flashcards: GeneratedFlashcard[]) {
     remove(-1); // Remove last empty flashcard
-    // TODO: temporary fix, will generate tags in future
     const flashcardsWithTags = flashcards.map((f) => ({ ...f, tag: "" }));
 
     append(flashcardsWithTags);
-    const success = dict.decks.createDeck.added + flashcards.length + dict.decks.createDeck.flashcards
+    const success =
+      dict.decks.createDeck.added +
+      flashcards.length +
+      dict.decks.createDeck.flashcards;
     toast.success(success, {
       position: "top-center",
     });
@@ -100,26 +106,28 @@ export default function CreateDeckForm({
           e.key === "Enter" && e.preventDefault();
         }}
       >
-        <div className="grid md:grid-cols-2 grid-cols-1 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Name input */}
-          <FormField
-            control={form.control}
-            name="name"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>{dict.decks.createDeck.name}</FormLabel>
-                <FormControl>
-                  <Input
-                    autoFocus
-                    placeholder={dict.decks.createDeck.giveSetName}
-                    {...field}
-                    maxLength={50}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+          <div className="col-span-2 grid grid-cols-2 gap-6">
+            <FormField
+              control={form.control}
+              name="name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>{dict.decks.createDeck.name}</FormLabel>
+                  <FormControl>
+                    <Input
+                      autoFocus
+                      placeholder={dict.decks.createDeck.giveSetName}
+                      {...field}
+                      maxLength={50}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
 
           {/* Subject select */}
           <FormField
@@ -149,32 +157,8 @@ export default function CreateDeckForm({
             )}
           />
 
-          {/* Privacy switch */}
-          <div className="md:col-span-2">
-            <FormField
-              control={form.control}
-              name="private"
-              render={({ field }) => (
-                <FormItem className="flex justify-between items-center rounded-lg border p-4">
-                  <div>
-                    <FormLabel>{dict.decks.createDeck.private}</FormLabel>
-                    <FormDescription className="text-sm text-muted-foreground">
-                      {dict.decks.createDeck.privateDescription}
-                    </FormDescription>
-                  </div>
-                  <FormControl>
-                    <Switch
-                      checked={field.value}
-                      onCheckedChange={field.onChange}
-                    />
-                  </FormControl>
-                </FormItem>
-              )}
-            />
-          </div>
-
           {/* Academic level select */}
-          <div className="md:col-span-2">
+          <div className="md:col-span-1">
             <FormField
               control={form.control}
               name="academicLevel"
@@ -183,7 +167,7 @@ export default function CreateDeckForm({
                   <FormLabel>{dict.decks.createDeck.academicLevel}</FormLabel>
                   <Select
                     onValueChange={field.onChange}
-                    defaultValue={field.value}
+                    defaultValue={session.data?.user.academicLevel}
                   >
                     <FormControl>
                       <SelectTrigger>
@@ -209,9 +193,35 @@ export default function CreateDeckForm({
           </div>
         </div>
 
+        {/* Privacy switch */}
+        <div className="md:col-span-2">
+          <FormField
+            control={form.control}
+            name="private"
+            render={({ field }) => (
+              <FormItem className="flex justify-between items-center rounded-lg border p-4">
+                <div>
+                  <FormLabel>{dict.decks.createDeck.private}</FormLabel>
+                  <FormDescription className="text-sm text-muted-foreground">
+                    {dict.decks.createDeck.privateDescription}
+                  </FormDescription>
+                </div>
+                <FormControl>
+                  <Switch
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
+                  />
+                </FormControl>
+              </FormItem>
+            )}
+          />
+        </div>
+
         {/* Flashcards input */}
         <div className="py-8">
-          <h4 className="mb-6 text-2xl font-medium">{dict.decks.createDeck.addFlashcard}</h4>
+          <h4 className="mb-6 text-2xl font-medium">
+            {dict.decks.createDeck.addFlashcard}
+          </h4>
 
           <p className="mt-6 mb-8 text-muted-foreground max-w-xl">
             {dict.decks.createDeck.addFlashcardDescription}

@@ -75,7 +75,11 @@ export default function ProfileSetupForm({
     });
 
     // Manually update the session
-    await session.update({ nickname: values.nickname, preferencesSet: true });
+    await session.update({
+      nickname: values.nickname,
+      preferencesSet: true,
+      academicLevel: values.academicLevel,
+    });
 
     toast.success(dict.profileSetupPage.updateSuccess);
 

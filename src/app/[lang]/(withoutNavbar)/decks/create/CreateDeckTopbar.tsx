@@ -165,8 +165,8 @@ export default function CreateDeckTopbar({
   }
 
   return (
-    <header className="sticky top-0 z-50 py-4 px-8 border-b bg-background">
-      <div className="flex justify-between items-center gap-4 px-6 text-sm font-medium text-gray-700 dark:text-gray-300">
+    <header className="sticky top-0 z-50 px-8 border-b bg-background">
+      <div className="flex justify-between items-center h-[60px] gap-4 px-6 text-sm font-medium text-gray-700 dark:text-gray-300">
         <div className="flex items-center gap-4">
           <BackButton />
           <p>{form.watch("name") || dict.decks.newSet}</p>

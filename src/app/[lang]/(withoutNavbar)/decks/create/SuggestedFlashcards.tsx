@@ -36,8 +36,8 @@ export default function SuggestedFlashcards() {
   const { theme } = useTheme();
 
   useEffect(() => {
-    // When at least two flashcards are filled, find and suggest similar flashcards based on embeddings
-    if (numFlashcards >= 3) {
+    // When at least one flashcard are filled, find and suggest similar flashcards based on embeddings
+    if (numFlashcards >= 2) {
       // Find similar flashcards
       const embeddingInput = getValues("flashcards")
         .slice(0, -2) // Last flashcard will only have two chars in front side, so we remove it

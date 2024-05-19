@@ -64,16 +64,16 @@ export function percentageToHsl(
 
 export function percentageToTwBgColor(percentage: number): string {
   if (percentage >= 100) {
-    return "bg-green-400"; // Green for 100
+    return "bg-green-500/90"; // Green for 100
   } else if (percentage <= 0) {
-    return "bg-red-400"; // Red for 0
+    return "bg-red-500/90"; // Red for 0
   } else if (percentage < 25) {
-    return "bg-red-400";
+    return "bg-red-500/90";
   } else if (percentage < 50) {
-    return "bg-orange-400";
-  } else if (percentage < 75) {
-    return "bg-yellow-400";
+    return "bg-orange-500/90";
+  } else if (percentage < 70) {
+    return "bg-yellow-500/90";
   } else {
-    return "bg-lime-400";
+    return "bg-lime-500/90";
   }
 }

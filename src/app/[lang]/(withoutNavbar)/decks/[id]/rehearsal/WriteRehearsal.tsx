@@ -129,9 +129,9 @@ export default function WriteRehearsal({
                     "flex gap-1 rounded-full py-2 px-5 mx-auto w-fit shadow-sm font-semibold"
                   )}
                 >
-                  <span className="text-lg">
+                  <span className="text-lg text-white">
                     {feedbacks[currentIndex].score}{" "}
-                    <span className="text-muted-foreground text-sm">/ 100</span>
+                    <span className="text-sm text-gray-300">/ 100</span>
                   </span>
                   <span className="text-lg">
                     {feedbacks[currentIndex].score === 100 && getRandomEmoji()}

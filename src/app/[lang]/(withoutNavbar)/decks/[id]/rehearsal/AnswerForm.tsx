@@ -128,7 +128,7 @@ export function AnswerForm({
                   <SendHorizonal />
                 </Button>
               </TooltipTrigger>
-              <TooltipContent>Send inn</TooltipContent>
+              <TooltipContent>{dict.rehearsal.sendIn}</TooltipContent>
             </Tooltip>
           </TooltipProvider>
         </div>

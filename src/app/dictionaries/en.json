@@ -297,7 +297,8 @@
     "rate": "Rate the set",
     "saveError": "Could not save the exercise",
     "saveErrorDescription": "You will not be able to see this exercise in your progress",
-    "enterAnswerHere": "Enter your answer here"
+    "enterAnswerHere": "Enter your answer here",
+    "sendIn": "Submit"
   },
   "xpDisplay": {
     "knowledgePoints": "Knowledge points"

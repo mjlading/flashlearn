@@ -296,7 +296,8 @@
     "rate": "Vurder settet",
     "saveError": "Kunne ikke lagre øvingen",
     "saveErrorDescription": "Du vil ikke kunne se denne øvingen i din fremgang",
-    "enterAnswerHere": "Skriv inn svaret ditt her"
+    "enterAnswerHere": "Skriv inn svaret ditt her",
+    "sendIn": "Send inn"
   },
   "xpDisplay": {
     "knowledgePoints": "Kunnskapspoeng"

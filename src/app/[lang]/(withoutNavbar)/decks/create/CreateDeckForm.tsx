@@ -278,7 +278,7 @@ export default function CreateDeckForm({
                       control={form.control}
                       name={`flashcards.${index}.front`}
                       render={({ field }) => (
-                        <FormItem className="flex-grow">
+                        <FormItem className="w-1/2">
                           <FormControl>
                             <Textarea
                               placeholder={
@@ -297,7 +297,7 @@ export default function CreateDeckForm({
                       control={form.control}
                       name={`flashcards.${index}.back`}
                       render={({ field }) => (
-                        <FormItem className="flex-grow">
+                        <FormItem className="w-1/2">
                           <FormControl>
                             <Textarea
                               placeholder={

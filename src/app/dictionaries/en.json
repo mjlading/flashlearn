@@ -296,7 +296,8 @@
     "timeSpent": "Time spent",
     "rate": "Rate the set",
     "saveError": "Could not save the exercise",
-    "saveErrorDescription": "You will not be able to see this exercise in your progress"
+    "saveErrorDescription": "You will not be able to see this exercise in your progress",
+    "enterAnswerHere": "Enter your answer here"
   },
   "xpDisplay": {
     "knowledgePoints": "Knowledge points"

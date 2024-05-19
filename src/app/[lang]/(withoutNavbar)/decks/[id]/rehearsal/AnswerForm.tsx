@@ -100,7 +100,7 @@ export function AnswerForm({
                   <TextareaAutosize
                     rows={1}
                     maxRows={10}
-                    placeholder="Skriv inn svaret ditt her"
+                    placeholder={dict.rehearsal.enterAnswerHere}
                     className="w-full p-4 pr-16 leading-relaxed text-md rounded-xl resize-none bg-muted dark:bg-muted/40 outline-none focus:bg-gray-200 dark:focus:bg-muted/60 placeholder-gray-500"
                     autoFocus
                     disabled={disabled}

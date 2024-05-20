@@ -136,7 +136,9 @@
         "saveFailed": "The collection could not be stored",
         "tryAgain": "Please try again",
         "editWorked": "Your edit of ",
-        "editFailed": "Your changes could not be stored"
+        "editFailed": "Your changes could not be stored",
+        "theDeck": "The deck ",
+        "isAlreadyAdded": " is already added"
       },
       "addedSets": "Added decks"
     },

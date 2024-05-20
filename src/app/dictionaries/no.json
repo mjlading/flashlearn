@@ -136,7 +136,9 @@
         "saveFailed": "Samlingen kunne ikke lagres",
         "tryAgain": "Vennligst prøv igjen",
         "editWorked": "Redigeringen av  ",
-        "editFailed": "Endringene dine kunne ikke lagres"
+        "editFailed": "Endringene dine kunne ikke lagres",
+        "theDeck": "Settet ",
+        "isAlreadyAdded": " er alerede lagt til"
       },
       "addedSets": "Lagt til sett"
     },

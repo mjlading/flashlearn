@@ -55,7 +55,11 @@ export default function CreateCollecionTabs({
     deck: SerializedStateDates<Deck, "dateCreated" | "dateChanged">
   ) {
     if (addedDecks.find((d) => d.id === deck.id)) {
-      toast("Settet " + deck.name + " er allerede lagt til.");
+      toast(
+        dict.collections.createCollection.toasts.theDeck +
+          deck.name +
+          dict.collections.createCollection.toasts.isAlreadyAdded
+      );
       return;
     }
 

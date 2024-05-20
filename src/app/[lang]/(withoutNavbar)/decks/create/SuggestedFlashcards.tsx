@@ -52,7 +52,7 @@ export default function SuggestedFlashcards() {
         // Find nearest e.g. most similar neighbors to the target embedding
         const nearestNeighbors = await getNearestNeighborsMutation.mutateAsync({
           targetEmbedding: targetEmbedding,
-          n: 2,
+          n: 4,
           excludedBacks: excludedBacks.current,
         });
 

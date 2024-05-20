@@ -45,7 +45,7 @@ export default function CreateDeckTopbar({
             onClick: () => {
               router.push(
                 `/${dict.lang}/decks/${data.id}/rehearsal?mode=visual`
-              ); // TODO: set mode to preffered mode
+              );
             },
           },
         }

@@ -4,31 +4,28 @@ First, install dependencies:
 ```bash
 npm i
 ```
-Then set up the required environment variables (provided with the submitted source code as .env.local)
+Then set up the required environment variables (provided with the submitted source code as '.env', '.env.test' and 'Cypress.env.json')
 
-You can then run in either dev mode:
+You can then run in dev mode:
 ```bash
 npm run dev
 ```
-Alternatively you can build the project and then run it at far greater performance:
+Alternatively you can build the project and then run it with better performance:
 ```bash
 npx next build
 npx next
 ```
 # Environment variables
-To run project locally, add the following environment variables to .env.local:
+To run project locally, add the following environment variables to .env (unless you have the .env files setup already):
 - NEXTAUTH_SECRET
 - GITHUB_CLIENT_ID
 - GITHUB_CLIENT_SECRET
-
-OPENAI_API_KEY
-
-AUTH_GOOGLE_ID
-AUTH_GOOGLE_SECRET
-GOOGLE_REFRESH_TOKEN
-
-ENABLE_CYPRESS_LOGIN=false #turn this on to run cypress tests
-CYPRESS_TEST_AC_ID="clvo5f7hy00039ehvjepjy5y8"
+- OPENAI_API_KEY
+- AUTH_GOOGLE_ID
+- AUTH_GOOGLE_SECRET
+- GOOGLE_REFRESH_TOKEN
+- ENABLE_CYPRESS_LOGIN=false #turn this on to run cypress tests
+- CYPRESS_TEST_AC_ID="clwfwwqze0003wm9yx12qyrm6"
 # Run in development mode
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 

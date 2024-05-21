@@ -93,7 +93,9 @@
       "addFlashcard": "Add flashcards",
       "addFlashcardDescription": "Every flashcard has a front and back. The front has a term or question, and the back side can contain an answer or explanation.",
       "placeholderFront": "Front",
-      "placeholderBack": "Back"
+      "placeholderBack": "Back",
+      "edit": "Edit",
+      "preview": "Preview"
     }
   },
   "collections": {
@@ -134,7 +136,9 @@
         "saveFailed": "The collection could not be stored",
         "tryAgain": "Please try again",
         "editWorked": "Your edit of ",
-        "editFailed": "Your changes could not be stored"
+        "editFailed": "Your changes could not be stored",
+        "theDeck": "The deck ",
+        "isAlreadyAdded": " is already added"
       },
       "addedSets": "Added decks"
     },
@@ -215,7 +219,11 @@
     "learningOutcomes": "Learning outcomes",
     "learningMethods": "Learning methods",
     "generateFlashcards": "Generate flashcards",
-    "courseCode": "Course code"
+    "courseCode": "Course code",
+    "sameAsText": "Same as text",
+    "language": "Generation language",
+    "norwegian": "Norwegian",
+    "english": "English"
   },
   "generateFromFile": {
     "file": "File",
@@ -290,9 +298,14 @@
     "timeSpent": "Time spent",
     "rate": "Rate the set",
     "saveError": "Could not save the exercise",
-    "saveErrorDescription": "You will not be able to see this exercise in your progress"
+    "saveErrorDescription": "You will not be able to see this exercise in your progress",
+    "enterAnswerHere": "Enter your answer here",
+    "sendIn": "Submit"
   },
   "xpDisplay": {
     "knowledgePoints": "Knowledge points"
+  },
+  "knowledgeLevel": {
+    "mastery": "Mastery"
   }
 }

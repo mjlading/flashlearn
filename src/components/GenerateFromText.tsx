@@ -19,13 +19,16 @@ import { GeneratedFlashcard } from "./GenerateFlashcardsInput";
 import { api } from "@/app/api/trpc/client";
 import { toast } from "sonner";
 import { useDictionary } from "@/lib/DictProvider";
+import GenerationLanguageSelect from "./GenerationLangaugeSelect";
 
 export default function GenerateFromText({
   onGeneratedFlashcards,
   onLoadingStateChanged,
+  academicLevel,
 }: {
   onGeneratedFlashcards: (flashcards: GeneratedFlashcard[]) => void;
   onLoadingStateChanged: (newState: boolean) => void;
+  academicLevel: string;
 }) {
   const dict = useDictionary();
 
@@ -39,6 +42,8 @@ export default function GenerateFromText({
   });
 
   const [generationType, setGenerationType] = useState("mixed");
+  const [generationLanguage, setGenerationLanguage] = useState("auto");
+
   const generateFlashcardsMutation =
     api.ai.generateFlashcardsFromText.useMutation({
       onMutate: () => {
@@ -65,6 +70,8 @@ export default function GenerateFromText({
     event.stopPropagation(); // Prevent triggering the outer form
     generateFlashcardsMutation.mutate({
       text: data.textInput,
+      language: generationLanguage,
+      academicLevel: academicLevel,
       type: generationType,
     });
   }
@@ -107,6 +114,10 @@ export default function GenerateFromText({
                   <FormMessage />
                 </FormItem>
               )}
+            />
+            <GenerationLanguageSelect
+              value={generationLanguage}
+              onValueChange={(value) => setGenerationLanguage(value)}
             />
             <GenerationTypeTabs
               value={generationType}

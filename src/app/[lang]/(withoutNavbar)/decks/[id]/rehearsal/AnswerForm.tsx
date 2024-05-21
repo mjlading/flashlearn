@@ -1,21 +1,20 @@
-import { Flashcard } from "@prisma/client";
-import { useFormContext } from "react-hook-form";
-import { useEffect, useState } from "react";
-import { api } from "@/app/api/trpc/client";
+import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
-import { z } from "zod";
-import TextareaAutosize from "react-textarea-autosize";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { Button } from "@/components/ui/button";
-import { SendHorizonal } from "lucide-react";
-import { toast } from "sonner";
 import useStreamedFeedback from "@/hooks/useStreamedFeedback";
 import { useDictionary } from "@/lib/DictProvider";
+import { Flashcard } from "@prisma/client";
+import { SendHorizonal } from "lucide-react";
+import { useEffect, useState } from "react";
+import { useFormContext } from "react-hook-form";
+import TextareaAutosize from "react-textarea-autosize";
+import { toast } from "sonner";
+import { z } from "zod";
 
 export type Feedback = {
   score: number;
@@ -31,11 +30,13 @@ export function AnswerForm({
   currentIndex,
   setFeedback,
   disabled,
+  onSubmitted,
 }: {
   flashcard: Flashcard;
   currentIndex: number;
   setFeedback: (feedback: Partial<Feedback>) => void;
   disabled: boolean;
+  onSubmitted: (answer: string) => void;
 }) {
   const dict = useDictionary();
 
@@ -66,6 +67,8 @@ export function AnswerForm({
   }, [feedback]);
 
   async function onSubmit(data: z.infer<typeof FormSchema>) {
+    onSubmitted(data.answer);
+    form.setValue("answer", "");
     try {
       await generateFeedback({
         front: flashcard.front,
@@ -87,7 +90,7 @@ export function AnswerForm({
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)}>
-        <div className="relative">
+        <div className="relative bg-transparent">
           <FormField
             control={form.control}
             name="answer"
@@ -97,7 +100,7 @@ export function AnswerForm({
                   <TextareaAutosize
                     rows={1}
                     maxRows={10}
-                    placeholder="Skriv inn svaret ditt her"
+                    placeholder={dict.rehearsal.enterAnswerHere}
                     className="w-full p-4 pr-16 leading-relaxed text-md rounded-xl resize-none bg-muted dark:bg-muted/40 outline-none focus:bg-gray-200 dark:focus:bg-muted/60 placeholder-gray-500"
                     autoFocus
                     disabled={disabled}
@@ -125,7 +128,7 @@ export function AnswerForm({
                   <SendHorizonal />
                 </Button>
               </TooltipTrigger>
-              <TooltipContent>Send inn</TooltipContent>
+              <TooltipContent>{dict.rehearsal.sendIn}</TooltipContent>
             </Tooltip>
           </TooltipProvider>
         </div>

@@ -6,20 +6,24 @@ import { useEffect, useRef, useState } from "react";
 import { type Flashcard as FlashcardType } from "@prisma/client";
 import { useDictionary } from "@/lib/DictProvider";
 import { toast } from "sonner";
+import type { Mode } from "@prisma/client";
 
 export default function useRehearsal({
   flashcards,
   deckId,
   creatorUserId,
+  mode,
 }: {
   flashcards: FlashcardType[];
   deckId: string;
   creatorUserId: string;
+  mode: Mode;
 }) {
   const dict = useDictionary();
 
   const [currentIndex, setCurrentIndex] = useState(0);
   const [currentFlashcard, setCurrentFlashcard] = useState(flashcards[0]);
+  const [userAnswers, setUserAnswers] = useState<string[]>([]);
   const [feedbacks, setFeedbacks] = useState<Partial<Feedback>[]>([]);
   const [dialogOpen, setDialogOpen] = useState(false);
 
@@ -120,6 +124,7 @@ export default function useRehearsal({
       rehearsalId: rehearsalData.id,
       timeSpent: timeSpent.current,
       score: averageScore.current,
+      mode: mode,
       deckId: deckId,
     });
 
@@ -129,6 +134,13 @@ export default function useRehearsal({
       score: averageScore.current,
     });
   }
+
+  const maxScoreEmojis = ["🎉", "🥳", "🎊", "🙌", "✨", "💫", "🥇", "👏"];
+
+  const getRandomEmoji = () => {
+    const randomIndex = Math.floor(Math.random() * maxScoreEmojis.length);
+    return maxScoreEmojis[randomIndex];
+  };
 
   return {
     currentIndex,
@@ -143,5 +155,8 @@ export default function useRehearsal({
     timeSpent,
     xpGain,
     isFinished,
+    userAnswers,
+    setUserAnswers,
+    getRandomEmoji,
   };
 }

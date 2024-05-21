@@ -10,19 +10,17 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { cn, percentageToHsl } from "@/lib/utils";
+import useRehearsal from "@/hooks/useRehearsal";
+import { useDictionary } from "@/lib/DictProvider";
+import { cn, percentageToTwBgColor } from "@/lib/utils";
 import { type Flashcard as FlashcardType } from "@prisma/client";
-import { Bot, Ear, MessageCircleQuestion, Mic } from "lucide-react";
+import { Bot, Ear } from "lucide-react";
 import { useSession } from "next-auth/react";
-import { useTheme } from "next-themes";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
-import { Feedback } from "./AnswerForm";
+import MicInput from "./MicInput";
 import PreOralRehearsal from "./PreOralRehearsal";
 import ProgressBar from "./ProgressBar";
-import MicInput from "./MicInput";
-import { useDictionary } from "@/lib/DictProvider";
-import useRehearsal from "@/hooks/useRehearsal";
 import RehearsalFinishedDialog from "./RehearsalFinishedDialog";
 
 export default function OralRehearsal({
@@ -64,10 +62,10 @@ export default function OralRehearsal({
     timeSpent,
     xpGain,
     isFinished,
-  } = useRehearsal({ flashcards, deckId, creatorUserId });
+    getRandomEmoji,
+  } = useRehearsal({ flashcards, deckId, creatorUserId, mode: "ORAL" });
 
   const session = useSession();
-  const { theme } = useTheme();
 
   useEffect(() => {
     getMicAudio();
@@ -326,17 +324,18 @@ export default function OralRehearsal({
           <div className="space-y-4">
             {/* The score */}
             <div
-              className="rounded-full mx-auto w-fit p-2 shadow-sm font-semibold"
-              style={{
-                backgroundColor: percentageToHsl(
-                  (feedbacks[currentIndex].score || 0) / 100,
-                  0,
-                  120,
-                  theme === "dark" ? 20 : 65
-                ),
-              }}
+              className={cn(
+                percentageToTwBgColor(feedbacks[currentIndex]?.score || 0),
+                "flex gap-1 rounded-full py-2 px-5 mx-auto w-fit shadow-sm font-semibold"
+              )}
             >
-              {feedbacks[currentIndex].score} / 100
+              <span className="text-lg">
+                {feedbacks[currentIndex].score}{" "}
+                <span className="text-muted-foreground text-sm">/ 100</span>
+              </span>
+              <span className="text-lg">
+                {feedbacks[currentIndex].score === 100 && getRandomEmoji()}
+              </span>
             </div>
 
             {/* The tips */}

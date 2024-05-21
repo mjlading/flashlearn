@@ -4,6 +4,7 @@ import { dictType } from "@/app/dictionaries/dictionariesClientSide";
 import GenerateFlashcardsInput, {
   GeneratedFlashcard,
 } from "@/components/GenerateFlashcardsInput";
+import MarkdownRenderer from "@/components/MarkdownRenderer";
 import {
   Form,
   FormControl,
@@ -23,6 +24,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
 import { useDictionary } from "@/lib/DictProvider";
 import { academicLevelMap } from "@/lib/academicLevel";
@@ -98,6 +100,27 @@ export default function CreateDeckForm({
 
   const subjectOptions = ["Auto", ...Object.keys(subjectNameMap)];
 
+  function subjectName(subject: string) {
+    if (dict.lang === "no") {
+      return subjectNameMap[subject] || "Auto";
+    } else {
+      // lang is "en"
+      return subject;
+    }
+  }
+
+  function academicLevelName(academicLevel: string) {
+    if (dict.lang === "no") {
+      return academicLevelMap[academicLevel];
+    } else {
+      // lang is "en"
+      return academicLevel
+        .replace("_", " ")
+        .toLowerCase()
+        .replace(/^\w/, (c) => c.toUpperCase());
+    }
+  }
+
   return (
     <Form {...form}>
       <form
@@ -148,7 +171,7 @@ export default function CreateDeckForm({
                   <SelectContent>
                     {subjectOptions.map((subjectOption) => (
                       <SelectItem value={subjectOption} key={subjectOption}>
-                        {subjectNameMap[subjectOption] || "Auto"}
+                        {subjectName(subjectOption) || "Auto"}
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -166,7 +189,7 @@ export default function CreateDeckForm({
                 <FormLabel>{dict.decks.createDeck.academicLevel}</FormLabel>
                 <Select
                   onValueChange={field.onChange}
-                  defaultValue={session.data?.user.academicLevel}
+                  defaultValue={session.data?.user.academicLevel || "BACHELOR"}
                 >
                   <FormControl>
                     <SelectTrigger>
@@ -180,7 +203,7 @@ export default function CreateDeckForm({
                           value={academicLevelOption}
                           key={academicLevelOption}
                         >
-                          {academicLevelMap[academicLevelOption]}
+                          {academicLevelName(academicLevelOption)}
                         </SelectItem>
                       )
                     )}
@@ -227,52 +250,93 @@ export default function CreateDeckForm({
 
           {/* Generation input */}
           {showGenerateFlashcardsInput && (
-            <GenerateFlashcardsInput onAddFlashcards={handleAddFlashcards} />
+            <GenerateFlashcardsInput
+              onAddFlashcards={handleAddFlashcards}
+              academicLevel={form.getValues("academicLevel")}
+            />
           )}
 
-          {fields.map((field, index) => (
-            <div key={field.id} className="mt-6">
-              <Label className="block text-lg font-medium text-muted-foreground mb-2">
-                {index + 1}.
-              </Label>
-              <div className="flex gap-8">
-                {/* Front side of flashcard */}
-                <FormField
-                  control={form.control}
-                  name={`flashcards.${index}.front`}
-                  render={({ field }) => (
-                    <FormItem className="flex-grow">
-                      <FormControl>
-                        <Textarea
-                          placeholder={dict.decks.createDeck.placeholderFront}
-                          className="h-[12rem] resize-none p-4"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                {/* Back side of flashcard */}
-                <FormField
-                  control={form.control}
-                  name={`flashcards.${index}.back`}
-                  render={({ field }) => (
-                    <FormItem className="flex-grow">
-                      <FormControl>
-                        <Textarea
-                          placeholder={dict.decks.createDeck.placeholderBack}
-                          className="h-[12rem] resize-none p-4"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
-            </div>
-          ))}
+          <Tabs defaultValue="edit">
+            <TabsList>
+              <TabsTrigger value="edit">
+                {dict.decks.createDeck.edit}
+              </TabsTrigger>
+              <TabsTrigger value="preview">
+                {dict.decks.createDeck.preview}
+              </TabsTrigger>
+            </TabsList>
+            <TabsContent value="edit">
+              {/* Section for editing and adding flashcards */}
+              {fields.map((field, index) => (
+                <div key={field.id} className="mt-6">
+                  <Label className="block text-lg font-medium text-muted-foreground mb-2">
+                    {index + 1}.
+                  </Label>
+                  <div className="flex gap-8">
+                    {/* Front side of flashcard */}
+                    <FormField
+                      control={form.control}
+                      name={`flashcards.${index}.front`}
+                      render={({ field }) => (
+                        <FormItem className="w-1/2">
+                          <FormControl>
+                            <Textarea
+                              placeholder={
+                                dict.decks.createDeck.placeholderFront
+                              }
+                              className="h-[12rem] resize-none p-4"
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    {/* Back side of flashcard */}
+                    <FormField
+                      control={form.control}
+                      name={`flashcards.${index}.back`}
+                      render={({ field }) => (
+                        <FormItem className="w-1/2">
+                          <FormControl>
+                            <Textarea
+                              placeholder={
+                                dict.decks.createDeck.placeholderBack
+                              }
+                              className="h-[12rem] resize-none p-4"
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                </div>
+              ))}
+            </TabsContent>
+            {/* The preview of flashcards, with rendered markdown and syntax highlighting */}
+            <TabsContent value="preview">
+              {fields.map((field, index) => (
+                <div key={field.id} className="mt-6">
+                  <Label className="block text-lg font-medium text-muted-foreground mb-2">
+                    {index + 1}.
+                  </Label>
+                  <div className="flex gap-8">
+                    {/* Front side of flashcard preview */}
+                    <div className="w-1/2 h-[12rem] p-4 border rounded-md overflow-auto">
+                      <MarkdownRenderer>{field.front}</MarkdownRenderer>
+                    </div>
+
+                    {/* Back side of flashcard preview */}
+                    <div className="w-1/2 h-[12rem] p-4 border rounded-md overflow-auto">
+                      <MarkdownRenderer>{field.back}</MarkdownRenderer>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </TabsContent>
+          </Tabs>
           {/* Show error message if less than 2 flashcards are filled */}
           <FormMessage className="my-2">
             {form.formState.errors.flashcards?.root?.message}

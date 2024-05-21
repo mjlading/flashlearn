@@ -1,17 +1,18 @@
 "use client";
 
-import Flashcard from "@/components/Flashcard";
+import Flashcard, { FlashcardRef } from "@/components/Flashcard";
 import { LoadingSpinner } from "@/components/LoadingSpinner";
 import { TextGenerateEffect } from "@/components/TextGenerateEffect";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import useRehearsal from "@/hooks/useRehearsal";
-import { percentageToHsl } from "@/lib/utils";
+import { cn, percentageToTwBgColor } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { type Flashcard as FlashcardType } from "@prisma/client";
 import { motion } from "framer-motion";
 import { Bot } from "lucide-react";
-import { useTheme } from "next-themes";
-import { useEffect } from "react";
+import { useSession } from "next-auth/react";
+import { useEffect, useRef } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { z } from "zod";
 import { AnswerForm, FormSchema } from "./AnswerForm";
@@ -44,14 +45,26 @@ export default function WriteRehearsal({
     timeSpent,
     xpGain,
     isFinished,
-  } = useRehearsal({ flashcards, deckId, creatorUserId });
+    userAnswers,
+    setUserAnswers,
+    getRandomEmoji,
+  } = useRehearsal({ flashcards, deckId, creatorUserId, mode: "WRITE" });
 
-  const { theme } = useTheme();
+  const flashcardRef = useRef<FlashcardRef>(null);
+
+  const session = useSession();
 
   useEffect(() => {
     startRehearsal();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  function handleAnswerSubmitted(answer: string) {
+    if (flashcardRef.current) {
+      flashcardRef.current.flipCard();
+    }
+    setUserAnswers((prev) => [...prev, answer]);
+  }
 
   // Used for animation
   const variants = {
@@ -74,15 +87,35 @@ export default function WriteRehearsal({
         setCurrentIndex={setCurrentIndex}
       />
       <FormProvider {...form}>
-        <Flashcard
-          flashcard={currentFlashcard}
-          className="h-[10rem] mt-4"
-          mode="write"
-          isFlipEnabled={!!feedbacks[currentIndex]}
-        />
+        <ScrollArea className="flex-1 space-y-2 pb-2">
+          <Flashcard
+            ref={flashcardRef}
+            flashcard={currentFlashcard}
+            className="h-[10rem] mt-4"
+            mode="write"
+            isFlipEnabled={!!feedbacks[currentIndex]}
+          />
 
-        {/* The feedback section */}
-        <ScrollArea className="flex-1 space-y-2">
+          {/* The user's answer section */}
+          {userAnswers[currentIndex] && (
+            <div className="flex gap-2 justify-end pl-10 my-4">
+              <div
+                className="dark:bg-slate-800 bg-slate-200
+          rounded-3xl rounded-tr-md p-4"
+              >
+                <p>{userAnswers[currentIndex]}</p>
+              </div>
+              <Avatar className="h-8 w-8 shadow-sm">
+                <AvatarImage
+                  src={session.data?.user.image ?? ""}
+                  alt="profil"
+                />
+                <AvatarFallback>meg</AvatarFallback>
+              </Avatar>
+            </div>
+          )}
+
+          {/* The feedback section */}
           {form.formState.isSubmitting && (
             <LoadingSpinner className="mx-auto" />
           )}
@@ -91,22 +124,23 @@ export default function WriteRehearsal({
               {/* The score */}
               {feedbacks[currentIndex].score !== undefined && (
                 <div
-                  className="rounded-full mx-auto w-fit p-2 shadow-sm font-semibold"
-                  style={{
-                    backgroundColor: percentageToHsl(
-                      (feedbacks[currentIndex]?.score || 0) / 100,
-                      0,
-                      120,
-                      theme === "dark" ? 20 : 65
-                    ),
-                  }}
+                  className={cn(
+                    percentageToTwBgColor(feedbacks[currentIndex]?.score || 0),
+                    "flex gap-1 rounded-full py-2 px-5 mx-auto w-fit shadow-sm font-semibold"
+                  )}
                 >
-                  {feedbacks[currentIndex].score} / 100
+                  <span className="text-lg text-white">
+                    {feedbacks[currentIndex].score}{" "}
+                    <span className="text-sm text-gray-300">/ 100</span>
+                  </span>
+                  <span className="text-lg">
+                    {feedbacks[currentIndex].score === 100 && getRandomEmoji()}
+                  </span>
                 </div>
               )}
 
               {/* The tips */}
-              <ul className="space-y-4">
+              <ul className="space-y-4 pb-8">
                 {feedbacks[currentIndex].tips?.map((tip, index) => (
                   <motion.div
                     key={index}
@@ -130,12 +164,13 @@ export default function WriteRehearsal({
         </ScrollArea>
 
         {/* The textarea input section */}
-        <div className="pb-4">
+        <div className="pb-4 bg-transparent">
           <AnswerForm
             flashcard={currentFlashcard}
             currentIndex={currentIndex}
             disabled={!!feedbacks[currentIndex]}
             setFeedback={handleSetFeedback}
+            onSubmitted={handleAnswerSubmitted}
           />
         </div>
       </FormProvider>

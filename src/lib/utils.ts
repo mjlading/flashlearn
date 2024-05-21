@@ -38,13 +38,10 @@ export function getBaseUrl() {
   return `http://localhost:${process.env.PORT ?? 3000}`;
 }
 
-
 // Returns a string like '2 dager siden'
-export function dateDifferenceFromNow(locale:string, date: string) {
-  if (locale === "no")
-    moment.locale("nb"); // Set the locale  to norwegian
-  else if (locale === "en")
-    moment.locale("en-gb"); // Set the locale  to english (gb) // Hardcoded solution needs case for each supported language
+export function dateDifferenceFromNow(locale: string, date: string) {
+  if (locale === "no") moment.locale("nb"); // Set the locale  to norwegian
+  else if (locale === "en") moment.locale("en-gb"); // Set the locale  to english (gb) // Hardcoded solution needs case for each supported language
   return moment(date).fromNow();
 }
 
@@ -67,16 +64,16 @@ export function percentageToHsl(
 
 export function percentageToTwBgColor(percentage: number): string {
   if (percentage >= 100) {
-    return "bg-green-500"; // Green for 100
+    return "bg-green-500/90"; // Green for 100
   } else if (percentage <= 0) {
-    return "bg-red-500"; // Red for 0
+    return "bg-red-500/90"; // Red for 0
   } else if (percentage < 25) {
-    return "bg-red-600";
+    return "bg-red-500/90";
   } else if (percentage < 50) {
-    return "bg-orange-500";
-  } else if (percentage < 75) {
-    return "bg-yellow-500";
+    return "bg-orange-500/90";
+  } else if (percentage < 70) {
+    return "bg-yellow-500/90";
   } else {
-    return "bg-lime-500";
+    return "bg-lime-500/90";
   }
 }

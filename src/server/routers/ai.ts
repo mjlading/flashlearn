@@ -8,6 +8,7 @@ import path from "path";
 import pgvector from "pgvector";
 import { z } from "zod";
 import { protectedProcedure, publicProcedure, router } from "../trpc";
+import { auth } from "@/auth";
 
 export const aiRouter = router({
   generateEmbedding: publicProcedure //test me
@@ -217,11 +218,13 @@ export const aiRouter = router({
     .input(
       z.object({
         keywords: z.array(z.string()),
+        language: z.string(),
+        academicLevel: z.string(),
         type: z.string(),
       })
     )
     .mutation(async ({ input }) => {
-      const { keywords, type } = input;
+      const { keywords, language, type, academicLevel } = input;
 
       console.time("generateFlashcardsFromKeywords time");
 
@@ -239,6 +242,9 @@ export const aiRouter = router({
         flashcardTypeDescription =
           "a mix of theoretical flashcards (terms and definitions) and practical problem-solving questions with direct answers";
       }
+
+      const languageText =
+        language === "auto" ? "Same language as the input text" : language;
 
       // Define tools used for function calling
       const tools: any = [
@@ -283,7 +289,7 @@ export const aiRouter = router({
         messages: [
           {
             role: "user",
-            content: `Generate ${n} specific and concise flashcards for the following ${n} keywords. Flashcards should be highly ${type}, focusing on ${flashcardTypeDescription}.
+            content: `Generate ${n} specific and concise flashcards for the following ${n} keywords. Flashcards should be highly ${type}, focusing on ${flashcardTypeDescription}. The academic level of the cards should be: ${academicLevel}. Reply in ${languageText}.
               
               ${keywords.join(",")}
               `,
@@ -305,11 +311,13 @@ export const aiRouter = router({
     .input(
       z.object({
         text: z.string(),
+        language: z.string(),
+        academicLevel: z.string(),
         type: z.string(),
       })
     )
     .mutation(async ({ input }) => {
-      const { text, type } = input;
+      const { text, language, type, academicLevel } = input;
 
       const n = "5-20";
 
@@ -326,6 +334,9 @@ export const aiRouter = router({
         flashcardTypeDescription =
           "a mix of theoretical flashcards (terms and definitions) and practical problem-solving questions with direct answers";
       }
+
+      const languageText =
+        language === "auto" ? "Same language as the input text" : language;
 
       // Define tools used for function calling
       const tools: any = [
@@ -370,7 +381,7 @@ export const aiRouter = router({
         messages: [
           {
             role: "user",
-            content: `Generate ${n} descriptive, detailed flashcards for the following text. Flashcards should be highly ${type}, focusing on ${flashcardTypeDescription}.
+            content: `Generate ${n} descriptive, detailed flashcards for the following text. Flashcards should be highly ${type}, focusing on ${flashcardTypeDescription}. The academic level of the cards should be: ${academicLevel}. Reply in ${languageText}.
                     
                     ${text}
                     `,
@@ -397,6 +408,7 @@ export const aiRouter = router({
     )
     .mutation(async ({ input }) => {
       const { front, back, answer } = input;
+      const session = await auth();
 
       // Define tools used for function calling
       const tools: any = [
@@ -404,8 +416,7 @@ export const aiRouter = router({
           type: "function",
           function: {
             name: "generate_feedback",
-            description:
-              "Generates descriptive, helpful feedback on a flashcard submission",
+            description: "Generates feedback on a flashcard submission",
             parameters: {
               type: "object",
               properties: {
@@ -438,7 +449,7 @@ export const aiRouter = router({
         messages: [
           {
             role: "user",
-            content: `Given a students answer to a flashcard quiz, give a score (0-100) and optional useful tips for improvement. If score=100 dont give tips.
+            content: `You're a teacher. Given a ${session?.user.academicLevel} students answer to a flashcard quiz, provide a score (0-100) based on the logical correctness of the answer. The answer's details (e.g. variable names, test cases, vocabulary, grammar) does not have to match the flashcard back to be considered 100% correct. Rather than judging such details, you should give 100% if the student shows that they understand the question and the answer is logically correct. Provide optional useful, spesific and detailed tips aimed at the student for improvement if the score is less than 100.
                     flashcard front: ${front}
                     flashcard back: ${back}
                     The students answer: ${answer}

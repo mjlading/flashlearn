@@ -1,6 +1,15 @@
 "use client";
 
+import { api } from "@/app/api/trpc/client";
+import { useDictionary } from "@/lib/DictProvider";
+import { CourseInfo, getCourseInfo } from "@/lib/webScraper";
 import { CheckCircle2, GraduationCap } from "lucide-react";
+import { useState } from "react";
+import { toast } from "sonner";
+import { GeneratedFlashcard } from "./GenerateFlashcardsInput";
+import GenerationLanguageSelect from "./GenerationLangaugeSelect";
+import GenerationTypeTabs from "./GenerationTypeTabs";
+import { LoadingSpinner } from "./LoadingSpinner";
 import { Button } from "./ui/button";
 import {
   Dialog,
@@ -10,24 +19,18 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "./ui/dialog";
-import { Label } from "./ui/label";
 import { Input } from "./ui/input";
-import { LoadingSpinner } from "./LoadingSpinner";
+import { Label } from "./ui/label";
 import { ScrollArea } from "./ui/scroll-area";
-import { useState } from "react";
-import { CourseInfo, getCourseInfo } from "@/lib/webScraper";
-import { toast } from "sonner";
-import GenerationTypeTabs from "./GenerationTypeTabs";
-import { GeneratedFlashcard } from "./GenerateFlashcardsInput";
-import { api } from "@/app/api/trpc/client";
-import { useDictionary } from "@/lib/DictProvider";
 
 export default function GenerateFromCourse({
   onGeneratedFlashcards,
   onLoadingStateChanged,
+  academicLevel,
 }: {
   onGeneratedFlashcards: (flashcards: GeneratedFlashcard[]) => void;
   onLoadingStateChanged: (newState: boolean) => void;
+  academicLevel: string;
 }) {
   const dict = useDictionary();
 
@@ -35,6 +38,8 @@ export default function GenerateFromCourse({
   const [isLoadingCourseCode, setIsLoadingCourseCode] = useState(false);
   const [courseInfo, setCourseInfo] = useState<CourseInfo | null>(null);
   const [generationType, setGenerationType] = useState("mixed");
+  const [generationLanguage, setGenerationLanguage] = useState("auto");
+
   const generateFlashcardsMutation =
     api.ai.generateFlashcardsFromText.useMutation({
       onMutate: () => {
@@ -61,6 +66,9 @@ export default function GenerateFromCourse({
       toast.warning(`Emnet ${courseCodePrepared} ble ikke funnet!`);
     }
     setCourseInfo(courseInfo);
+
+    console.log("LANGUAGE: ", courseInfo?.language);
+    courseInfo?.language && setGenerationLanguage(courseInfo.language);
     setIsLoadingCourseCode(false);
   }
 
@@ -71,8 +79,6 @@ export default function GenerateFromCourse({
       courseInfo.name +
       "\nStudy level: " +
       courseInfo.studyLevel +
-      "\nLanguage:" +
-      courseInfo.language +
       "\n" +
       courseInfo.courseContent +
       "\n" +
@@ -80,6 +86,8 @@ export default function GenerateFromCourse({
 
     generateFlashcardsMutation.mutate({
       text: prompt,
+      language: generationLanguage,
+      academicLevel: academicLevel,
       type: generationType,
     });
   }
@@ -131,7 +139,7 @@ export default function GenerateFromCourse({
         </div>
         {courseInfo && (
           <div className="flex flex-col gap-4">
-            <ScrollArea className="h-[20rem]">
+            <ScrollArea className="h-[18rem]">
               <h2 className="font-semibold text-lg mb-1">{courseInfo.name}</h2>
               <div className="flex gap-2 items-center">
                 <CheckCircle2 size={20} className="text-success" />
@@ -177,6 +185,11 @@ export default function GenerateFromCourse({
                 {courseInfo.learningMethod}
               </p>
             </ScrollArea>
+
+            <GenerationLanguageSelect
+              value={generationLanguage}
+              onValueChange={(value) => setGenerationLanguage(value)}
+            />
             <GenerationTypeTabs
               value={generationType}
               onValueChange={(value) => setGenerationType(value)}

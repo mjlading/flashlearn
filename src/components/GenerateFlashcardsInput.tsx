@@ -24,8 +24,10 @@ export type GeneratedFlashcard = {
 
 export default function GenerateFlashcardsInput({
   onAddFlashcards,
+  academicLevel,
 }: {
   onAddFlashcards: (generatedFlashcards: GeneratedFlashcard[]) => void;
+  academicLevel: string;
 }) {
   const dict = useDictionary();
   const [generatedFlashcards, setGeneratedFlashcards] = useState<
@@ -61,24 +63,28 @@ export default function GenerateFlashcardsInput({
         {!isLoading && !generatedFlashcards.length && (
           <div className="space-x-2">
             <GenerateFromText
+              academicLevel={academicLevel}
               onGeneratedFlashcards={handleGeneratedFlashcards}
               onLoadingStateChanged={(newState: boolean) =>
                 setIsLoading(newState)
               }
             />
             <GenerateFromFile
+              academicLevel={academicLevel}
               onGeneratedFlashcards={handleGeneratedFlashcards}
               onLoadingStateChanged={(newState: boolean) =>
                 setIsLoading(newState)
               }
             />
             <GenerateFromCourse
+              academicLevel={academicLevel}
               onGeneratedFlashcards={handleGeneratedFlashcards}
               onLoadingStateChanged={(newState: boolean) =>
                 setIsLoading(newState)
               }
             />
             <GenerateFromKeywords
+              academicLevel={academicLevel}
               onGeneratedFlashcards={handleGeneratedFlashcards}
               onLoadingStateChanged={(newState: boolean) =>
                 setIsLoading(newState)

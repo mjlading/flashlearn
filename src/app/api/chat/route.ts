@@ -1,3 +1,4 @@
+import { auth } from "@/auth";
 import openai from "@/lib/ai";
 import { NextResponse } from "next/server";
 
@@ -7,8 +8,7 @@ const tools: any = [
     type: "function",
     function: {
       name: "generate_feedback",
-      description:
-        "Generates descriptive, helpful feedback on a flashcard submission",
+      description: "Generates feedback on a flashcard submission",
       parameters: {
         type: "object",
         properties: {
@@ -21,7 +21,7 @@ const tools: any = [
             items: {
               type: "string",
             },
-            description: "Helpful constructive tips to help the student learn",
+            description: "Helpful constructive tips to encourage learning",
           },
         },
         required: ["score"],
@@ -32,7 +32,7 @@ const tools: any = [
 
 export async function POST(request: Request) {
   const { front, back, answer } = await request.json();
-  // console.log(front, back, answer);
+  const session = await auth();
 
   const completion = await openai.chat.completions.create({
     model: "gpt-4o",
@@ -44,10 +44,10 @@ export async function POST(request: Request) {
     messages: [
       {
         role: "user",
-        content: `Given a students answer to a flashcard quiz, give a score (0-100) and optional useful tips (concise and few) for improvement. Avoid broad/general tips like "practice more" or "double-check your work", instead give spesific practical tips. If score=100 dont give tips.
+        content: `You're my teacher. My academic level is: ${session?.user.academicLevel}. Given my answer to a flashcard quiz, provide a score (0-100) based on the logical correctness of the answer. The answer's details (e.g. variable names, test cases, vocabulary, grammar) does not have to match the flashcard back to be considered 100% correct. Rather than judging such details, you should give 100% if i show that i understand the question and the answer is logically correct. Provide optional useful, spesific and detailed tips aimed at me for improvement if the score is less than 100.
                 flashcard front: ${front}
                 flashcard back: ${back}
-                The students answer: ${answer}
+                My answer: ${answer}
                 `,
       },
     ],

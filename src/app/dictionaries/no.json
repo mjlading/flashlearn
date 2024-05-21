@@ -64,12 +64,12 @@
       "noBookmakedSets": "Du har ingen bokmerkede sett",
       "noBookmakedSetsEx": "Dine bokmerkede sett vil vises her"
     },
-    "createDecks":{
-      "nameMinLetters":"Navnet må være minst 2 tegn",
-      "nameMaxLetters":"Navnet kan ikke være mer enn 50 tegn",
-      "frontMaxLetters":"Fremsiden kan være maks 500 tegn",
-      "backMaxLetters":"Baksiden kan være maks 1500 tegn",
-      "flashcardsMin":"Settet må ha minst 2 studiekort"
+    "createDecks": {
+      "nameMinLetters": "Navnet må være minst 2 tegn",
+      "nameMaxLetters": "Navnet kan ikke være mer enn 50 tegn",
+      "frontMaxLetters": "Fremsiden kan være maks 500 tegn",
+      "backMaxLetters": "Baksiden kan være maks 1500 tegn",
+      "flashcardsMin": "Settet må ha minst 2 studiekort"
     },
     "startPractice": {
       "visual": "Visuell",
@@ -93,7 +93,9 @@
       "addFlashcard": "Legg til studiekort",
       "addFlashcardDescription": "Hvert kort har en fremside og en bakside. Fremsiden kan ha et begrep eller spørsmål, og baksiden kan ha et svar eller en forklaring.",
       "placeholderFront": "Fremside",
-      "placeholderBack": "Bakside"
+      "placeholderBack": "Bakside",
+      "edit": "Rediger",
+      "preview": "Forhåndsvisning"
     }
   },
   "collections": {
@@ -118,9 +120,9 @@
     "noCollections": "Du har ingen samlinger",
     "noCollectionDescription": "Lag en samling for å organisere og øve flere sett sammen",
     "createCollection": {
-      "nameMinLetters":"Navnet må være minst 2 tegn",
-      "nameMaxLetters":"Navnet kan ikke være mer enn 50 tegn",
-      "descriptionMaxLetters":"Beskrivelsen kan ikke være mer enn 500 tegn",
+      "nameMinLetters": "Navnet må være minst 2 tegn",
+      "nameMaxLetters": "Navnet kan ikke være mer enn 50 tegn",
+      "descriptionMaxLetters": "Beskrivelsen kan ikke være mer enn 500 tegn",
       "aboutCollection": "Om samlingen",
       "addToCollection": "Legg til sett",
       "placeholderName": "Gi samlingen din et navn",
@@ -134,7 +136,9 @@
         "saveFailed": "Samlingen kunne ikke lagres",
         "tryAgain": "Vennligst prøv igjen",
         "editWorked": "Redigeringen av  ",
-        "editFailed": "Endringene dine kunne ikke lagres"
+        "editFailed": "Endringene dine kunne ikke lagres",
+        "theDeck": "Settet ",
+        "isAlreadyAdded": " er alerede lagt til"
       },
       "addedSets": "Lagt til sett"
     },
@@ -214,7 +218,11 @@
     "learningOutcomes": "Læringsutbytte",
     "learningMethods": "Læringsformer",
     "generateFlashcards": "Generer studiekort",
-    "courseCode": "Emnekode"
+    "courseCode": "Emnekode",
+    "sameAsText": "Samme som tekst",
+    "language": "Språk for generering",
+    "norwegian": "Norsk",
+    "english": "Engelsk"
   },
   "generateFromFile": {
     "file": "Fil",
@@ -289,9 +297,14 @@
     "timeSpent": "Tid brukt",
     "rate": "Vurder settet",
     "saveError": "Kunne ikke lagre øvingen",
-    "saveErrorDescription": "Du vil ikke kunne se denne øvingen i din fremgang"
+    "saveErrorDescription": "Du vil ikke kunne se denne øvingen i din fremgang",
+    "enterAnswerHere": "Skriv inn svaret ditt her",
+    "sendIn": "Send inn"
   },
   "xpDisplay": {
     "knowledgePoints": "Kunnskapspoeng"
+  },
+  "knowledgeLevel": {
+    "mastery": "Mestring"
   }
 }

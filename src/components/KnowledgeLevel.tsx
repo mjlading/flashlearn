@@ -6,12 +6,15 @@ import {
   TooltipTrigger,
 } from "./ui/tooltip";
 import { Star } from "lucide-react";
+import { useDictionary } from "@/lib/DictProvider";
 
 export default function KnowledgeLevel({
   knowledgeLevel,
 }: {
   knowledgeLevel: number;
 }) {
+  const dict = useDictionary();
+
   const bgColor = percentageToTwBgColor(knowledgeLevel);
 
   return (
@@ -37,7 +40,7 @@ export default function KnowledgeLevel({
             ></div>
           </div>
         </TooltipTrigger>
-        <TooltipContent>Mestring</TooltipContent>
+        <TooltipContent>{dict.knowledgeLevel.mastery}</TooltipContent>
       </Tooltip>
     </TooltipProvider>
   );

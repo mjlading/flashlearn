@@ -26,7 +26,7 @@ describe("User/profile interactions", ()=> {
         
         it("Contains nickame of user", ()=>{
             cy.get('[data-cy="userDropdown"]').click().then(()=>{
-                cy.get('[data-cy="nameInDropDown"]').contains('dededed')
+                cy.get('[data-cy="nameInDropDown"]').contains('Eggbert')
             })
         })
         it("Contains email of user", ()=>{
@@ -47,11 +47,11 @@ describe("User/profile interactions", ()=> {
             })
         })
         it("Can open the user settings screen", ()=>{
-            cy.get('[data-cy="userSettings"]').should('exist').contains('dededed')
+            cy.get('[data-cy="userSettings"]').should('exist').contains('Eggbert')
         })
         it("User settings shows nickname of user", ()=>{
             cy.get('[data-cy="userSettings"]')
-            .get('[data-cy="userSettingsNickname"]').contains('dededed')
+            .get('[data-cy="userSettingsNickname"]').contains('Eggbert')
         })
         it("User settings shows correct academic level", ()=>{
             cy.get('[data-cy="userSettings"]')

@@ -37,5 +37,3 @@ during testing we use the dev. database with an account that we own to run authe
 
 Add 'CYPRESS_TEST_AC_ID' with the id of the user you wish to test, and set 'ENABLE_CYPRESS_LOGIN' to 'true' within your local environment variables ('.env.local')
 Add your user credentials to the variables 'GOOGLE_TEST_ACCOUNT_PWD' and 'GOOGLE_TEST_ACCOUNT_EMAIL' to the cypress environment variables ('Cypress.env.json)
-
-Make sure to run cypress tests in development mode (npm run dev), without this the cypress tests cannot access protected pages.

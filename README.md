@@ -38,7 +38,7 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 Before deployment to vercel, tests are run through github actions. 
 
-for local testing, use 'npm run test', this runs tests that use the testdatabase. 
+for local testing, use 'npm run test', THIS NEEDS '.env.test' TO AIM AT TEST DATABASE, OTHERWISE IT WILL WIPE DEV DATABASE
 Vitest is used for integration tests that check if trpc endpoints work the way we expect.
 
 # Cypress
